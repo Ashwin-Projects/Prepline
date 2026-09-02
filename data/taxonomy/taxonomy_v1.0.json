@@ -1,0 +1,677 @@
+{
+  "taxonomy_version": "v1.0",
+  "description": "Versioned Computer Science Shared Taxonomy covering DSA, DBMS, OS, Computer Networks, and System Design.",
+  "domains": [
+    "dsa",
+    "dbms",
+    "os",
+    "cn",
+    "system_design"
+  ],
+  "nodes": [
+    {
+      "topic_id": "dsa",
+      "name": "Data Structures and Algorithms",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": null,
+      "description": "Core computer science data structures, storage abstractions, and algorithmic problem-solving paradigms."
+    },
+    {
+      "topic_id": "dsa.arrays",
+      "name": "Arrays and Strings",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Linear contiguous memory structures, character sequences, indexing, and array manipulation algorithms."
+    },
+    {
+      "topic_id": "dsa.arrays.two_pointers",
+      "name": "Two Pointers Technique",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.arrays",
+      "description": "Searching pairs or subarrays in linear structures using converging or fast-slow pointer iterations."
+    },
+    {
+      "topic_id": "dsa.arrays.sliding_window",
+      "name": "Sliding Window Technique",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.arrays",
+      "description": "Maintaining dynamic or fixed-size contiguous subarray windows to solve range and substring optimization problems."
+    },
+    {
+      "topic_id": "dsa.arrays.prefix_sum",
+      "name": "Prefix Sum",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.arrays",
+      "description": "Precomputing cumulative sum arrays to perform constant-time range sum queries."
+    },
+    {
+      "topic_id": "dsa.linked_lists",
+      "name": "Linked Lists",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Singly and doubly linked pointer-based node sequences, insertions, deletions, and list operations."
+    },
+    {
+      "topic_id": "dsa.linked_lists.traversal_reversal",
+      "name": "Linked List Manipulation & Cycle Detection",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.linked_lists",
+      "description": "Reversing linked list pointers, merging sorted lists, finding middle nodes, and Floyd's cycle-finding algorithm."
+    },
+    {
+      "topic_id": "dsa.stacks_queues",
+      "name": "Stacks and Queues",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "LIFO stack and FIFO queue abstract data types, implementation variants, and sequence evaluation."
+    },
+    {
+      "topic_id": "dsa.stacks_queues.monotonic_stack",
+      "name": "Monotonic Stack and Queue",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.stacks_queues",
+      "description": "Maintaining elements in strictly increasing or decreasing order inside stacks/queues to find next greater or smaller elements."
+    },
+    {
+      "topic_id": "dsa.trees",
+      "name": "Trees and Binary Trees",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Hierarchical node data structures, binary trees, balanced trees, and recursive tree traversals."
+    },
+    {
+      "topic_id": "dsa.trees.traversal",
+      "name": "Tree Traversals",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.trees",
+      "description": "Visiting tree nodes using preorder, inorder, postorder, and level-order breadth-first traversals."
+    },
+    {
+      "topic_id": "dsa.trees.bst",
+      "name": "Binary Search Trees",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.trees",
+      "description": "Ordered binary search trees, insertion, deletion, searching, and maintaining BST invariants."
+    },
+    {
+      "topic_id": "dsa.trees.lowest_common_ancestor",
+      "name": "Lowest Common Ancestor",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.trees",
+      "description": "Finding the lowest shared ancestor node of two target nodes in binary trees and binary search trees."
+    },
+    {
+      "topic_id": "dsa.heaps",
+      "name": "Heaps and Priority Queues",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Min-heaps, max-heaps, priority queues, binary heap representations, and heapify operations."
+    },
+    {
+      "topic_id": "dsa.heaps.top_k",
+      "name": "Top K Elements and K-Way Merge",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.heaps",
+      "description": "Using min/max priority queues to efficiently track top K frequent elements and merge K sorted streams."
+    },
+    {
+      "topic_id": "dsa.graphs",
+      "name": "Graphs and Network Topologies",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Vertices, edges, directed/undirected graphs, adjacency representations, and graph algorithms."
+    },
+    {
+      "topic_id": "dsa.graphs.bfs_dfs",
+      "name": "Graph Traversal (BFS & DFS)",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.graphs",
+      "description": "Exploring graphs using queue-based Breadth-First Search and recursive or stack-based Depth-First Search."
+    },
+    {
+      "topic_id": "dsa.graphs.shortest_path",
+      "name": "Shortest Path Algorithms",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.graphs",
+      "description": "Computing single-source and all-pairs shortest paths using Dijkstra's, Bellman-Ford, and Floyd-Warshall algorithms."
+    },
+    {
+      "topic_id": "dsa.graphs.topological_sort",
+      "name": "Topological Sorting",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.graphs",
+      "description": "Ordering vertices in Directed Acyclic Graphs (DAGs) using Kahn's algorithm or DFS for dependency resolution."
+    },
+    {
+      "topic_id": "dsa.graphs.disjoint_set",
+      "name": "Disjoint Set Union (Union-Find)",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.graphs",
+      "description": "Managing partitioned sets using Union-Find with path compression and rank-based union for connectivity."
+    },
+    {
+      "topic_id": "dsa.sorting_searching",
+      "name": "Sorting and Searching",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Comparison and non-comparison sorting techniques, linear search, and binary search methodologies."
+    },
+    {
+      "topic_id": "dsa.sorting_searching.binary_search",
+      "name": "Binary Search",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.sorting_searching",
+      "description": "Logarithmic search on sorted arrays, rotated arrays, and binary search on monotonic answer spaces."
+    },
+    {
+      "topic_id": "dsa.dp",
+      "name": "Dynamic Programming",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Optimization via overlapping subproblems, optimal substructure, memoization, and tabular state transitions."
+    },
+    {
+      "topic_id": "dsa.dp.1d",
+      "name": "1D Dynamic Programming",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.dp",
+      "description": "Solving linear recurrence state transitions including Fibonacci variants, house robber, and climbing stairs."
+    },
+    {
+      "topic_id": "dsa.dp.knapsack",
+      "name": "Knapsack and Subset DP",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.dp",
+      "description": "0/1 Knapsack, unbounded knapsack, coin change, and subset sum optimization problems."
+    },
+    {
+      "topic_id": "dsa.dp.grid",
+      "name": "Grid Path Dynamic Programming",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.dp",
+      "description": "Finding minimum path sums and unique traversal paths across 2D grid matrices."
+    },
+    {
+      "topic_id": "dsa.dp.lcs",
+      "name": "String and Subsequence DP",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.dp",
+      "description": "Longest Common Subsequence, Edit Distance, and String Alignment dynamic programming algorithms."
+    },
+    {
+      "topic_id": "dsa.backtracking",
+      "name": "Recursion and Backtracking",
+      "domain": "dsa",
+      "type": "high_level_concept",
+      "parent_id": "dsa",
+      "description": "Exploring state space trees recursively, pruning invalid branches, and generating combinatorial structures."
+    },
+    {
+      "topic_id": "dsa.backtracking.subsets_permutations",
+      "name": "Subsets and Permutations",
+      "domain": "dsa",
+      "type": "granular_skill",
+      "parent_id": "dsa.backtracking",
+      "description": "Generating power sets, permutations, combinations, and solving constraint satisfaction problems."
+    },
+    {
+      "topic_id": "dbms",
+      "name": "Database Management Systems",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": null,
+      "description": "Database architectures, data modeling, relational algebra, SQL querying, transactions, and indexing."
+    },
+    {
+      "topic_id": "dbms.relational_model",
+      "name": "Relational Model and ER Diagrams",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": "dbms",
+      "description": "Entities, relationships, keys (primary, foreign), and relational schema design."
+    },
+    {
+      "topic_id": "dbms.sql",
+      "name": "Structured Query Language (SQL)",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": "dbms",
+      "description": "Data Definition Language (DDL), Data Manipulation Language (DML), and complex relational queries."
+    },
+    {
+      "topic_id": "dbms.sql.queries_aggregations",
+      "name": "SQL Aggregations and Grouping",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.sql",
+      "description": "Filtering, grouping, HAVING clauses, and aggregate functions (COUNT, SUM, AVG, MIN, MAX)."
+    },
+    {
+      "topic_id": "dbms.sql.joins",
+      "name": "SQL Joins",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.sql",
+      "description": "Combining rows from multiple relational tables using INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN, and self joins."
+    },
+    {
+      "topic_id": "dbms.sql.subqueries",
+      "name": "SQL Subqueries and Window Functions",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.sql",
+      "description": "Nested subqueries, correlated subqueries, Common Table Expressions (CTEs), and window ranking functions."
+    },
+    {
+      "topic_id": "dbms.normalization",
+      "name": "Database Normalization",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": "dbms",
+      "description": "Functional dependencies, eliminating data redundancy, and database normal forms."
+    },
+    {
+      "topic_id": "dbms.normalization.normal_forms",
+      "name": "Normal Forms (1NF, 2NF, 3NF, BCNF)",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.normalization",
+      "description": "Decomposing tables to satisfy First, Second, Third, and Boyce-Codd Normal Forms."
+    },
+    {
+      "topic_id": "dbms.transactions",
+      "name": "Transactions and Concurrency Control",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": "dbms",
+      "description": "Database transaction management, ACID properties, schedule serializability, and concurrency control."
+    },
+    {
+      "topic_id": "dbms.transactions.acid",
+      "name": "ACID Properties",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.transactions",
+      "description": "Atomicity, Consistency, Isolation, and Durability guarantees in transactional databases."
+    },
+    {
+      "topic_id": "dbms.transactions.isolation_locking",
+      "name": "Transaction Isolation and Locking",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.transactions",
+      "description": "Read Committed, Repeatable Read, Serializable isolation levels, 2-Phase Locking (2PL), and deadlock resolution."
+    },
+    {
+      "topic_id": "dbms.indexing",
+      "name": "Database Indexing and Storage",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": "dbms",
+      "description": "Disk storage organization, page layouts, file structures, and database index mechanisms."
+    },
+    {
+      "topic_id": "dbms.indexing.b_trees",
+      "name": "B-Trees and B+ Tree Indexing",
+      "domain": "dbms",
+      "type": "granular_skill",
+      "parent_id": "dbms.indexing",
+      "description": "Clustered and non-clustered indexes implemented using balanced B-Tree and B+ Tree structures."
+    },
+    {
+      "topic_id": "dbms.nosql",
+      "name": "NoSQL Databases",
+      "domain": "dbms",
+      "type": "high_level_concept",
+      "parent_id": "dbms",
+      "description": "Non-relational data models including Key-Value, Document, Wide-Column, and Graph store architectures."
+    },
+    {
+      "topic_id": "os",
+      "name": "Operating Systems",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": null,
+      "description": "Operating system kernel architecture, process management, memory management, file systems, and hardware abstractions."
+    },
+    {
+      "topic_id": "os.process_management",
+      "name": "Processes and Threads",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": "os",
+      "description": "Process state transitions, process control blocks, execution threads, and user-space vs kernel-space execution."
+    },
+    {
+      "topic_id": "os.process_management.context_switch",
+      "name": "Context Switching and Process Control Block",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.process_management",
+      "description": "Register state saving, process control block (PCB) metadata, and context switch CPU overhead."
+    },
+    {
+      "topic_id": "os.process_management.multithreading",
+      "name": "Multithreading and User/Kernel Threads",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.process_management",
+      "description": "Thread execution models, POSIX threads, race conditions, and user-level vs kernel-level thread mapping."
+    },
+    {
+      "topic_id": "os.cpu_scheduling",
+      "name": "CPU Scheduling",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": "os",
+      "description": "Processor allocation strategies, scheduling queues, preemptive and non-preemptive scheduling algorithms."
+    },
+    {
+      "topic_id": "os.cpu_scheduling.algorithms",
+      "name": "CPU Scheduling Algorithms",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.cpu_scheduling",
+      "description": "First-Come First-Served (FCFS), Shortest Job First (SJF), Round Robin (RR), and Priority Scheduling."
+    },
+    {
+      "topic_id": "os.process_synchronization",
+      "name": "Process Synchronization and IPC",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": "os",
+      "description": "Inter-process communication, critical section problem, mutual exclusion, and synchronization primitives."
+    },
+    {
+      "topic_id": "os.process_synchronization.semaphores_mutex",
+      "name": "Semaphores, Mutexes, and Monitors",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.process_synchronization",
+      "description": "Mutex locks, counting semaphores, monitors, and classic concurrency problems (Producer-Consumer, Dining Philosophers)."
+    },
+    {
+      "topic_id": "os.memory_management",
+      "name": "Memory Management and Virtual Memory",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": "os",
+      "description": "Main memory allocation, contiguous memory, paging, segmentation, and virtual memory systems."
+    },
+    {
+      "topic_id": "os.memory_management.paging_segmentation",
+      "name": "Paging, TLB, and Segmentation",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.memory_management",
+      "description": "Logical to physical address translation, page tables, Translation Lookaside Buffer (TLB), and memory segmentation."
+    },
+    {
+      "topic_id": "os.memory_management.page_replacement",
+      "name": "Demand Paging and Page Replacement",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.memory_management",
+      "description": "Page fault handling, thrashing, and page replacement algorithms (FIFO, LRU, Optimal, Clock)."
+    },
+    {
+      "topic_id": "os.deadlocks",
+      "name": "Deadlocks",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": "os",
+      "description": "Necessary conditions for deadlock, resource allocation graphs, and handling strategies."
+    },
+    {
+      "topic_id": "os.deadlocks.prevention_avoidance",
+      "name": "Deadlock Prevention and Banker's Algorithm",
+      "domain": "os",
+      "type": "granular_skill",
+      "parent_id": "os.deadlocks",
+      "description": "Breaking Coffman conditions, Banker's safety algorithm, deadlock detection, and recovery mechanisms."
+    },
+    {
+      "topic_id": "os.file_systems",
+      "name": "File Systems",
+      "domain": "os",
+      "type": "high_level_concept",
+      "parent_id": "os",
+      "description": "File concepts, directory organization, disk block allocation strategies, and inode structures."
+    },
+    {
+      "topic_id": "cn",
+      "name": "Computer Networks",
+      "domain": "cn",
+      "type": "high_level_concept",
+      "parent_id": null,
+      "description": "Data communications, layered network architectures, Internet protocol stack, and network security."
+    },
+    {
+      "topic_id": "cn.network_models",
+      "name": "Network Architecture Models",
+      "domain": "cn",
+      "type": "high_level_concept",
+      "parent_id": "cn",
+      "description": "OSI 7-layer model, TCP/IP protocol stack, encapsulation, and packet headers."
+    },
+    {
+      "topic_id": "cn.network_models.osi_layers",
+      "name": "OSI Model and TCP/IP Layers",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.network_models",
+      "description": "Physical, Data Link, Network, Transport, Session, Presentation, and Application layers and protocol mapping."
+    },
+    {
+      "topic_id": "cn.application_layer",
+      "name": "Application Layer Protocols",
+      "domain": "cn",
+      "type": "high_level_concept",
+      "parent_id": "cn",
+      "description": "Client-server architecture, HTTP/HTTPS, DNS, FTP, SMTP, and application data exchange."
+    },
+    {
+      "topic_id": "cn.application_layer.http_https",
+      "name": "HTTP, HTTPS, and REST",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.application_layer",
+      "description": "HTTP request/response methods, status codes, headers, RESTful API conventions, and HTTPS security."
+    },
+    {
+      "topic_id": "cn.application_layer.dns",
+      "name": "Domain Name System (DNS)",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.application_layer",
+      "description": "DNS hierarchy, recursive/iterative domain resolution, record types (A, AAAA, CNAME, MX, TXT), and DNS caching."
+    },
+    {
+      "topic_id": "cn.transport_layer",
+      "name": "Transport Layer Protocols",
+      "domain": "cn",
+      "type": "high_level_concept",
+      "parent_id": "cn",
+      "description": "End-to-end communication, port addressing, multiplexing, TCP, and UDP transport mechanisms."
+    },
+    {
+      "topic_id": "cn.transport_layer.tcp_udp",
+      "name": "TCP vs UDP Protocols",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.transport_layer",
+      "description": "Connection-oriented reliable TCP vs connectionless lightweight UDP trade-offs and packet headers."
+    },
+    {
+      "topic_id": "cn.transport_layer.tcp_mechanisms",
+      "name": "TCP Handshake, Flow, and Congestion Control",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.transport_layer",
+      "description": "TCP 3-way handshake, 4-way teardown, sliding window flow control, and slow-start congestion control."
+    },
+    {
+      "topic_id": "cn.network_layer",
+      "name": "Network Layer and Routing",
+      "domain": "cn",
+      "type": "high_level_concept",
+      "parent_id": "cn",
+      "description": "Logical IP addressing, subnetting, packet forwarding, and routing algorithms."
+    },
+    {
+      "topic_id": "cn.network_layer.ip_subnetting",
+      "name": "IP Addressing, Subnetting, and CIDR",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.network_layer",
+      "description": "IPv4/IPv6 addressing, subnet masks, Classless Inter-Domain Routing (CIDR), and NAT."
+    },
+    {
+      "topic_id": "cn.network_layer.routing_protocols",
+      "name": "Routing Algorithms and Protocols",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.network_layer",
+      "description": "Distance-vector (RIP) and Link-state (OSPF) routing algorithms, BGP, and autonomous systems."
+    },
+    {
+      "topic_id": "cn.network_security",
+      "name": "Network Security Fundamentals",
+      "domain": "cn",
+      "type": "high_level_concept",
+      "parent_id": "cn",
+      "description": "Symmetric/asymmetric encryption, digital signatures, SSL/TLS, firewalls, and network threats."
+    },
+    {
+      "topic_id": "cn.network_security.tls_ssl",
+      "name": "TLS/SSL Handshake and Encryption",
+      "domain": "cn",
+      "type": "granular_skill",
+      "parent_id": "cn.network_security",
+      "description": "TLS handshake protocol, public-key certificates, symmetric session key exchange, and transport encryption."
+    },
+    {
+      "topic_id": "system_design",
+      "name": "System Design",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": null,
+      "description": "Large-scale distributed systems design, high availability, fault tolerance, scalability, and architectural components."
+    },
+    {
+      "topic_id": "system_design.scalability",
+      "name": "Scalability and System Architectures",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": "system_design",
+      "description": "Monolithic vs microservices architectures, horizontal and vertical scaling, and back-of-the-envelope estimations."
+    },
+    {
+      "topic_id": "system_design.load_balancing",
+      "name": "Load Balancing",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": "system_design",
+      "description": "Traffic distribution, Layer 4 vs Layer 7 load balancing, health checking, and reverse proxies."
+    },
+    {
+      "topic_id": "system_design.load_balancing.algorithms",
+      "name": "Load Balancing Algorithms & Consistent Hashing",
+      "domain": "system_design",
+      "type": "granular_skill",
+      "parent_id": "system_design.load_balancing",
+      "description": "Round Robin, Weighted Least Connections, and Consistent Hashing for server distribution."
+    },
+    {
+      "topic_id": "system_design.caching",
+      "name": "Caching Strategies and CDNs",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": "system_design",
+      "description": "In-memory caching, distributed caches (Redis, Memcached), cache policies, and Content Delivery Networks."
+    },
+    {
+      "topic_id": "system_design.caching.strategies",
+      "name": "Cache Invalidation & Eviction Strategies",
+      "domain": "system_design",
+      "type": "granular_skill",
+      "parent_id": "system_design.caching",
+      "description": "Cache-Aside, Write-Through, Write-Back caching patterns, LRU/LFU eviction, and cache stampede prevention."
+    },
+    {
+      "topic_id": "system_design.database_scaling",
+      "name": "Database Scaling and Partitioning",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": "system_design",
+      "description": "Scaling databases beyond single node capacity through replication, federation, and partitioning."
+    },
+    {
+      "topic_id": "system_design.database_scaling.sharding_replication",
+      "name": "Database Sharding and Read Replicas",
+      "domain": "system_design",
+      "type": "granular_skill",
+      "parent_id": "system_design.database_scaling",
+      "description": "Horizontal database sharding keys, primary-replica replication, read scaling, and split-brain scenarios."
+    },
+    {
+      "topic_id": "system_design.messaging",
+      "name": "Message Queues and Event-Driven Architecture",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": "system_design",
+      "description": "Asynchronous task processing, message brokers (Kafka, RabbitMQ), publish-subscribe, and event streaming."
+    },
+    {
+      "topic_id": "system_design.messaging.pub_sub",
+      "name": "Message Queue Patterns and Decoupling",
+      "domain": "system_design",
+      "type": "granular_skill",
+      "parent_id": "system_design.messaging",
+      "description": "Point-to-point queues, publish-subscribe topics, message ordering, idempotent consumer processing, and dead-letter queues."
+    },
+    {
+      "topic_id": "system_design.distributed_consensus",
+      "name": "Distributed Systems Trade-offs & CAP Theorem",
+      "domain": "system_design",
+      "type": "high_level_concept",
+      "parent_id": "system_design",
+      "description": "Consistency, Availability, Partition Tolerance trade-offs, PACELC theorem, and leader election."
+    },
+    {
+      "topic_id": "system_design.rate_limiting",
+      "name": "Rate Limiting and API Gateways",
+      "domain": "system_design",
+      "type": "granular_skill",
+      "parent_id": "system_design",
+      "description": "Throttling incoming requests using Token Bucket, Leaky Bucket, Sliding Window Log algorithms, and API gateway routing."
+    }
+  ]
+}
