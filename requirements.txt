@@ -4,3 +4,4 @@ pdfplumber
 pandas
 numpy
 scikit-learn
+rake-nltk
