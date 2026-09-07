@@ -1,0 +1,99 @@
+report_id,round,round_type,question_text,topic,needs_review,review_reason
+AMZ001,OA,OA,nan,2 coding questions,True,OA mentions 2 coding questions without specific problem names
+AMZ001,OA,behavioral,nan,Workstyle,False,nan
+AMZ001,Round 1,technical,Burning Tree,nan,False,nan
+AMZ001,Round 1,technical,Overlapping Intervals,nan,False,nan
+AMZ001,Round 2,behavioral,nan,behavioral,False,nan
+AMZ001,Round 2,system_design,Parking Lot design,nan,False,nan
+AMZ002,OA,OA,Maximum Units on a Truck,nan,False,nan
+AMZ002,OA,behavioral,nan,behavioral,False,nan
+AMZ002,Round 1,behavioral,nan,project discussion,False,nan
+AMZ002,Round 1,behavioral,nan,Leadership Principles,False,nan
+AMZ002,Round 1,technical,nan,technical questions,True,Mentions technical questions generally without specific problem names
+AMZ003,Algorithms/DSA round,technical,Gas Station,nan,False,nan
+AMZ003,Algorithms/DSA round,technical,binary-tree leaves,nan,False,nan
+AMZ003,Algorithms/DSA round,technical,right view,nan,False,nan
+AMZ003,Round 2,technical,bottom view BFS/DFS,nan,False,nan
+AMZ004,OA,OA,Demolition Robot,nan,False,nan
+AMZ004,OA,OA,nan,priority-queue problem,True,Mentions priority-queue problem without exact problem title
+AMZ004,Technical interview,technical,Meeting Rooms II,nan,False,nan
+AMZ004,Technical interview,technical,Top K Frequent Elements,nan,False,nan
+AMZ005,OA,OA,Optimal Merge Pattern/min-heap,nan,False,nan
+AMZ005,OA,OA,grid shortest path,nan,False,nan
+AMZ005,OA,behavioral,nan,workstyle,False,nan
+AMZ005,Technical rounds,technical,nan,DSA/technical topics,True,General mention of subsequent technical interviews without specific question details
+AMZ006,OA,OA,nan,two coding questions,True,OA mentions two coding questions without specific problem names
+AMZ006,Interview Round 1,technical,Copy List with Random Pointer,nan,False,nan
+AMZ006,Interview Round 1,technical,Validate BST variant,nan,False,nan
+AMZ007,Technical Round 1,technical,Sliding Window Maximum,nan,False,nan
+AMZ007,Technical Round 1,technical,nan,Sliding Window Maximum follow-up,True,Mentions follow-up question to Sliding Window Maximum without details
+AMZ007,Technical Round 1,behavioral,nan,Leadership Principles questions,False,nan
+AMZ008,Written coding test,OA,Reverse Linked List,nan,False,nan
+AMZ008,Written coding test,OA,Sliding Window Maximum,nan,False,nan
+AMZ008,Four technical rounds,technical,nan,"coding, problem solving, algorithms, data structures",True,High-level summary of four technical rounds without specific problem names
+AMZ008,Four technical rounds,technical,nan,CS fundamentals,False,nan
+AMZ008,Four technical rounds,behavioral,nan,Leadership Principles,False,nan
+AMZ009,OA,OA,Maximum Units on a Truck,nan,False,nan
+AMZ009,OA,OA,Minimum Platforms,nan,False,nan
+AMZ009,Interview,technical,Palindrome Linked List,nan,False,nan
+AMZ009,Interview,technical,minimum steps/shortest path for a knight,nan,False,nan
+AMZ009,Interview,technical,nan,further variations,True,Vague mention of further variations without specific question details
+AMZ010,OA,OA,nan,arrays/binary search,False,nan
+AMZ010,OA,OA,nan,sorting by condition,False,nan
+AMZ010,3 interviews,technical,nan,algorithms/DSA,True,Broad topic summary across 3 interviews without specific questions
+AMZ010,3 interviews,technical,nan,CS fundamentals,False,nan
+AMZ010,3 interviews,behavioral,nan,hiring-manager discussion,False,nan
+AMZ011,OA,OA,nan,greedy and dynamic programming coding questions,True,General mention of greedy and dynamic programming questions without exact problem names
+AMZ011,OA,behavioral,nan,Leadership Principles,False,nan
+AMZ011,Rounds 1-4,mixed,nan,DSA with CS concepts,True,High-level summary of Rounds 1-4 combining DSA and CS concepts without specific questions
+AMZ013,Technical phone screen,behavioral,nan,resume/project discussion,False,nan
+AMZ013,Technical phone screen,technical,heap-based scheduling problem,nan,False,nan
+AMZ013,Onsite rounds,technical,nan,onsite rounds,True,Mentions onsite rounds followed without specific question or topic details
+AMZ014,OA,OA,nan,debugging,False,nan
+AMZ014,OA,behavioral,nan,workstyle,False,nan
+AMZ014,OA,OA,nan,reasoning,False,nan
+AMZ014,OA,OA,Merge Two Sorted Lists,nan,False,nan
+AMZ014,OA,OA,Clone Linked List with Random Pointer,nan,False,nan
+AMZ014,Interview,technical,Trapping Rainwater,nan,False,nan
+AMZ014,Interview,technical,Reverse Linked List,nan,False,nan
+AMZ015,OA,OA,nan,two array-based coding problems,True,Mentions two array-based coding problems without specific problem names
+AMZ015,Technical interviews,technical,nan,technical interviews,True,General mention of technical interviews without specific question or topic details
+AMZ016,OA,OA,,HackerRank coding problems,True,OA mentions HackerRank coding problems without specific problem names
+AMZ016,OA,behavioral,,behavioral assessment,False,
+AMZ016,Round 1,technical,sort prime and non-prime orders,,False,
+AMZ016,Round 1,technical,Shortest path in a grid,,False,
+AMZ016,Round 2,system_design,LED system design using OOP/SOLID principles,,False,
+AMZ016,Round 3,technical,Longest Increasing Subsequence bridge problem,,False,
+AMZ016,Round 3,technical,First non-repeating character in a data stream,,False,
+AMZ017,OA,OA,,coding problems,True,OA mentions coding problems without specific problem titles
+AMZ017,OA,behavioral,,workstyle assessment,False,
+AMZ017,Round 1,technical,Queue using Stacks,,False,
+AMZ017,Round 1,technical,Symmetry in n-ary tree,,False,
+AMZ017,Round 2,technical,Linked list manipulation,,False,
+AMZ017,Round 2,technical,Binary search on modified sorted array,,False,
+AMZ018,OA,OA,,two coding problems,True,OA mentions two coding problems without specific problem names
+AMZ018,Round 1,technical,Maximum Width of Binary Tree,,False,
+AMZ018,Round 1,technical,Next Greater Element,,False,
+AMZ018,Round 2,behavioral,,Leadership Principles,False,
+AMZ018,Round 2,behavioral,,project challenges,False,
+AMZ019,OA,OA,Maximum Subarray Sum,,False,
+AMZ019,OA,OA,,string manipulation,False,
+AMZ019,Technical Round 1,technical,Connect Ropes with Minimum Cost,,False,
+AMZ019,Technical Round 1,technical,Left View of a Binary Tree,,False,
+AMZ019,Technical Round 2,behavioral,,Leadership Principles,False,
+AMZ019,Technical Round 2,behavioral,,project deep dive,False,
+AMZ020,OA,OA,,greedy and dynamic programming problems,True,OA mentions greedy and DP problems without specific problem names
+AMZ020,Technical Round 1,technical,Minimum Skips to Arrive at Meeting on Time variant,,False,
+AMZ020,Technical Round 1,technical,,OS and CN fundamentals,False,
+AMZ021,OA,OA,,two coding problems,True,OA mentions two coding problems without specific titles
+AMZ021,OA,behavioral,,workstyle,False,
+AMZ021,Round 1,technical,Lowest Common Ancestor in Binary Tree,,False,
+AMZ021,Round 1,technical,Topological Sort,,False,
+AMZ021,Round 2,behavioral,,Leadership Principles,False,
+AMZ021,Round 2,technical,,CS fundamentals,False,
+AMZ022,OA,OA,,two coding questions,True,OA mentions two coding questions without specific titles
+AMZ022,OA,behavioral,,workstyle,False,
+AMZ022,Technical Round 1,technical,Rotten Oranges BFS,,False,
+AMZ022,Technical Round 1,technical,Course Schedule topological sort,,False,
+AMZ022,Technical Round 2,behavioral,,Leadership Principles,False,
+AMZ022,Technical Round 2,behavioral,,resume discussion,False,
