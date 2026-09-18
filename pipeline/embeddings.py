@@ -10,10 +10,18 @@ Output shape matches the existing repo contract in keyword_abstraction.py:
 - similarity_scores: Dict[str, float]   (topic_id -> score, not a parallel list, so scores can never drift out of alignment with IDs)
 """
 import json
+import os
 from typing import List, Dict, Tuple
 from sentence_transformers import SentenceTransformer, util
 
 SIMILARITY_THRESHOLD = 0.50  # MVP baseline (Phase 5.3) - frozen after benchmark
+
+DEFAULT_TAXONOMY_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "data",
+    "taxonomy",
+    "taxonomy_v1.0.json"
+)
 
 _model = None
 _taxonomy_nodes = None
@@ -39,7 +47,7 @@ def load_taxonomy(taxonomy_path: str) -> int:
     """
     global _taxonomy_nodes, _taxonomy_embeddings
     model = load_model()
-    with open(taxonomy_path, "r") as f:
+    with open(taxonomy_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     nodes = data["nodes"] if isinstance(data, dict) and "nodes" in data else data
     _taxonomy_nodes = nodes
@@ -55,7 +63,11 @@ def _match_single_concept(concept_text: str, threshold: float) -> List[Tuple[str
     alphabetically by topic_id (Phase 6.4).
     """
     if _taxonomy_nodes is None or _taxonomy_embeddings is None:
-        raise RuntimeError("Call load_taxonomy(path) before matching.")
+        if os.path.exists(DEFAULT_TAXONOMY_PATH):
+            load_taxonomy(DEFAULT_TAXONOMY_PATH)
+        else:
+            raise RuntimeError("Call load_taxonomy(path) before matching.")
+
 
     model = load_model()
     concept_emb = model.encode(concept_text, convert_to_tensor=True)

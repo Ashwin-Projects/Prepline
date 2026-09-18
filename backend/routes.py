@@ -24,6 +24,12 @@ from backend.schemas import (
     PriorityGapItem
 )
 from pipeline.syllabus_parser import parse_syllabus_pdf, UnsupportedPDFError
+from pipeline.scoring import (
+    calculate_syllabus_coverage,
+    calculate_topic_importance,
+    calculate_composite_score,
+    rank_priority_gaps
+)
 
 router = APIRouter(prefix="/api/v1", tags=["PREPLINE Alignment Engine"])
 
@@ -31,6 +37,22 @@ router = APIRouter(prefix="/api/v1", tags=["PREPLINE Alignment Engine"])
 SUPPORTED_COMPANY = "Amazon"
 SUPPORTED_ROLE = "SDE-1"
 MIN_REPORTS_REQUIRED = 15
+
+# Dataset Paths
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed")
+REPORTS_CSV_PATH = os.path.join(DATA_DIR, "reports.csv")
+QUESTIONS_CSV_PATH = os.path.join(DATA_DIR, "questions.csv")
+
+
+def _get_report_count() -> int:
+    """Reads unique report count from canonical processed reports.csv dataset."""
+    if not os.path.exists(REPORTS_CSV_PATH):
+        return 0
+    import csv
+    with open(REPORTS_CSV_PATH, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        report_ids = {row["report_id"].strip() for row in reader if row.get("report_id")}
+        return len(report_ids)
 
 # Storage for uploaded syllabi in memory/temp cache for API prototype
 SYLLABUS_CACHE: Dict[str, Dict[str, Any]] = {}
@@ -118,25 +140,23 @@ async def validate_target(request: TargetSelectionRequest):
             message=f"Role '{request.company} {request.role}' is not supported yet. PREPLINE currently supports Amazon SDE-1 only."
         )
 
-    # In prototype, we assume Amazon SDE-1 dataset count
-    # (Will be connected to interview_parser.py dataset count in future phase)
-    mock_report_count = 18  # >= 15 reports
+    report_count = _get_report_count()
 
-    if mock_report_count < MIN_REPORTS_REQUIRED:
+    if report_count < MIN_REPORTS_REQUIRED:
         return ReportCountValidationResponse(
             company=SUPPORTED_COMPANY,
             role=SUPPORTED_ROLE,
-            report_count=mock_report_count,
+            report_count=report_count,
             min_reports_required=MIN_REPORTS_REQUIRED,
             eligible=False,
             status="INSUFFICIENT_DATA",
-            message=f"Insufficient interview data ({mock_report_count}/{MIN_REPORTS_REQUIRED} reports). Minimum 15 required."
+            message=f"Insufficient interview data ({report_count}/{MIN_REPORTS_REQUIRED} reports). Minimum 15 required."
         )
 
     return ReportCountValidationResponse(
         company=SUPPORTED_COMPANY,
         role=SUPPORTED_ROLE,
-        report_count=mock_report_count,
+        report_count=report_count,
         min_reports_required=MIN_REPORTS_REQUIRED,
         eligible=True,
         status="ELIGIBLE",
@@ -148,7 +168,7 @@ async def validate_target(request: TargetSelectionRequest):
 async def run_pipeline(request: PipelineRunRequest):
     """
     Endpoint 4 & 5: Pipeline Execution & Return Results
-    Orchestrates the PREPLINE pipeline flow and returns the full result structure.
+    Orchestrates the PREPLINE pipeline flow and returns real calculated scoring results.
     """
     # 1. Validate Target Role
     if request.company.lower() != SUPPORTED_COMPANY.lower() or request.role.lower() != SUPPORTED_ROLE.lower():
@@ -166,7 +186,7 @@ async def run_pipeline(request: PipelineRunRequest):
         )
 
     # 3. Validate Density Gate (Report Count >= 15)
-    report_count = 18  # Baseline Amazon SDE-1 dataset report count
+    report_count = _get_report_count()
     if report_count < MIN_REPORTS_REQUIRED:
         return PreplineResultResponse(
             company=SUPPORTED_COMPANY,
@@ -184,70 +204,56 @@ async def run_pipeline(request: PipelineRunRequest):
             message="Report count < 15. Pipeline stopped per density gate requirement."
         )
 
-    # 4. Assemble modular result structure ready for future scoring engine output
-    # (Scaffolding return structure with parsed syllabus mappings and version tags)
+    # 4. Phase 8: Calculate Syllabus Coverage
+    coverage_res = calculate_syllabus_coverage(syllabus_data)
+    topic_coverage_list = coverage_res.get("topic_coverage", [])
+
+    # 5. Phase 9: Calculate Topic Importance
+    importance_res = calculate_topic_importance(
+        questions_input=QUESTIONS_CSV_PATH,
+        total_reports_count=report_count
+    )
+    importance_list = importance_res.get("interview_importance", [])
+
+    # 6. Phase 10: Calculate Composite Score S_comp
+    composite_res = calculate_composite_score(
+        importance_dict=importance_res,
+        coverage_dict=coverage_res
+    )
+    s_comp = composite_res.get("composite_score", 0.0)
+
+    # 7. Phase 11: Rank Priority Gaps
+    priority_gaps_list = rank_priority_gaps(
+        importance_dict=importance_res,
+        coverage_dict=coverage_res
+    )
+
+    # 8. Determine overall depth confidence status
+    depth_statuses = {item.get("depth_status") for item in topic_coverage_list if item.get("depth_status")}
+    if depth_statuses == {"measured"}:
+        overall_depth_status = "measured"
+    elif depth_statuses == {"fallback"}:
+        overall_depth_status = "fallback"
+    elif depth_statuses:
+        overall_depth_status = "mixed"
+    else:
+        overall_depth_status = "fallback"
+
     taxonomy_ver = syllabus_data.get("taxonomy_version", "v1.0")
 
-    # Sample result payload structure matching blueprint
     return PreplineResultResponse(
         company=SUPPORTED_COMPANY,
         role=SUPPORTED_ROLE,
         report_count=report_count,
         density_gate_passed=True,
-        S_comp=76.5,  # Placeholder score ready for scoring.py hook
-        topic_coverage=[
-            TopicCoverageItem(
-                topic_id="dsa.trees.bst",
-                topic_name="Binary Search Trees",
-                presence=1,
-                depth=3.5,
-                depth_status="measured",
-                depth_signal_count=2,
-                coverage=0.82
-            ),
-            TopicCoverageItem(
-                topic_id="dsa.dp.knapsack",
-                topic_name="Dynamic Programming Knapsack",
-                presence=1,
-                depth=1.0,
-                depth_status="fallback",
-                depth_signal_count=0,
-                coverage=0.45
-            )
-        ],
-        interview_importance=[
-            TopicImportanceItem(
-                topic_id="dsa.trees.bst",
-                importance=0.88,
-                matched_report_count=16
-            ),
-            TopicImportanceItem(
-                topic_id="dsa.dp.knapsack",
-                importance=0.92,
-                matched_report_count=17
-            )
-        ],
-        priority_gaps=[
-            PriorityGapItem(
-                rank=1,
-                topic_id="dsa.dp.knapsack",
-                topic_name="Dynamic Programming Knapsack",
-                importance=0.92,
-                coverage=0.45,
-                priority_gap=0.506
-            ),
-            PriorityGapItem(
-                rank=2,
-                topic_id="dsa.trees.bst",
-                topic_name="Binary Search Trees",
-                importance=0.88,
-                coverage=0.82,
-                priority_gap=0.158
-            )
-        ],
+        S_comp=s_comp,
+        topic_coverage=[TopicCoverageItem(**item) for item in topic_coverage_list],
+        interview_importance=[TopicImportanceItem(**item) for item in importance_list],
+        priority_gaps=[PriorityGapItem(**item) for item in priority_gaps_list],
         taxonomy_version=taxonomy_ver,
         scoring_config_version="v1.0",
-        depth_confidence_status="measured",
+        depth_confidence_status=overall_depth_status,
         status="SUCCESS",
         message="PREPLINE alignment calculation completed successfully."
     )
+
