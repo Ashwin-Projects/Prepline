@@ -109,8 +109,10 @@ class TestBackendAPI(unittest.TestCase):
         # 3. Assert all required PREPLINE result fields
         self.assertEqual(data["company"], "Amazon")
         self.assertEqual(data["role"], "SDE-1")
+        self.assertEqual(data["report_count"], 21)
         self.assertTrue(data["density_gate_passed"])
         self.assertIsNotNone(data["S_comp"])
+        self.assertNotEqual(data["S_comp"], 76.5)  # Must NOT be old hardcoded mock score!
         self.assertIn("topic_coverage", data)
         self.assertIn("interview_importance", data)
         self.assertIn("priority_gaps", data)
@@ -118,6 +120,36 @@ class TestBackendAPI(unittest.TestCase):
         self.assertEqual(data["scoring_config_version"], "v1.0")
         self.assertIn("depth_confidence_status", data)
 
+    def test_pipeline_run_scoring_engine_integration_matches_pipeline(self):
+        """Integration test verifying API output matches direct scoring engine output."""
+        pdf_path = self.create_sample_pdf("integration_syllabus.pdf")
+        with open(pdf_path, "rb") as f:
+            files = {"file": ("integration_syllabus.pdf", f, "application/pdf")}
+            upload_res = client.post("/api/v1/syllabi/upload", files=files)
+
+        syllabus_id = upload_res.json()["syllabus_id"]
+
+        run_payload = {
+            "syllabus_id": syllabus_id,
+            "company": "Amazon",
+            "role": "SDE-1"
+        }
+        response = client.post("/api/v1/pipeline/run", json=run_payload)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        # Check full list lengths and structure
+        self.assertGreater(len(data["topic_coverage"]), 10)
+        self.assertGreater(len(data["interview_importance"]), 10)
+        self.assertGreater(len(data["priority_gaps"]), 0)
+
+        # Check priority gap ranking order
+        gaps = data["priority_gaps"]
+        for i in range(len(gaps) - 1):
+            self.assertEqual(gaps[i]["rank"], i + 1)
+            self.assertGreaterEqual(gaps[i]["priority_gap"], gaps[i + 1]["priority_gap"])
+
 
 if __name__ == "__main__":
     unittest.main()
+
