@@ -1,7 +1,4 @@
-torch
-sentence-transformers
-pdfplumber
-pandas
 numpy
+pandas
 scikit-learn
-rake-nltk
+sentence-transformers
