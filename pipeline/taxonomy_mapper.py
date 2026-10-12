@@ -1,5 +1,6 @@
 """
 Phase 6 - Deterministic 60/40 Multi-Topic Mapping
+(+ Phase 12.1 unmapped-term logging wired in)
 
 Orchestrates Phase 4 (keyword_abstraction.two_pass_abstract) + Phase 5 (embeddings.match_concepts_to_taxonomy) into the final stored mapping
 record, and applies the deterministic primary/secondary credit split.
@@ -9,6 +10,7 @@ This is the module Sprint 4/5 (syllabus depth modeling, scoring.py) should impor
 from typing import Dict
 from pipeline.keyword_abstraction import two_pass_abstract, DEFAULT_TAXONOMY_VERSION
 from pipeline.embeddings import match_concepts_to_taxonomy, SIMILARITY_THRESHOLD
+from pipeline.unmapped_terms_logger import log_unmapped_terms
 
 
 def assign_credit(similarity_scores: Dict[str, float]) -> Dict[str, float]:
@@ -26,7 +28,6 @@ def assign_credit(similarity_scores: Dict[str, float]) -> Dict[str, float]:
     ordered = sorted(similarity_scores.items(), key=lambda x: (-x[1], x[0]))
     if len(ordered) == 1:
         return {ordered[0][0]: 1.0}
-
     primary_topic = ordered[0][0]
     secondary_topics = [topic_id for topic_id, _ in ordered[1:]]
     credit = {primary_topic: 0.60}
@@ -51,6 +52,8 @@ def map_source_to_taxonomy(
 
     Returns the same schema as keyword_abstraction.two_pass_abstract(), with matched_topic_ids and similarity_scores now actually filled in
     (Phase 5), plus an added `credit` field (Phase 6) that Sprint 5's scoring.py consumes for W(r,t) and I(t).
+
+    Every call that finds below-threshold concepts automatically logs them (Phase 12.1) - no separate step needed by callers.
     """
     record = two_pass_abstract(
         source_id=source_id,
@@ -59,10 +62,18 @@ def map_source_to_taxonomy(
         taxonomy_version=taxonomy_version,
     )
 
-    matched_topic_ids, similarity_scores = match_concepts_to_taxonomy(
+    matched_topic_ids, similarity_scores, unmapped_concepts = match_concepts_to_taxonomy(
         record["intermediate_concepts"], threshold=threshold
     )
     record["matched_topic_ids"] = matched_topic_ids
     record["similarity_scores"] = similarity_scores
     record["credit"] = assign_credit(similarity_scores)
+
+    log_unmapped_terms(
+        unmapped_concepts,
+        source_type=source_type,
+        taxonomy_version=taxonomy_version,
+        source_id=source_id,
+    )
+
     return record
