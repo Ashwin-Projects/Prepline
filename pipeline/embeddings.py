@@ -49,7 +49,8 @@ def load_taxonomy(taxonomy_path: str) -> int:
     model = load_model()
     with open(taxonomy_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    nodes = data["nodes"] if isinstance(data, dict) and "nodes" in data else data _taxonomy_nodes = nodes
+    nodes = data["nodes"] if isinstance(data, dict) and "nodes" in data else data
+    _taxonomy_nodes = nodes
     descriptions = [n.get("description", n["topic_id"]) for n in nodes]
     _taxonomy_embeddings = model.encode(descriptions, convert_to_tensor=True)
     return len(nodes)
@@ -85,10 +86,12 @@ def match_concepts_to_taxonomy(
     concepts: List[str], threshold: float = SIMILARITY_THRESHOLD
 ) -> Tuple[List[str], Dict[str, float], List[str]]:
     """
-    Phase 5, applied across one source's intermediate_concepts list.
-    Returns (matched_topic_ids, similarity_scores, unmapped_concepts).
-    unmapped_concepts is new: every concept that scored below threshold
-    against EVERY taxonomy node - this feeds Phase 12.1 logging.
+    Phase 5, applied across an entire source's `intermediate_concepts` list (i.e. everything two_pass_abstract() extracted for one
+    source_id). Matches each concept independently, then merges results by topic_id - keeping the best score seen for that topic across all
+    concepts belonging to this source.
+
+    Returns (matched_topic_ids, similarity_scores, unmapped_concepts). The first two are in exactly the shape two_pass_abstract()'s output
+    dict expects. unmapped_concepts is every concept that scored below threshold against EVERY taxonomy node - this feeds Phase 12.1 logging.
     """
     best_by_topic: Dict[str, float] = {}
     unmapped_concepts: List[str] = []
@@ -101,6 +104,6 @@ def match_concepts_to_taxonomy(
             if topic_id not in best_by_topic or score > best_by_topic[topic_id]:
                 best_by_topic[topic_id] = score
     ordered = sorted(best_by_topic.items(), key=lambda x: (-x[1], x[0]))
-    matched_topic_ids = [t for t, _ in ordered]
+    matched_topic_ids = [topic_id for topic_id, _ in ordered]
     similarity_scores = dict(ordered)
     return matched_topic_ids, similarity_scores, unmapped_concepts
