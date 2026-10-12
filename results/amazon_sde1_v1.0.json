@@ -1,0 +1,191 @@
+{
+  "company": "Amazon",
+  "role": "SDE-1",
+  "report_count": 21,
+  "syllabus_file": "B.Tech_CSE_2024_2025(1) (1).pdf",
+  "taxonomy_version": "v1.0",
+  "scoring_config_version": "v1.0",
+  "scoring_config": {
+    "gamma": 0.5,
+    "similarity_threshold": 0.5,
+    "depth_reference_values": {
+      "unit_hours": 10.0,
+      "slide_count": 20.0,
+      "slides": 20.0,
+      "lab_hours": 10.0,
+      "lab_count": 5.0,
+      "assignment_count": 5.0,
+      "assignments": 5.0
+    }
+  },
+  "generated_at": "2026-10-12T17:05:16.507973+00:00",
+  "status": "SUCCESS",
+  "S_comp": 51.538,
+  "scoring_universe_size": 21,
+  "syllabus_units": 303,
+  "units_with_matches": 116,
+  "topics_present": 58,
+  "topics_in_taxonomy": 83,
+  "depth_counts": {
+    "all_topics": {
+      "measured": 58,
+      "fallback": 25
+    },
+    "present_topics": {
+      "measured": 58
+    }
+  },
+  "top_priority_gaps": [
+    {
+      "rank": 1,
+      "topic_id": "dsa.heaps",
+      "topic_name": "Heaps and Priority Queues",
+      "importance": 0.0952,
+      "coverage": 0.0,
+      "priority_gap": 0.0952
+    },
+    {
+      "rank": 2,
+      "topic_id": "dsa.graphs.shortest_path",
+      "topic_name": "Shortest Path Algorithms",
+      "importance": 0.0762,
+      "coverage": 0.0,
+      "priority_gap": 0.0762
+    },
+    {
+      "rank": 3,
+      "topic_id": "dsa.dp.grid",
+      "topic_name": "Grid Path Dynamic Programming",
+      "importance": 0.0667,
+      "coverage": 0.0,
+      "priority_gap": 0.0667
+    },
+    {
+      "rank": 4,
+      "topic_id": "dsa.heaps.top_k",
+      "topic_name": "Top K Elements and K-Way Merge",
+      "importance": 0.0476,
+      "coverage": 0.0,
+      "priority_gap": 0.0476
+    },
+    {
+      "rank": 5,
+      "topic_id": "system_design.messaging",
+      "topic_name": "Message Queues and Event-Driven Architecture",
+      "importance": 0.0476,
+      "coverage": 0.0,
+      "priority_gap": 0.0476
+    },
+    {
+      "rank": 6,
+      "topic_id": "dsa.trees.lowest_common_ancestor",
+      "topic_name": "Lowest Common Ancestor",
+      "importance": 0.0302,
+      "coverage": 0.0,
+      "priority_gap": 0.0302
+    },
+    {
+      "rank": 7,
+      "topic_id": "dsa.stacks_queues.monotonic_stack",
+      "topic_name": "Monotonic Stack and Queue",
+      "importance": 0.0762,
+      "coverage": 0.6465,
+      "priority_gap": 0.0269
+    },
+    {
+      "rank": 8,
+      "topic_id": "dsa.linked_lists.traversal_reversal",
+      "topic_name": "Linked List Manipulation & Cycle Detection",
+      "importance": 0.1524,
+      "coverage": 0.8904,
+      "priority_gap": 0.0167
+    },
+    {
+      "rank": 9,
+      "topic_id": "dsa.sorting_searching.binary_search",
+      "topic_name": "Binary Search",
+      "importance": 0.0603,
+      "coverage": 0.7925,
+      "priority_gap": 0.0125
+    },
+    {
+      "rank": 10,
+      "topic_id": "dsa.sorting_searching",
+      "topic_name": "Sorting and Searching",
+      "importance": 0.054,
+      "coverage": 0.7721,
+      "priority_gap": 0.0123
+    }
+  ],
+  "unmapped_terms_summary": {
+    "distinct_terms": 4868,
+    "distinct_terms_by_source_type": {
+      "syllabus": 4784,
+      "interview": 89
+    },
+    "total_occurrences": 7859
+  },
+  "top_unmapped_terms": [
+    {
+      "term": "module",
+      "source_type": "syllabus",
+      "occurrences": 303,
+      "frequency": 8
+    },
+    {
+      "term": "2022",
+      "source_type": "syllabus",
+      "occurrences": 49,
+      "frequency": 4
+    },
+    {
+      "term": "annexure",
+      "source_type": "syllabus",
+      "occurrences": 49,
+      "frequency": 4
+    },
+    {
+      "term": "board",
+      "source_type": "syllabus",
+      "occurrences": 39,
+      "frequency": 3
+    },
+    {
+      "term": "academic council",
+      "source_type": "syllabus",
+      "occurrences": 38,
+      "frequency": 2
+    },
+    {
+      "term": "evaluation",
+      "source_type": "syllabus",
+      "occurrences": 38,
+      "frequency": 2
+    },
+    {
+      "term": "2022 approved",
+      "source_type": "syllabus",
+      "occurrences": 37,
+      "frequency": 2
+    },
+    {
+      "term": "2022 proceedings",
+      "source_type": "syllabus",
+      "occurrences": 37,
+      "frequency": 2
+    },
+    {
+      "term": "able",
+      "source_type": "syllabus",
+      "occurrences": 37,
+      "frequency": 2
+    },
+    {
+      "term": "course",
+      "source_type": "syllabus",
+      "occurrences": 36,
+      "frequency": 2
+    }
+  ],
+  "runtime_seconds": 1050.9
+}
