@@ -4,7 +4,7 @@ Syllabus Parser Module (Phase 7)
 Parses text-selectable VIT syllabus PDFs using pdfplumber:
 - Detects and flags scanned/image-based PDFs as unsupported (OCR excluded from MVP scope).
 - Extracts course metadata, module units, and available depth signals.
-- Passes extracted text to the two-pass abstraction pipeline preserving taxonomy_version.
+- Maps each unit through the full Phase 4-6 taxonomy pipeline (taxonomy_mapper.map_source_to_taxonomy) preserving taxonomy_version.
 """
 
 import re
@@ -12,7 +12,8 @@ import os
 from typing import Dict, Any, List, Optional
 import pdfplumber
 
-from pipeline.keyword_abstraction import two_pass_abstract, DEFAULT_TAXONOMY_VERSION
+from pipeline.keyword_abstraction import DEFAULT_TAXONOMY_VERSION
+from pipeline.taxonomy_mapper import map_source_to_taxonomy
 
 # Minimum text threshold to detect scanned / non-text PDFs
 MIN_TEXT_LENGTH_THRESHOLD = 50
@@ -169,7 +170,7 @@ def parse_syllabus_pdf(
     Parses a text-selectable VIT syllabus PDF:
     1. Detects scanned/image PDFs and raises UnsupportedPDFError.
     2. Extracts course metadata, modules, and depth signals.
-    3. Passes extracted unit texts into two_pass_abstract preserving taxonomy_version.
+    3. Maps each unit text to taxonomy topics via map_source_to_taxonomy preserving taxonomy_version.
     """
     if is_scanned_pdf(pdf_path):
         raise UnsupportedPDFError(
@@ -189,13 +190,13 @@ def parse_syllabus_pdf(
     course_metadata = extract_course_metadata(full_text)
     modules = parse_vit_modules(full_text, course_metadata)
 
-    # Map each module unit through two-pass abstraction pipeline
+    # Map each module unit through the two-pass abstraction + embedding matching pipeline
     two_pass_mappings = []
     course_code = course_metadata.get("course_code", "SYLLABUS")
 
     for mod in modules:
         source_id = f"{course_code}_mod_{mod['module_number']}"
-        mapping = two_pass_abstract(
+        mapping = map_source_to_taxonomy(
             source_id=source_id,
             raw_text=mod["unit_text"],
             source_type="syllabus",

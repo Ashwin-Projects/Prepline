@@ -104,5 +104,30 @@ class TestSyllabusParser(unittest.TestCase):
         self.assertEqual(first_mapping["depth_signals"]["unit_hours"], 6)
 
 
+    def test_bst_syllabus_unit_maps_to_taxonomy_presence(self):
+        # Syllabus units must go through embedding matching (Phase 5), not just Pass 1 keyword extraction,
+        # otherwise C(t) is 0 for every topic.
+        from reportlab.pdfgen import canvas
+        from pipeline.scoring import calculate_syllabus_coverage
+        pdf_path = os.path.join(self.temp_dir.name, "vit_cse2002.pdf")
+
+        c = canvas.Canvas(pdf_path)
+        c.drawString(100, 750, "Course Code: CSE2002")
+        c.drawString(100, 735, "Course Title: Data Structures")
+        c.drawString(100, 700, "Module: 1 Binary Search Trees (8 hours)")
+        c.drawString(100, 685, "Binary search trees: insertion, deletion and search in a BST.")
+        c.save()
+
+        result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0")
+        mapping = result["two_pass_mappings"][0]
+        self.assertIn("dsa.trees.bst", mapping["matched_topic_ids"])
+        self.assertEqual(mapping["taxonomy_version"], "v1.0")
+        self.assertEqual(mapping["depth_signals"]["unit_hours"], 8)
+
+        coverage = calculate_syllabus_coverage(result)
+        bst = next(t for t in coverage["topic_coverage"] if t["topic_id"] == "dsa.trees.bst")
+        self.assertEqual(bst["presence"], 1)
+        self.assertEqual(bst["depth_status"], "measured")
+
 if __name__ == "__main__":
     unittest.main()
