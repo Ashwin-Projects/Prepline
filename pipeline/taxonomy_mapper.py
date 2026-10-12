@@ -1,6 +1,11 @@
 """
 Phase 6 - Deterministic 60/40 Multi-Topic Mapping
 (+ Phase 12.1 unmapped-term logging wired in)
+
+Orchestrates Phase 4 (keyword_abstraction.two_pass_abstract) + Phase 5 (embeddings.match_concepts_to_taxonomy) into the final stored mapping
+record, and applies the deterministic primary/secondary credit split.
+
+This is the module Sprint 4/5 (syllabus depth modeling, scoring.py) should import from.
 """
 from typing import Dict
 from pipeline.keyword_abstraction import two_pass_abstract, DEFAULT_TAXONOMY_VERSION
@@ -19,7 +24,7 @@ def assign_credit(similarity_scores: Dict[str, float]) -> Dict[str, float]:
     """
     if not similarity_scores:
         return {}
-    
+
     ordered = sorted(similarity_scores.items(), key=lambda x: (-x[1], x[0]))
     if len(ordered) == 1:
         return {ordered[0][0]: 1.0}
@@ -38,11 +43,17 @@ def map_source_to_taxonomy(
     source_type: str = "syllabus",
     taxonomy_version: str = DEFAULT_TAXONOMY_VERSION,
     threshold: float = SIMILARITY_THRESHOLD,
-    ) -> dict:
+) -> dict:
     """
-    Full Phase 4-6 pipeline for one source. Every call that finds
-    below-threshold concepts automatically logs them (Phase 12.1) - no
-    separate step needed by callers.
+    Full Phase 4-6 pipeline for one source. IMPORTANT: `raw_text` should be ONE question (interview side) or ONE syllabus unit's text
+    (syllabus side) - not a multi-question/multi-round blob. Per Phase 6.5, credits are stored per-question; Phase 9 aggregates across
+    questions within a report afterward. If raw interview data isn't already split to one-question-per-row, that split belongs in
+    interview_parser.py (Phase 2), upstream of this function.
+
+    Returns the same schema as keyword_abstraction.two_pass_abstract(), with matched_topic_ids and similarity_scores now actually filled in
+    (Phase 5), plus an added `credit` field (Phase 6) that Sprint 5's scoring.py consumes for W(r,t) and I(t).
+
+    Every call that finds below-threshold concepts automatically logs them (Phase 12.1) - no separate step needed by callers.
     """
     record = two_pass_abstract(
         source_id=source_id,
@@ -58,6 +69,11 @@ def map_source_to_taxonomy(
     record["similarity_scores"] = similarity_scores
     record["credit"] = assign_credit(similarity_scores)
 
-    log_unmapped_terms(unmapped_concepts, source_type=source_type, taxonomy_version=taxonomy_version)
+    log_unmapped_terms(
+        unmapped_concepts,
+        source_type=source_type,
+        taxonomy_version=taxonomy_version,
+        source_id=source_id,
+    )
 
     return record
