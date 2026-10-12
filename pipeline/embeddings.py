@@ -84,23 +84,26 @@ def _match_single_concept(concept_text: str, threshold: float) -> List[Tuple[str
 
 def match_concepts_to_taxonomy(
     concepts: List[str], threshold: float = SIMILARITY_THRESHOLD
-) -> Tuple[List[str], Dict[str, float]]:
+) -> Tuple[List[str], Dict[str, float], List[str]]:
     """
     Phase 5, applied across an entire source's `intermediate_concepts` list (i.e. everything two_pass_abstract() extracted for one
     source_id). Matches each concept independently, then merges results by topic_id - keeping the best score seen for that topic across all
     concepts belonging to this source.
 
-    Returns (matched_topic_ids, similarity_scores) in exactly the shape two_pass_abstract()'s output dict expects, so the caller can just do:
-        record["matched_topic_ids"], record["similarity_scores"] = \\ 
-        match_concepts_to_taxonomy(record["intermediate_concepts"])
+    Returns (matched_topic_ids, similarity_scores, unmapped_concepts). The first two are in exactly the shape two_pass_abstract()'s output
+    dict expects. unmapped_concepts is every concept that scored below threshold against EVERY taxonomy node - this feeds Phase 12.1 logging.
     """
     best_by_topic: Dict[str, float] = {}
+    unmapped_concepts: List[str] = []
     for concept in concepts:
-        for topic_id, score in _match_single_concept(concept, threshold):
+        matches = _match_single_concept(concept, threshold)
+        if not matches:
+            unmapped_concepts.append(concept)
+            continue
+        for topic_id, score in matches:
             if topic_id not in best_by_topic or score > best_by_topic[topic_id]:
                 best_by_topic[topic_id] = score
-
     ordered = sorted(best_by_topic.items(), key=lambda x: (-x[1], x[0]))
     matched_topic_ids = [topic_id for topic_id, _ in ordered]
     similarity_scores = dict(ordered)
-    return matched_topic_ids, similarity_scores
+    return matched_topic_ids, similarity_scores, unmapped_concepts
