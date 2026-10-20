@@ -24,6 +24,12 @@ sys.path.insert(0, ROOT)
 import pipeline.unmapped_terms_logger as unmapped_terms_logger
 from pipeline.config import load_scoring_config
 from pipeline.embeddings import SIMILARITY_THRESHOLD
+from pipeline.interview_parser import (
+    count_reports,
+    filter_questions,
+    load_questions_csv,
+    write_excluded_questions,
+)
 from pipeline.syllabus_parser import parse_syllabus_pdf
 from pipeline.scoring import (
     calculate_syllabus_coverage,
@@ -43,18 +49,22 @@ SCORING_CONFIG_VERSION = CONFIG["config_version"]
 TOP_N = 10
 
 DEFAULT_QUESTIONS = os.path.join(ROOT, "data", "processed", "questions.csv")
-DEFAULT_REPORTS = os.path.join(ROOT, "data", "processed", "reports.csv")
+DEFAULT_EXCLUDED = os.path.join(ROOT, "data", "processed", "excluded_questions.csv")
 DEFAULT_OUT = os.path.join(ROOT, "results", f"amazon_sde1_{CONFIG['taxonomy_version']}.json")
 
 
-def count_reports(reports_csv: str) -> int:
-    import csv
-    with open(reports_csv, "r", encoding="utf-8") as f:
-        return len({row["report_id"].strip() for row in csv.DictReader(f) if row.get("report_id")})
-
-
-def run(pdf_path: str, questions_csv: str, reports_csv: str) -> dict:
-    report_count = count_reports(reports_csv)
+def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
+    included, excluded = filter_questions(load_questions_csv(questions_csv))
+    write_excluded_questions(excluded, excluded_out)
+    report_count = count_reports(included)
+    excluded_by_reason = dict(sorted(Counter(
+        reason for row in excluded for reason in row["exclusion_reason"].split(";")
+    ).items()))
+    print(
+        f"Interview questions: {len(included)} included, {len(excluded)} excluded {excluded_by_reason}; "
+        f"{report_count} reports with >=1 included question",
+        flush=True,
+    )
     result = {
         "company": COMPANY,
         "role": ROLE,
@@ -68,6 +78,13 @@ def run(pdf_path: str, questions_csv: str, reports_csv: str) -> dict:
             "depth_reference_values": MVP_REFERENCE_VALUES,
         },
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "interview_filter": {
+            "questions_total": len(included) + len(excluded),
+            "questions_included": len(included),
+            "questions_excluded": len(excluded),
+            "excluded_by_reason": excluded_by_reason,
+            "excluded_questions_file": os.path.relpath(excluded_out, ROOT).replace(os.sep, "/"),
+        },
     }
     if report_count < MIN_REPORTS:
         result.update(status="INSUFFICIENT_DATA", S_comp=None)
@@ -125,7 +142,9 @@ def print_summary(r: dict) -> None:
     print(f"PREPLINE - {r['company']} {r['role']}  ({r['syllabus_file']})")
     print("=" * 70)
     print(f"Status:                 {r['status']}")
-    print(f"Report count:           {r['report_count']}")
+    print(f"Report count:           {r['report_count']} (reports with >=1 included question)")
+    f = r["interview_filter"]
+    print(f"Questions:              {f['questions_included']} included / {f['questions_excluded']} excluded {f['excluded_by_reason']}")
     print(f"Taxonomy version:       {r['taxonomy_version']}")
     print(f"Scoring config version: {r['scoring_config_version']}")
     if r["status"] != "SUCCESS":
@@ -150,14 +169,14 @@ def main():
     parser = argparse.ArgumentParser(description="Run the full Prepline pipeline and save a versioned result.")
     parser.add_argument("--pdf", required=True)
     parser.add_argument("--questions", default=DEFAULT_QUESTIONS)
-    parser.add_argument("--reports", default=DEFAULT_REPORTS)
+    parser.add_argument("--excluded-out", default=DEFAULT_EXCLUDED)
     parser.add_argument("--out", default=DEFAULT_OUT)
     args = parser.parse_args()
 
     if not os.path.exists(args.pdf):
         sys.exit(f"Syllabus PDF not found: {args.pdf}")
 
-    result = run(args.pdf, args.questions, args.reports)
+    result = run(args.pdf, args.questions, args.excluded_out)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)

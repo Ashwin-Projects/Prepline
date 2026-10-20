@@ -25,6 +25,7 @@ from backend.schemas import (
     PriorityGapItem
 )
 from pipeline.config import load_scoring_config
+from pipeline.interview_parser import count_reports, filter_questions, load_questions_csv
 from pipeline.syllabus_parser import parse_syllabus_pdf, UnsupportedPDFError
 from pipeline.scoring import (
     calculate_syllabus_coverage,
@@ -46,19 +47,18 @@ SCORING_CONFIG_VERSION = CONFIG["config_version"]
 
 # Dataset Paths
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed")
-REPORTS_CSV_PATH = os.path.join(DATA_DIR, "reports.csv")
 QUESTIONS_CSV_PATH = os.path.join(DATA_DIR, "questions.csv")
 
 
 def _get_report_count() -> int:
-    """Reads unique report count from canonical processed reports.csv dataset."""
-    if not os.path.exists(REPORTS_CSV_PATH):
+    """
+    Reports with at least one included question (interview_parser.filter_questions).
+    The same count is used for the density gate and as the I(t) denominator.
+    """
+    if not os.path.exists(QUESTIONS_CSV_PATH):
         return 0
-    import csv
-    with open(REPORTS_CSV_PATH, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        report_ids = {row["report_id"].strip() for row in reader if row.get("report_id")}
-        return len(report_ids)
+    included, _ = filter_questions(load_questions_csv(QUESTIONS_CSV_PATH))
+    return count_reports(included)
 
 _UNSAFE_FILENAME_CHARS = re.compile(r"[^A-Za-z0-9._-]")
 
