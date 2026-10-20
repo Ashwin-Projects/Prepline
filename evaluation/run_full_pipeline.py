@@ -53,7 +53,9 @@ TOP_N = 10
 
 DEFAULT_QUESTIONS = os.path.join(ROOT, "data", "processed", "questions.csv")
 DEFAULT_EXCLUDED = os.path.join(ROOT, "data", "processed", "excluded_questions.csv")
-DEFAULT_OUT = os.path.join(ROOT, "results", f"amazon_sde1_{CONFIG['taxonomy_version']}.json")
+# Results files are versioned and never overwritten (Deprecation & Migration): v1.1 = scoring-correctness fixes.
+RESULTS_VERSION = "v1.1"
+DEFAULT_OUT = os.path.join(ROOT, "results", f"amazon_sde1_{RESULTS_VERSION}.json")
 
 
 def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
@@ -64,13 +66,15 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         reason for row in excluded for reason in row["exclusion_reason"].split(";")
     ).items()))
     print(
-        f"Interview questions: {len(included)} included, {len(excluded)} excluded {excluded_by_reason}; "
+        f"Interview questions: {len(included)} included, {len(excluded)} excluded "
+        f"(rows per reason, a row can have several: {excluded_by_reason}); "
         f"{report_count} reports with >=1 included question",
         flush=True,
     )
     orphans = find_granular_without_high_level_ancestor(load_taxonomy_nodes(DEFAULT_TAXONOMY_PATH))
     print(f"Granular nodes without a high-level ancestor: {len(orphans)} {orphans}", flush=True)
     result = {
+        "results_version": RESULTS_VERSION,
         "company": COMPANY,
         "role": ROLE,
         "report_count": report_count,
@@ -105,11 +109,26 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
     print(f"  {syllabus['units_count']} units in {time.time() - t0:.0f}s", flush=True)
     print_course_filter(syllabus["course_filter"], syllabus["courses"], syllabus["text_layer"])
 
+    t_parse = time.time() - t0
+
+    t = time.time()
     coverage = calculate_syllabus_coverage(syllabus)
+    t_coverage = time.time() - t
     print("Scoring interview questions...", flush=True)
+    t = time.time()
     importance = calculate_topic_importance(questions_csv, total_reports_count=report_count)
+    t_importance = time.time() - t
+    t = time.time()
     composite = calculate_composite_score(importance, coverage)
     gaps = rank_priority_gaps(importance, coverage)
+    t_scoring = time.time() - t
+    stage_timings = {
+        "parse": round(t_parse, 1),
+        "coverage": round(t_coverage, 1),
+        "importance": round(t_importance, 1),
+        "scoring": round(t_scoring, 1),
+    }
+    print(f"Stage timings (s): {stage_timings}", flush=True)
 
     topics = coverage["topic_coverage"]
     present = [t for t in topics if t["presence"] == 1]
@@ -145,6 +164,7 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
             {k: r[k] for k in ("term", "source_type", "occurrences", "frequency")}
             for r in unmapped_rows[:TOP_N]
         ],
+        stage_timings_seconds=stage_timings,
         runtime_seconds=round(time.time() - t0, 1),
     )
     return result
@@ -201,6 +221,8 @@ def main():
     parser.add_argument("--out", default=DEFAULT_OUT)
     args = parser.parse_args()
 
+    if os.path.exists(args.out):
+        sys.exit(f"Refusing to overwrite existing results file: {args.out} (results are versioned; choose a new --out)")
     if not os.path.exists(args.pdf):
         sys.exit(f"Syllabus PDF not found: {args.pdf}")
 

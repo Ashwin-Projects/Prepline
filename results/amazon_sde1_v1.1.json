@@ -1,0 +1,678 @@
+{
+  "results_version": "v1.1",
+  "company": "Amazon",
+  "role": "SDE-1",
+  "report_count": 18,
+  "syllabus_file": "B.Tech_CSE_2024_2025(1) (1).pdf",
+  "taxonomy_version": "v1.0",
+  "scoring_config_version": "v1.0",
+  "scoring_config": {
+    "gamma": 0.5,
+    "similarity_threshold": 0.5,
+    "depth_reference_values": {
+      "unit_hours": 10.0,
+      "slide_count": 20.0,
+      "slides": 20.0,
+      "lab_hours": 10.0,
+      "lab_count": 5.0,
+      "assignment_count": 5.0,
+      "assignments": 5.0
+    }
+  },
+  "generated_at": "2026-10-20T20:29:54.981673+00:00",
+  "granular_without_high_level_ancestor": [],
+  "interview_filter": {
+    "questions_total": 98,
+    "questions_included": 46,
+    "questions_excluded": 52,
+    "excluded_by_reason": {
+      "behavioral_round": 23,
+      "needs_review": 20,
+      "no_question_text": 52
+    },
+    "excluded_questions_file": "data/processed/excluded_questions.csv"
+  },
+  "status": "SUCCESS",
+  "S_comp": 60.3657,
+  "scoring_universe_size": 9,
+  "courses_kept": [
+    {
+      "course_code": "BCSE102P",
+      "course_title": "Structured and Object-Oriented Programming Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 4,
+      "project_hours": null,
+      "credits": 2
+    },
+    {
+      "course_code": "BMAT205L",
+      "course_title": "Discrete Mathematics and Graph Theory",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 4
+    },
+    {
+      "course_code": "BCSE203E",
+      "course_title": "Web Programming",
+      "lecture_hours": 1,
+      "tutorial_hours": 0,
+      "practical_hours": 4,
+      "project_hours": null,
+      "credits": 3
+    }
+  ],
+  "course_filter": {
+    "kept": [
+      "BCSE102P",
+      "BMAT205L",
+      "BCSE203E"
+    ],
+    "dropped": [
+      {
+        "course_code": "BECE102L",
+        "course_title": "Digital Systems Design",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BECE102P",
+        "course_title": "Digital Systems Design Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BECE204L",
+        "course_title": "Microprocessors and Microcontrollers",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BECE204P",
+        "course_title": "Microprocessors and Microcontrollers Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE206L",
+        "course_title": "Foundations of Data Science",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE207L",
+        "course_title": "Programming for Data Science",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE207P",
+        "course_title": "Programming for Data Science Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE208L",
+        "course_title": "Data Mining",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE208P",
+        "course_title": "Data Mining Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE209L",
+        "course_title": "Machine Learning",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE209P",
+        "course_title": "Machine Learning Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE331L",
+        "course_title": "Exploratory Data Analysis",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE331P",
+        "course_title": "Exploratory Data Analysis Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE332L",
+        "course_title": "Deep Learning",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE332P",
+        "course_title": "Deep Learning Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE333L",
+        "course_title": "Statistical Inference",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE333P",
+        "course_title": "Statistical Inference Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE334L",
+        "course_title": "Predictive Analytics",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE335L",
+        "course_title": "Healthcare Data Analytics",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE336L",
+        "course_title": "Financial Data Analytics",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE336P",
+        "course_title": "Financial Data Analytics Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE310L",
+        "course_title": "IoT Architectures and Protocols",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE311L",
+        "course_title": "Sensors and Actuator Devices",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE311P",
+        "course_title": "Sensors and Actuator Devices Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE312L",
+        "course_title": "Programming for IoT Boards",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE312P",
+        "course_title": "Programming for IoT Boards Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE313L",
+        "course_title": "Fundamentals of Fog and Edge Computing",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE314L",
+        "course_title": "Privacy and Security in IoT",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE315L",
+        "course_title": "Wearable Computing",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE316L",
+        "course_title": "Design of Smart Cities",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE317L",
+        "course_title": "INFORMATION SECURITY",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE318L",
+        "course_title": "DATA PRIVACY",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE319L",
+        "course_title": "PENETRATION TESTING AND VULNERABILITY ANALYSIS",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE319P",
+        "course_title": "PENETRATION TESTING AND VULNERABILITY ANALYSIS LAB",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE320L",
+        "course_title": "WEB APPLICATION SECURITY",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE321L",
+        "course_title": "MALWARE ANALYSIS",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE321P",
+        "course_title": "MALWARE ANALYSIS LAB",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE322L",
+        "course_title": "DIGITAL FORENSICS",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE322P",
+        "course_title": "DIGITAL FORENSICS LAB",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE323L",
+        "course_title": "DIGITAL WATERMARKING AND STEGANOGRAPHY",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE324L",
+        "course_title": "BLOCKCHAIN TECHNOLOGY",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE325L",
+        "course_title": "BITCOIN",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE326L",
+        "course_title": "BLOCKCHAIN ARCHITECTURE DESIGN",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE327L",
+        "course_title": "SMART CONTRACTS",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE327P",
+        "course_title": "SMART CONTRACTS LAB",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE328L",
+        "course_title": "CRYPTOCURRENCY TECHNOLOGIES",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE329L",
+        "course_title": "BLOCKCHAIN AND DISTRIBUTED LEDGER TECHNOLOGY",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE329P",
+        "course_title": "BLOCKCHAIN AND DISTRIBUTED LEDGER TECHNOLOGY LAB",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE330L",
+        "course_title": "PUBLIC KEY INFRASTRUCTURE AND TRUST MANAGEMENT",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE391J",
+        "course_title": "Technical Answers to Real Problems Project",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE392J",
+        "course_title": "Design Project",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE393J",
+        "course_title": "Laboratory Project",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE394J",
+        "course_title": "Product Development Project",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE396J",
+        "course_title": "Reading Course",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE397J",
+        "course_title": "Special Project",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE398J",
+        "course_title": "Simulation Project",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BEEE303L",
+        "course_title": "Control Systems",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BEEE303P",
+        "course_title": "Control Systems Lab",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE399J",
+        "course_title": "Summer Industrial Internship",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE497J",
+        "course_title": "Project - I",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE498J",
+        "course_title": "Project \u2013 II / Internship",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BPHY101L",
+        "course_title": "Engineering Physics",
+        "drop_reason": "not_in_allowlist"
+      },
+      {
+        "course_code": "BCSE431L",
+        "course_title": "Fundamentals of Quantum Computing",
+        "drop_reason": "not_in_allowlist"
+      }
+    ],
+    "allowlisted_missing": [
+      "BCSE101E",
+      "BCSE102L",
+      "BCSE103E",
+      "BCSE202L",
+      "BCSE202P",
+      "BCSE204L",
+      "BCSE204P",
+      "BCSE205L",
+      "BCSE301L",
+      "BCSE301P",
+      "BCSE302L",
+      "BCSE302P",
+      "BCSE303L",
+      "BCSE303P",
+      "BCSE304L",
+      "BCSE305L",
+      "BCSE306L",
+      "BCSE307L",
+      "BCSE307P",
+      "BCSE308L",
+      "BCSE308P",
+      "BCSE309L",
+      "BCSE309P"
+    ]
+  },
+  "text_layer": {
+    "page_count": 213,
+    "pages_without_text": [
+      15,
+      16,
+      17,
+      18,
+      20,
+      21,
+      30,
+      31,
+      32,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183
+    ],
+    "scanned_courses": [
+      "BCSE101E",
+      "BCSE102L",
+      "BCSE103E",
+      "BCSE202L",
+      "BCSE202P",
+      "BCSE204L",
+      "BCSE204P",
+      "BCSE205L",
+      "BCSE301L",
+      "BCSE301P",
+      "BCSE302L",
+      "BCSE302P",
+      "BCSE303L",
+      "BCSE303P",
+      "BCSE304L",
+      "BCSE305L",
+      "BCSE306L",
+      "BCSE307L",
+      "BCSE307P",
+      "BCSE308L",
+      "BCSE308P",
+      "BCSE309L",
+      "BCSE309P"
+    ]
+  },
+  "syllabus_units": 16,
+  "modules_with_depth_signals": 16,
+  "units_with_matches": 5,
+  "topics_present": 22,
+  "topics_in_taxonomy": 83,
+  "depth_counts": {
+    "all_topics": {
+      "measured": 22,
+      "fallback": 61
+    },
+    "present_topics": {
+      "measured": 22
+    }
+  },
+  "top_priority_gaps": [
+    {
+      "rank": 1,
+      "topic_id": "dsa.stacks_queues.monotonic_stack",
+      "topic_name": "Monotonic Stack and Queue",
+      "importance": 0.1111,
+      "coverage": 0.0,
+      "priority_gap": 0.1111
+    },
+    {
+      "rank": 2,
+      "topic_id": "dsa.dp.grid",
+      "topic_name": "Grid Path Dynamic Programming",
+      "importance": 0.0778,
+      "coverage": 0.0,
+      "priority_gap": 0.0778
+    },
+    {
+      "rank": 3,
+      "topic_id": "dsa.heaps.top_k",
+      "topic_name": "Top K Elements and K-Way Merge",
+      "importance": 0.0556,
+      "coverage": 0.0,
+      "priority_gap": 0.0556
+    },
+    {
+      "rank": 4,
+      "topic_id": "dsa.sorting_searching.binary_search",
+      "topic_name": "Binary Search",
+      "importance": 0.0333,
+      "coverage": 0.0,
+      "priority_gap": 0.0333
+    },
+    {
+      "rank": 5,
+      "topic_id": "dsa.trees.lowest_common_ancestor",
+      "topic_name": "Lowest Common Ancestor",
+      "importance": 0.1111,
+      "coverage": 0.8904,
+      "priority_gap": 0.0122
+    },
+    {
+      "rank": 6,
+      "topic_id": "dsa.graphs.shortest_path",
+      "topic_name": "Shortest Path Algorithms",
+      "importance": 0.0889,
+      "coverage": 0.8904,
+      "priority_gap": 0.0097
+    },
+    {
+      "rank": 7,
+      "topic_id": "dsa.trees.bst",
+      "topic_name": "Binary Search Trees",
+      "importance": 0.0444,
+      "coverage": 0.8904,
+      "priority_gap": 0.0049
+    },
+    {
+      "rank": 8,
+      "topic_id": "dsa.trees.traversal",
+      "topic_name": "Tree Traversals",
+      "importance": 0.0333,
+      "coverage": 0.8904,
+      "priority_gap": 0.0036
+    },
+    {
+      "rank": 9,
+      "topic_id": "dsa.linked_lists.traversal_reversal",
+      "topic_name": "Linked List Manipulation & Cycle Detection",
+      "importance": 0.2222,
+      "coverage": 1.0,
+      "priority_gap": 0.0
+    }
+  ],
+  "unmapped_terms_summary": {
+    "distinct_terms": 267,
+    "distinct_terms_by_source_type": {
+      "syllabus": 217,
+      "interview": 50
+    },
+    "total_occurrences": 274
+  },
+  "top_unmapped_terms": [
+    {
+      "term": "functions",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "heap",
+      "source_type": "interview",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "javascript",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "maximum units",
+      "source_type": "interview",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "random pointer",
+      "source_type": "interview",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "sliding window maximum",
+      "source_type": "interview",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "truck",
+      "source_type": "interview",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "able",
+      "source_type": "syllabus",
+      "occurrences": 1,
+      "frequency": 1
+    },
+    {
+      "term": "accessing memory locations",
+      "source_type": "syllabus",
+      "occurrences": 1,
+      "frequency": 1
+    },
+    {
+      "term": "advanced javascript",
+      "source_type": "syllabus",
+      "occurrences": 1,
+      "frequency": 1
+    }
+  ],
+  "stage_timings_seconds": {
+    "parse": 411.1,
+    "coverage": 0.0,
+    "importance": 0.9,
+    "scoring": 0.0
+  },
+  "runtime_seconds": 412.1
+}
