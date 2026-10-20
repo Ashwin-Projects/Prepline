@@ -8,14 +8,17 @@ Implements API endpoints for:
 """
 
 import asyncio
+import logging
 import os
 import re
 import shutil
 import tempfile
+import uuid
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, status
+from fastapi.responses import JSONResponse
 
 from backend.schemas import (
     TargetSelectionRequest,
@@ -54,6 +57,23 @@ MAX_UPLOAD_BYTES = API_CONFIG["max_upload_bytes"]
 MAX_PDF_PAGES = API_CONFIG["max_pdf_pages"]
 SYLLABUS_CACHE_SIZE = API_CONFIG["syllabus_cache_size"]
 PARSE_TIMEOUT_SECONDS = API_CONFIG["parse_timeout_seconds"]
+MAX_FILENAME_LENGTH = API_CONFIG["max_filename_length"]
+
+logger = logging.getLogger("prepline.api")
+
+
+def internal_error_response(err: BaseException, context: str) -> JSONResponse:
+    """
+    Logs the full error server-side under a fresh request id and returns a generic 500: clients never
+    see exception text, file paths or library internals - only the id to quote when reporting it.
+    """
+    request_id = uuid.uuid4().hex
+    logger.error("%s failed [request_id=%s]", context, request_id, exc_info=(type(err), err, err.__traceback__))
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": f"Internal server error. Reference: {request_id}", "request_id": request_id},
+        headers={"X-Request-ID": request_id},
+    )
 
 # PDF parsing is CPU-bound: it runs on a small dedicated pool, never on the event loop, so other
 # requests keep being served and at most max_concurrent_parses parses run at once.
@@ -152,6 +172,12 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
     temp_dir = tempfile.mkdtemp()
     parse_owns_temp_dir = False
     filename = safe_upload_filename(file.filename)
+    if len(filename) > MAX_FILENAME_LENGTH:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Filename too long (max {MAX_FILENAME_LENGTH} characters)."
+        )
     temp_path = os.path.join(temp_dir, filename)
 
     try:
@@ -200,10 +226,7 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
             detail=str(err)
         )
     except Exception as err:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to parse syllabus PDF: {str(err)}"
-        )
+        return internal_error_response(err, "Syllabus upload")
     finally:
         if not parse_owns_temp_dir:
             shutil.rmtree(temp_dir, ignore_errors=True)
