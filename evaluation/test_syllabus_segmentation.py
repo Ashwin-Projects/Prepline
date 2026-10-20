@@ -3,7 +3,7 @@ Item 1: split a syllabus PDF into courses (code + title + L-T-P-[J-]C), then mod
 within each course, and keep only allowlisted core CS courses.
 
 Fixture texts follow the layout of the real VIT B.Tech CSE 2024-25 PDF. Tests pass
-their own allowlist; the real one lives in config/scoring_v1.0.json.
+their own allowlist; the real one lives in config/scoring_v1.1.json.
 """
 import os
 import tempfile

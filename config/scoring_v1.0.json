@@ -1,9 +1,12 @@
 {
   "config_version": "v1.0",
+  "status": "deprecated",
+  "superseded_by": "config/scoring_v1.1.json",
+  "deprecation_note": "Deprecated 2026-10-21 (advisory; kept as a historical record). This is the scoring configuration behind results/amazon_sde1_v1.0.json. Current code applies the v1.1 rules (node-type matching, coverage inheritance, interview filtering, core-course allowlist, boilerplate stoplist) and no longer reproduces v1.0 results from this file. To reproduce v1.0, check out commit 48d05a7 (main before v1.1) and run evaluation/run_full_pipeline.py there. The frozen values below are identical in config/scoring_v1.1.json.",
   "description": "PREPLINE scoring configuration. tau, gamma, depth reference values, min_reports and the taxonomy version are FROZEN (CLAUDE.md skills policy); change them only with explicit owner approval and a new config version.",
   "taxonomy_version": "v1.0",
   "taxonomy_path": "data/taxonomy/taxonomy_v1.0.json",
-  "similarity_threshold": 0.50,
+  "similarity_threshold": 0.5,
   "gamma": 0.5,
   "depth_reference_values": {
     "unit_hours": 10.0,
@@ -16,70 +19,6 @@
   },
   "semester_weeks": 15,
   "min_reports": 15,
-  "node_type_rule": {
-    "syllabus": "high_level_concept",
-    "interview": "granular_skill"
-  },
-  "coverage_inheritance": {
-    "granular_skill": "nearest_high_level_ancestor"
-  },
-  "interview_filter": {
-    "exclude_round_types": ["behavioral"],
-    "exclude_needs_review": true,
-    "require_question_text": true
-  },
-  "syllabus": {
-    "core_courses_source": "data/raw/syllabi/vit_syllabus_manifest.csv relevant_topics (DSA, DAA, DBMS, OS, CN, other CSE core subjects): VIT B.Tech CSE 2024-25 Discipline Core + CS programming foundation courses + BMAT205L",
-    "core_courses": [
-      "BCSE101E",
-      "BCSE102L",
-      "BCSE102P",
-      "BCSE103E",
-      "BCSE202L",
-      "BCSE202P",
-      "BCSE203E",
-      "BCSE204L",
-      "BCSE204P",
-      "BCSE205L",
-      "BCSE301L",
-      "BCSE301P",
-      "BCSE302L",
-      "BCSE302P",
-      "BCSE303L",
-      "BCSE303P",
-      "BCSE304L",
-      "BCSE305L",
-      "BCSE306L",
-      "BCSE307L",
-      "BCSE307P",
-      "BCSE308L",
-      "BCSE308P",
-      "BCSE309L",
-      "BCSE309P",
-      "BMAT205L"
-    ],
-    "boilerplate_note": "Applied to syllabus text before RAKE, together with built-in date, year and bare-number patterns.",
-    "boilerplate_stoplist": [
-    "module",
-    "annexure",
-    "approved",
-    "academic council",
-    "proceedings",
-    "board of studies",
-    "recommended by",
-    "syllabus version",
-    "pre-requisite",
-    "course objectives",
-    "course outcomes",
-    "text book",
-    "text books",
-    "reference books",
-    "mode of evaluation",
-    "total lecture hours",
-    "total laboratory hours",
-    "hours"
-    ]
-  },
   "embedding_model": {
     "name": "all-MiniLM-L6-v2",
     "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"

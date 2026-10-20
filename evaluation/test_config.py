@@ -1,14 +1,15 @@
 """
-Central scoring config (config/scoring_v1.0.json).
+Central scoring config (config/scoring_v1.1.json; config/scoring_v1.0.json is kept as a deprecated record).
 
 The frozen values below are the Constraint-Driven Development guard: tau, gamma,
 the depth reference values, MIN_REPORTS and the taxonomy version must not change
 unless the project owner explicitly says so.
 """
+import json
 import os
 import re
 
-from pipeline.config import load_scoring_config
+from pipeline.config import CONFIG_PATH, load_scoring_config
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,6 +32,38 @@ def test_frozen_values():
     assert cfg["taxonomy_version"] == "v1.0"
     assert cfg["semester_weeks"] == 15
     assert cfg["depth_reference_values"] == FROZEN_REFERENCE_VALUES
+
+
+FROZEN_KEYS = ("taxonomy_version", "taxonomy_path", "similarity_threshold", "gamma",
+               "depth_reference_values", "semester_weeks", "min_reports", "embedding_model")
+V1_1_RULE_KEYS = ("node_type_rule", "coverage_inheritance", "interview_filter", "syllabus")
+
+
+def _read(rel):
+    with open(os.path.join(ROOT, rel), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def test_code_points_at_v1_1_config():
+    assert os.path.basename(CONFIG_PATH) == "scoring_v1.1.json"
+    cfg = load_scoring_config()
+    assert cfg["config_version"] == "v1.1"
+    for key in V1_1_RULE_KEYS:
+        assert key in cfg, key
+
+
+def test_v1_0_config_kept_as_deprecated_record():
+    old, new = _read("config/scoring_v1.0.json"), _read("config/scoring_v1.1.json")
+    assert old["config_version"] == "v1.0"
+    assert old["status"] == "deprecated"
+    assert old["superseded_by"] == "config/scoring_v1.1.json"
+    assert "no longer reproduces" in old["deprecation_note"]
+    # the record holds only what v1.0 actually used: none of the v1.1 rules
+    for key in V1_1_RULE_KEYS:
+        assert key not in old, key
+    # frozen numbers carried over unchanged
+    for key in FROZEN_KEYS:
+        assert old[key] == new[key], key
 
 
 def test_model_pinned():
