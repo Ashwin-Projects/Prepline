@@ -38,10 +38,18 @@ def _get_rake():
 
 
 # Built-in syllabus boilerplate patterns, applied besides the configured phrase stoplist:
-# dates (03.07.2021, 16-06-2022), years (2022) and bare numbers (module numbers, hour counts).
+# dates (03.07.2021, 16-06-2022), years (2022) and numbers that are only document structure.
+# Numbers that are content ("0/1 knapsack", "2-3 trees", "1-D arrays", "802.11", "8086") are kept.
 _DATE = re.compile(r"\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b")
 _YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
-_BARE_NUMBER = re.compile(r"(?<![A-Za-z0-9])\d+(?![A-Za-z0-9])")
+_STRUCTURAL_NUMBERS = (
+    re.compile(r"\b(?:Module|Unit)\s*[:\-]?\s*\d+", re.IGNORECASE),     # "Module:1", "Unit 2"
+    re.compile(r"\b\d+\s*(?:hours|hrs|hour|hr)\b", re.IGNORECASE),        # "8 hours", "6hours"
+    re.compile(r"^[ \t]*\d+[.)](?=\s)", re.MULTILINE),                    # list numbering "1. ", "2) "
+    re.compile(r"\bItem\s+\d+(?:/\d+)?", re.IGNORECASE),                  # footer "Item 66/22"
+    re.compile(r"\bAnnexure\s*-?\s*\d+", re.IGNORECASE),                  # "Annexure - 18"
+    re.compile(r"\bNo\.\s*\d+", re.IGNORECASE),                           # "Academic Council No. 63"
+)
 # Replacement acts as a phrase delimiter so RAKE never fuses the words on either side.
 _DELIMITER = " , "
 
@@ -53,14 +61,17 @@ def _phrase_pattern(phrase: str) -> "re.Pattern[str]":
 
 def strip_boilerplate(text: str, stoplist: Iterable[str]) -> str:
     """
-    Removes syllabus boilerplate before RAKE: dates, years, bare numbers and every stoplist
-    phrase (whole words, case-insensitive, longest phrase first), each replaced by a delimiter.
+    Removes syllabus boilerplate before RAKE: dates, years, structural numbers (module numbers,
+    hour counts, list numbering, footer item/annexure/council numbers) and every stoplist phrase
+    (whole words, case-insensitive, longest phrase first), each replaced by a delimiter.
     """
     out = _DATE.sub(_DELIMITER, text)
     out = _YEAR.sub(_DELIMITER, out)
+    for pattern in _STRUCTURAL_NUMBERS:
+        out = pattern.sub(_DELIMITER, out)
     for phrase in sorted({p.strip() for p in stoplist if p.strip()}, key=len, reverse=True):
         out = _phrase_pattern(phrase).sub(_DELIMITER, out)
-    return _BARE_NUMBER.sub(_DELIMITER, out)
+    return out
 
 
 def extract_intermediate_concepts(text: str) -> List[str]:

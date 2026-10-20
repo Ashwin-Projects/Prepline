@@ -35,10 +35,24 @@ def test_removes_years_and_dates():
         assert token not in out
 
 
-def test_removes_bare_numbers_but_not_alphanumerics():
-    out = strip_boilerplate("Module:1 x86 assembly 8 hours", ["module", "hours"])
-    assert "x86" in out
-    assert " 1 " not in f" {out} ".replace(":", " ") and " 8 " not in f" {out} "
+def test_removes_structural_numbers():
+    text = "Module:1 Stacks 8 hours\n1. Push and pop\nItem 66/22 - Annexure - 18\nApproved by Academic Council No. 63"
+    out = strip_boilerplate(text, STOPLIST)
+    for token in ("1", "8", "66/22", "18", "63"):
+        assert token not in out.split(), (token, out)
+    assert "Stacks" in out and "Push and pop" in out
+
+
+def test_keeps_numbers_that_are_content():
+    # Final-review finding: stripping every standalone integer destroyed real syllabus topics.
+    text = "0/1 knapsack, 2-3 trees, 1-D and 2-D arrays, 32-bit registers, IEEE 802.11, the 8086 microprocessor"
+    out = strip_boilerplate(text, STOPLIST)
+    for content in ("0/1 knapsack", "2-3 trees", "1-D", "2-D", "32-bit", "802.11", "8086"):
+        assert content in out, (content, out)
+
+
+def test_item_is_not_a_stopword():
+    assert "frequent item set mining" in strip_boilerplate("frequent item set mining", STOPLIST)
 
 
 def _concepts(text, source_type):
