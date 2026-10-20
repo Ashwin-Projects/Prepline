@@ -77,8 +77,7 @@
     "mode of evaluation",
     "total lecture hours",
     "total laboratory hours",
-    "hours",
-    "item"
+    "hours"
     ]
   },
   "embedding_model": {
