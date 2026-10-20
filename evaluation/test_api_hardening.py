@@ -42,6 +42,29 @@ def _upload(content: bytes, name: str = "syllabus.pdf"):
     return client.post("/api/v1/syllabi/upload", files={"file": (name, content, "application/pdf")})
 
 
+# --- M5: loopback-only dev server; unguessable syllabus ids --------------------------------------
+
+def test_dev_server_binds_loopback_by_default(monkeypatch):
+    import backend.app as app_module
+    monkeypatch.delenv("PREPLINE_HOST", raising=False)
+    assert app_module.dev_server_settings()["host"] == "127.0.0.1"
+    monkeypatch.setenv("PREPLINE_HOST", "0.0.0.0")
+    assert app_module.dev_server_settings()["host"] == "0.0.0.0"  # explicit opt-in only
+
+
+def test_syllabus_ids_are_uuid4():
+    import re
+    import uuid
+    first = _upload(_pdf_bytes(), name="my_syllabus.pdf").json()["syllabus_id"]
+    second = _upload(_pdf_bytes(), name="my_syllabus.pdf").json()["syllabus_id"]
+    for syllabus_id in (first, second):
+        match = re.fullmatch(r"syl_([0-9a-f]{32})", syllabus_id)
+        assert match, syllabus_id
+        assert uuid.UUID(match.group(1)).version == 4
+    assert first != second
+    assert "my_syllabus" not in first
+
+
 # --- M4: CORS allowlist from config, no credentials ----------------------------------------------
 
 def _preflight(origin):
