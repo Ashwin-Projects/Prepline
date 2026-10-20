@@ -8,7 +8,8 @@ Handles Two-Pass Abstraction:
 Every mapping preserves taxonomy_version.
 """
 
-from typing import List, Dict, Any, Optional
+import re
+from typing import Iterable, List, Dict, Any, Optional
 from rake_nltk import Rake
 
 from pipeline.config import load_scoring_config
@@ -34,6 +35,32 @@ def _get_rake():
             nltk.download("punkt_tab", quiet=True)
         _rake = Rake(min_length=1, max_length=4)
     return _rake
+
+
+# Built-in syllabus boilerplate patterns, applied besides the configured phrase stoplist:
+# dates (03.07.2021, 16-06-2022), years (2022) and bare numbers (module numbers, hour counts).
+_DATE = re.compile(r"\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b")
+_YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
+_BARE_NUMBER = re.compile(r"(?<![A-Za-z0-9])\d+(?![A-Za-z0-9])")
+# Replacement acts as a phrase delimiter so RAKE never fuses the words on either side.
+_DELIMITER = " , "
+
+
+def _phrase_pattern(phrase: str) -> "re.Pattern[str]":
+    words = [re.escape(w) for w in phrase.split()]
+    return re.compile(r"(?<![A-Za-z0-9])" + r"\s+".join(words) + r"(?![A-Za-z0-9])", re.IGNORECASE)
+
+
+def strip_boilerplate(text: str, stoplist: Iterable[str]) -> str:
+    """
+    Removes syllabus boilerplate before RAKE: dates, years, bare numbers and every stoplist
+    phrase (whole words, case-insensitive, longest phrase first), each replaced by a delimiter.
+    """
+    out = _DATE.sub(_DELIMITER, text)
+    out = _YEAR.sub(_DELIMITER, out)
+    for phrase in sorted({p.strip() for p in stoplist if p.strip()}, key=len, reverse=True):
+        out = _phrase_pattern(phrase).sub(_DELIMITER, out)
+    return _BARE_NUMBER.sub(_DELIMITER, out)
 
 
 def extract_intermediate_concepts(text: str) -> List[str]:
@@ -80,7 +107,10 @@ def two_pass_abstract(
     - similarity_scores: dict mapping topic_id -> score (Pass 2, filled in Phase 5/6)
     - taxonomy_version: version string (e.g., 'v1.0')
     """
-    intermediate_concepts = extract_intermediate_concepts(raw_text)
+    text = raw_text
+    if source_type == "syllabus":
+        text = strip_boilerplate(raw_text, load_scoring_config()["syllabus"]["boilerplate_stoplist"])
+    intermediate_concepts = extract_intermediate_concepts(text)
 
     return {
         "source_id": source_id,
