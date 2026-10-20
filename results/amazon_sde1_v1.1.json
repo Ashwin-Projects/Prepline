@@ -5,8 +5,9 @@
   "report_count": 18,
   "syllabus_file": "B.Tech_CSE_2024_2025(1) (1).pdf",
   "taxonomy_version": "v1.0",
-  "scoring_config_version": "v1.0",
+  "scoring_config_version": "v1.1",
   "scoring_config": {
+    "config_file": "config/scoring_v1.1.json",
     "gamma": 0.5,
     "similarity_threshold": 0.5,
     "depth_reference_values": {
@@ -19,7 +20,7 @@
       "assignments": 5.0
     }
   },
-  "generated_at": "2026-10-20T20:53:30.740496+00:00",
+  "generated_at": "2026-10-20T21:17:55.702768+00:00",
   "granular_without_high_level_ancestor": [],
   "interview_filter": {
     "questions_total": 98,
@@ -669,10 +670,10 @@
     }
   ],
   "stage_timings_seconds": {
-    "parse": 602.1,
+    "parse": 450.0,
     "coverage": 0.0,
-    "importance": 1.4,
+    "importance": 0.9,
     "scoring": 0.0
   },
-  "runtime_seconds": 603.5
+  "runtime_seconds": 450.9
 }

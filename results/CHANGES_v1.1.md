@@ -6,7 +6,7 @@
 - **v1.1 covers only 3 core courses, because of scanning.** v1.1 keeps only allowlisted core CS courses. Just 3 have a readable syllabus: BCSE102P Structured and Object-Oriented Programming Lab, BMAT205L Discrete Mathematics and Graph Theory, and BCSE203E Web Programming. The other 23 allowlisted core courses are listed in the PDF's catalogue, but their syllabus pages have no text layer: BCSE101E, BCSE102L, BCSE103E, BCSE202L, BCSE202P, BCSE204L, BCSE204P, BCSE205L, BCSE301L, BCSE301P, BCSE302L, BCSE302P, BCSE303L, BCSE303P, BCSE304L, BCSE305L, BCSE306L, BCSE307L, BCSE307P, BCSE308L, BCSE308P, BCSE309L, BCSE309P. In all, 67 of 213 pages have no text layer (listed in `text_layer.pages_without_text` in amazon_sde1_v1.1.json).
 - **Do not read v1.1's S_comp (60.37) as a curriculum measure, and do not compare it with v1.0.** It is higher than v1.0 despite scoring fewer courses: the scoring universe shrank to 9 granular skills (items 2 and 3), and those skills inherit coverage from high-level parents (trees, graphs, linked lists) that the Discrete Mathematics and OOP Lab syllabi happen to cover. It will become meaningful once readable core syllabi are supplied.
 - **Next step (separate):** text-layer or offline-OCR'd PDFs of the Discipline Core syllabi will be supplied and scored as their own results version. `results/amazon_sde1_v1.0.json` is kept unchanged.
-- **Frozen values unchanged:** tau = 0.50, gamma = 0.5, depth reference values, MIN_REPORTS = 15 and taxonomy v1.0 are now read from `config/scoring_v1.0.json`.
+- **Scoring config is now v1.1.** The rules this release adds (node-type rule, coverage inheritance, interview filtering, core-course allowlist, boilerplate stoplist) live in `config/scoring_v1.1.json`, which the code loads, and v1.1 results report `scoring_config_version: "v1.1"`. `config/scoring_v1.0.json` is kept as a deprecated historical record of what v1.0 used; current code no longer reproduces v1.0 from it (check out commit 48d05a7 to do that). tau = 0.50, gamma = 0.5, the depth reference values, MIN_REPORTS = 15, semester weeks, taxonomy v1.0 and the model revision are identical in both files.
 
 ## Headline numbers
 
@@ -15,7 +15,7 @@
 | S_comp | 51.538 | 60.3657 | 8.8277 |
 | Report count | 21 | 18 | -3 |
 | Scoring universe (topics with I(t) > 0) | 21 | 9 | -12 |
-| Runtime (s) | 1050.9 | 603.5 | -447.4 |
+| Runtime (s) | 1050.9 | 450.9 | -600.0 |
 
 ## Top-10 priority gaps, side by side
 
@@ -46,6 +46,7 @@ Each row is a full pipeline run after one more item was applied, in this order; 
 | Item 4 - depth signals | 60.3657 | 0.0 | 9 | – | – | 451.5 |
 | Item 5 - boilerplate stoplist | 60.3657 | 0.0 | 9 | – | – | 405.4 |
 | Final-review fixes (lab units, structural numbers) | 60.3657 | 0.0 | 9 | – | – | 603.5 |
+| Config v1.1 + report_id rule | 60.3657 | 0.0 | 9 | – | – | 450.9 |
 
 ## Item by item
 
@@ -58,10 +59,11 @@ Each row is a full pipeline run after one more item was applied, in this order; 
 | 4 Depth signals | lab_hours = course practical hours spread across its modules; unit_hours read from the module header line only | No change to S_comp, the top-10 gaps or measured/fallback counts. In v1.1 it only alters BCSE203E Web Programming (P = 4, 7 modules: lab_hours 60 → 8.57 per module), whose topics are outside the 9-skill scoring universe |
 | 5 Boilerplate stoplist | Strip module/annexure/approved/academic council/proceedings/... plus dates, years and bare numbers from syllabus text before RAKE | No change to S_comp or the top-10 gaps; syllabus units matching ≥1 topic 4 → 5 |
 | Final-review fixes | Embedded-course lab experiments become their own unit; only structural numbers (module numbers, hour counts, list numbering, footers) are stripped, so content like "0/1 knapsack" or "2-3 trees" survives | No change to S_comp or the top-10 gaps; syllabus units 16 → 17 (BCSE203E Web Programming's Indicative Experiments), units matching ≥1 topic 5 → 6 |
+| Config v1.1 + report_id rule | Rules moved to `config/scoring_v1.1.json` (v1.0 file kept as a deprecated record); interview rows without a report_id are excluded (`no_report_id`) | No change to S_comp or the top-10 gaps; `scoring_config_version` v1.0 → v1.1. The dataset has no rows without a report_id |
 | 6 Central config | All frozen constants and rules in `config/scoring_v1.0.json`, loaded once | No output change (values identical) |
 | 7 Security | Upload filenames sanitised before joining paths (path traversal fixed) | API only; no result change |
 | 10 Housekeeping | pydantic v2 `Field(examples=...)`; pytest under `# test` | No result change |
 
 ## Runtime
 
-v1.0: 1050.9 s (re-measured baseline on this machine: 1116.1 s). v1.1: 603.5 s, of which PDF text extraction is 602.1 s (`stage_timings_seconds`); scoring itself takes under 2 s. Extraction time varies run to run on this machine (the same code measured 405–412 s in runs E and the first v1.1 run), so compare runtimes loosely: the stable gains are batch encoding (item 8) and extracting each page once (item 1).
+v1.0: 1050.9 s (re-measured baseline on this machine: 1116.1 s). v1.1: 450.9 s, of which PDF text extraction is 450.0 s (`stage_timings_seconds`); scoring itself takes under 2 s. Extraction time varies run to run on this machine (across this branch's runs the same extraction took 405–602 s), so compare runtimes loosely: the stable gains are batch encoding (item 8) and extracting each page once (item 1).
