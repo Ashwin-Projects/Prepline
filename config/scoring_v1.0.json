@@ -57,6 +57,28 @@
       "BCSE309L",
       "BCSE309P",
       "BMAT205L"
+    ],
+    "boilerplate_note": "Applied to syllabus text before RAKE, together with built-in date, year and bare-number patterns.",
+    "boilerplate_stoplist": [
+    "module",
+    "annexure",
+    "approved",
+    "academic council",
+    "proceedings",
+    "board of studies",
+    "recommended by",
+    "syllabus version",
+    "pre-requisite",
+    "course objectives",
+    "course outcomes",
+    "text book",
+    "text books",
+    "reference books",
+    "mode of evaluation",
+    "total lecture hours",
+    "total laboratory hours",
+    "hours",
+    "item"
     ]
   },
   "embedding_model": {
