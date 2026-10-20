@@ -11,6 +11,10 @@ from typing import Dict
 from pipeline.keyword_abstraction import two_pass_abstract, DEFAULT_TAXONOMY_VERSION
 from pipeline.embeddings import match_concepts_to_taxonomy, SIMILARITY_THRESHOLD
 from pipeline.unmapped_terms_logger import log_unmapped_terms
+from pipeline.config import load_scoring_config
+
+# Syllabus units match only high_level_concept nodes; interview questions only granular_skill nodes.
+_NODE_TYPE_RULE = load_scoring_config()["node_type_rule"]
 
 
 def assign_credit(similarity_scores: Dict[str, float]) -> Dict[str, float]:
@@ -63,7 +67,9 @@ def map_source_to_taxonomy(
     )
 
     matched_topic_ids, similarity_scores, unmapped_concepts = match_concepts_to_taxonomy(
-        record["intermediate_concepts"], threshold=threshold
+        record["intermediate_concepts"],
+        threshold=threshold,
+        node_type=_NODE_TYPE_RULE.get(source_type),
     )
     record["matched_topic_ids"] = matched_topic_ids
     record["similarity_scores"] = similarity_scores

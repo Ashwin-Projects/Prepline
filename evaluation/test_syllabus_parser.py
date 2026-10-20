@@ -120,7 +120,9 @@ class TestSyllabusParser(unittest.TestCase):
 
         result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0")
         mapping = result["two_pass_mappings"][0]
-        self.assertIn("dsa.trees.bst", mapping["matched_topic_ids"])
+        # Syllabus units match only high-level concepts: the BST unit matches BST's parent, dsa.trees
+        self.assertIn("dsa.trees", mapping["matched_topic_ids"])
+        self.assertNotIn("dsa.trees.bst", mapping["matched_topic_ids"])
         self.assertEqual(mapping["taxonomy_version"], "v1.0")
         self.assertEqual(mapping["depth_signals"]["unit_hours"], 8)
 
@@ -128,6 +130,26 @@ class TestSyllabusParser(unittest.TestCase):
         bst = next(t for t in coverage["topic_coverage"] if t["topic_id"] == "dsa.trees.bst")
         self.assertEqual(bst["presence"], 1)
         self.assertEqual(bst["depth_status"], "measured")
+
+    def test_bst_gets_inherited_coverage(self):
+        from reportlab.pdfgen import canvas
+        from pipeline.scoring import calculate_syllabus_coverage
+        pdf_path = os.path.join(self.temp_dir.name, "vit_cse2002_inherit.pdf")
+
+        c = canvas.Canvas(pdf_path)
+        c.drawString(100, 750, "Course Code: CSE2002")
+        c.drawString(100, 735, "Course Title: Data Structures")
+        c.drawString(100, 700, "Module: 1 Binary Search Trees (8 hours)")
+        c.drawString(100, 685, "Binary search trees: insertion, deletion and search in a BST.")
+        c.save()
+
+        result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0")
+        coverage = {t["topic_id"]: t for t in calculate_syllabus_coverage(result)["topic_coverage"]}
+        bst = coverage["dsa.trees.bst"]
+        self.assertEqual(bst["coverage_source"], "inherited")
+        self.assertEqual(bst["inherited_from"], "dsa.trees")
+        self.assertGreater(bst["coverage"], 0.0)
+        self.assertEqual(bst["coverage"], coverage["dsa.trees"]["coverage"])
 
 if __name__ == "__main__":
     unittest.main()

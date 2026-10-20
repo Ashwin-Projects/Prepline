@@ -10,11 +10,15 @@ Phase 11: Priority Gap Ranking (Pending)
 import copy
 import hashlib
 import json
+import logging
 import math
 import os
 from typing import Dict, Any, List, Optional, Union, Tuple
 
 from pipeline.config import load_scoring_config, resolve_path
+from pipeline.taxonomy_tree import GRANULAR, nearest_high_level_ancestor
+
+logger = logging.getLogger(__name__)
 
 _CONFIG = load_scoring_config()
 
@@ -147,14 +151,48 @@ def calculate_syllabus_coverage(
             "coverage": round(coverage, 4),
             "depth_status": depth_status,
             "depth_signal_count": depth_signal_count,
-            "taxonomy_version": taxonomy_version
+            "taxonomy_version": taxonomy_version,
+            "coverage_source": "direct",
+            "inherited_from": None
         })
+
+    _inherit_granular_coverage(topic_coverage_list, nodes)
 
     return {
         "syllabus_id": syllabus_id,
         "taxonomy_version": taxonomy_version,
         "topic_coverage": topic_coverage_list
     }
+
+
+_INHERITED_FIELDS = ("presence", "depth", "coverage", "depth_status", "depth_signal_count")
+
+
+def _inherit_granular_coverage(topic_coverage_list: List[Dict[str, Any]], nodes: List[Dict[str, Any]]) -> None:
+    """
+    Coverage(t) for a granular_skill = Coverage of its nearest high_level_concept ancestor
+    (config coverage_inheritance), marked coverage_source="inherited". Granular nodes with no
+    high-level ancestor keep their direct coverage and are reported with a warning.
+    """
+    nodes_by_id = {n["topic_id"]: n for n in nodes}
+    by_topic = {item["topic_id"]: item for item in topic_coverage_list}
+    orphans = []
+    for node in nodes:
+        if node.get("type") != GRANULAR:
+            continue
+        ancestor_id = nearest_high_level_ancestor(node["topic_id"], nodes_by_id)
+        if ancestor_id is None:
+            orphans.append(node["topic_id"])
+            continue
+        item, ancestor = by_topic[node["topic_id"]], by_topic[ancestor_id]
+        for field in _INHERITED_FIELDS:
+            item[field] = ancestor[field]
+        item["coverage_source"] = "inherited"
+        item["inherited_from"] = ancestor_id
+    if orphans:
+        logger.warning(
+            "Granular nodes without a high_level_concept ancestor keep direct coverage: %s", ", ".join(sorted(orphans))
+        )
 
 
 def calculate_topic_importance(

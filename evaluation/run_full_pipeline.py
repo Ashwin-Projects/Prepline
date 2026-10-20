@@ -31,11 +31,14 @@ from pipeline.interview_parser import (
     write_excluded_questions,
 )
 from pipeline.syllabus_parser import parse_syllabus_pdf
+from pipeline.taxonomy_tree import find_granular_without_high_level_ancestor
 from pipeline.scoring import (
     calculate_syllabus_coverage,
     calculate_topic_importance,
     calculate_composite_score,
     rank_priority_gaps,
+    load_taxonomy_nodes,
+    DEFAULT_TAXONOMY_PATH,
     GAMMA_DEFAULT,
     MVP_REFERENCE_VALUES,
 )
@@ -65,6 +68,8 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         f"{report_count} reports with >=1 included question",
         flush=True,
     )
+    orphans = find_granular_without_high_level_ancestor(load_taxonomy_nodes(DEFAULT_TAXONOMY_PATH))
+    print(f"Granular nodes without a high-level ancestor: {len(orphans)} {orphans}", flush=True)
     result = {
         "company": COMPANY,
         "role": ROLE,
@@ -78,6 +83,7 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
             "depth_reference_values": MVP_REFERENCE_VALUES,
         },
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "granular_without_high_level_ancestor": orphans,
         "interview_filter": {
             "questions_total": len(included) + len(excluded),
             "questions_included": len(included),
