@@ -125,6 +125,9 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         course_filter=syllabus["course_filter"],
         text_layer=syllabus["text_layer"],
         syllabus_units=syllabus["units_count"],
+        modules_with_depth_signals=sum(
+            1 for m in syllabus["two_pass_mappings"] if any(v is not None for v in m["depth_signals"].values())
+        ),
         units_with_matches=sum(1 for m in syllabus["two_pass_mappings"] if m["matched_topic_ids"]),
         topics_present=len(present),
         topics_in_taxonomy=len(topics),
@@ -178,6 +181,7 @@ def print_summary(r: dict) -> None:
     print(f"Topics present:         {r['topics_present']} / {r['topics_in_taxonomy']}")
     print(f"Depth (present topics): {r['depth_counts']['present_topics']}")
     print(f"Depth (all topics):     {r['depth_counts']['all_topics']}")
+    print(f"Modules with >=1 depth signal: {r['modules_with_depth_signals']} / {r['syllabus_units']}")
     print("\nTop priority gaps:")
     print(f"  {'#':>2}  {'GAP':>6}  {'I(t)':>6}  {'COV':>6}  TOPIC")
     for g in r["top_priority_gaps"]:
