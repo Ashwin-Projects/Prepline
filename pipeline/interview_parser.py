@@ -6,6 +6,7 @@ config/scoring_v1.1.json -> interview_filter):
 - round_type in exclude_round_types (behavioral)  -> "behavioral_round"
 - needs_review is true                            -> "needs_review"
 - no question_text (empty / "nan")                -> "no_question_text"
+- no report_id (empty / "nan" / missing)          -> "no_report_id"
 
 The report count used for the density gate and the I(t) denominator is the
 number of distinct reports with at least one included question.
@@ -37,6 +38,9 @@ def _exclusion_reasons(row: Dict[str, Any], rules: Dict[str, Any]) -> List[str]:
         reasons.append("needs_review")
     if rules["require_question_text"] and _is_empty(row.get("question_text")):
         reasons.append("no_question_text")
+    if rules["require_report_id"] and _is_empty(row.get("report_id")):
+        # a question that belongs to no report would add to I(t) without counting in its denominator
+        reasons.append("no_report_id")
     return reasons
 
 

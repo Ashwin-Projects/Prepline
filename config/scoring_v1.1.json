@@ -29,7 +29,8 @@
       "behavioral"
     ],
     "exclude_needs_review": true,
-    "require_question_text": true
+    "require_question_text": true,
+    "require_report_id": true
   },
   "syllabus": {
     "core_courses_source": "data/raw/syllabi/vit_syllabus_manifest.csv relevant_topics (DSA, DAA, DBMS, OS, CN, other CSE core subjects): VIT B.Tech CSE 2024-25 Discipline Core + CS programming foundation courses + BMAT205L",

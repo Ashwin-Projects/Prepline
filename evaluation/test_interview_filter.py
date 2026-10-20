@@ -52,6 +52,31 @@ def test_multiple_reasons_joined():
     assert excluded[0]["exclusion_reason"] == "behavioral_round;needs_review;no_question_text"
 
 
+@pytest.mark.parametrize("report_id", ["", "   ", None, "nan"])
+def test_empty_report_id_excluded(report_id):
+    included, excluded = filter_questions([_row(report_id=report_id)])
+    assert included == []
+    assert excluded[0]["exclusion_reason"] == "no_report_id"
+
+
+def test_missing_report_id_column_excluded():
+    included, excluded = filter_questions([{"question_text": "Two Sum"}])
+    assert included == []
+    assert excluded[0]["exclusion_reason"] == "no_report_id"
+
+
+def test_empty_report_id_cannot_inflate_importance():
+    # A row without a report_id used to add credit to I(t) while count_reports ignored it.
+    rows = [_row("R1", question_text="Deadlock Detection and Prevention"),
+            _row("R2", question_text="Two Sum"),
+            _row("", question_text="Deadlock Detection and Prevention")]
+    res = scoring.calculate_topic_importance(rows)
+    assert res["total_reports_count"] == 2
+    item = {i["topic_id"]: i for i in res["interview_importance"]}["os.deadlocks.prevention_avoidance"]
+    assert item["matched_report_count"] == 1
+    assert item["importance"] == pytest.approx(0.5, abs=1e-4)
+
+
 def test_missing_columns_included():
     included, excluded = filter_questions([{"report_id": "R1", "question_text": "Two Sum"}])
     assert len(included) == 1 and excluded == []
