@@ -8,6 +8,10 @@ report-count density gate validation, pipeline execution, and PREPLINE alignment
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
+from pipeline.config import load_scoring_config
+
+_CONFIG = load_scoring_config()
+
 
 # --- Request Schemas ---
 
@@ -59,7 +63,7 @@ class UploadSyllabusResponse(BaseModel):
     units_count: int
     course_code: Optional[str] = None
     course_title: Optional[str] = None
-    taxonomy_version: str = "v1.0"
+    taxonomy_version: str = _CONFIG["taxonomy_version"]
     message: str = "Syllabus successfully uploaded and parsed."
 
 
@@ -85,8 +89,8 @@ class PreplineResultResponse(BaseModel):
     topic_coverage: List[TopicCoverageItem] = []
     interview_importance: List[TopicImportanceItem] = []
     priority_gaps: List[PriorityGapItem] = []
-    taxonomy_version: str = "v1.0"
-    scoring_config_version: str = "v1.0"
+    taxonomy_version: str = _CONFIG["taxonomy_version"]
+    scoring_config_version: str = _CONFIG["config_version"]
     depth_confidence_status: str = Field(..., examples=["measured"], description="'measured', 'fallback', or 'mixed'")
     status: str = Field(default="SUCCESS", description="'SUCCESS', 'INSUFFICIENT_DATA', or 'ERROR'")
     message: Optional[str] = None

@@ -121,7 +121,7 @@ class TestBackendAPI(unittest.TestCase):
         self.assertIn("interview_importance", data)
         self.assertIn("priority_gaps", data)
         self.assertEqual(data["taxonomy_version"], "v1.0")
-        self.assertEqual(data["scoring_config_version"], "v1.0")
+        self.assertEqual(data["scoring_config_version"], "v1.1")
         self.assertIn("depth_confidence_status", data)
 
     def test_pipeline_run_scoring_engine_integration_matches_pipeline(self):

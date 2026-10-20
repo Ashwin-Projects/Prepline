@@ -2,7 +2,7 @@
 Interview Parser Module (Phase 2)
 
 Filters processed interview question rows before scoring (rules in
-config/scoring_v1.0.json -> interview_filter):
+config/scoring_v1.1.json -> interview_filter):
 - round_type in exclude_round_types (behavioral)  -> "behavioral_round"
 - needs_review is true                            -> "needs_review"
 - no question_text (empty / "nan")                -> "no_question_text"

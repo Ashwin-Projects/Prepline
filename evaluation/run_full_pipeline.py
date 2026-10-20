@@ -22,7 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
 import pipeline.unmapped_terms_logger as unmapped_terms_logger
-from pipeline.config import load_scoring_config
+from pipeline.config import CONFIG_PATH, load_scoring_config
 from pipeline.embeddings import SIMILARITY_THRESHOLD
 from pipeline.interview_parser import (
     count_reports,
@@ -82,6 +82,7 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         "taxonomy_version": None,
         "scoring_config_version": SCORING_CONFIG_VERSION,
         "scoring_config": {
+            "config_file": os.path.relpath(CONFIG_PATH, ROOT).replace(os.sep, "/"),
             "gamma": GAMMA_DEFAULT,
             "similarity_threshold": SIMILARITY_THRESHOLD,
             "depth_reference_values": MVP_REFERENCE_VALUES,
