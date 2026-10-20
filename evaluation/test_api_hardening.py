@@ -42,6 +42,30 @@ def _upload(content: bytes, name: str = "syllabus.pdf"):
     return client.post("/api/v1/syllabi/upload", files={"file": (name, content, "application/pdf")})
 
 
+# --- M4: CORS allowlist from config, no credentials ----------------------------------------------
+
+def _preflight(origin):
+    return client.options("/api/v1/pipeline/run",
+                          headers={"Origin": origin, "Access-Control-Request-Method": "POST"})
+
+
+def test_cors_allowlist_in_config():
+    assert load_api_config()["cors_allowed_origins"] == ["http://localhost:8501"]
+
+
+def test_cors_rejects_unknown_origin():
+    response = _preflight("https://evil.example")
+    assert "access-control-allow-origin" not in response.headers
+    simple = client.get("/api/v1/supported-targets", headers={"Origin": "https://evil.example"})
+    assert "access-control-allow-origin" not in simple.headers
+
+
+def test_cors_allows_dashboard_without_credentials():
+    response = _preflight("http://localhost:8501")
+    assert response.headers["access-control-allow-origin"] == "http://localhost:8501"
+    assert "access-control-allow-credentials" not in response.headers
+
+
 # --- M3: 500s are generic + request id; details only in the server log; long names are 400 -------
 
 SECRET = r"boom at C:\Users\someone\AppData\Local\Temp\tmpabc\syllabus.pdf"

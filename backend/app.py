@@ -21,13 +21,13 @@ app = FastAPI(
     version="1.1.0"
 )
 
-# Configure CORS for Dashboard/Frontend integration
+# CORS: only the configured origins (default: the local Streamlit dashboard), never with credentials
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=routes.API_CONFIG["cors_allowed_origins"],
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 @app.middleware("http")
