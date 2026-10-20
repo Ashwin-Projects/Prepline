@@ -15,7 +15,7 @@
 | S_comp | 51.538 | 60.3657 | 8.8277 |
 | Report count | 21 | 18 | -3 |
 | Scoring universe (topics with I(t) > 0) | 21 | 9 | -12 |
-| Runtime (s) | 1050.9 | 412.1 | -638.8 |
+| Runtime (s) | 1050.9 | 603.5 | -447.4 |
 
 ## Top-10 priority gaps, side by side
 
@@ -45,6 +45,7 @@ Each row is a full pipeline run after one more item was applied, in this order; 
 | Item 1 - course segmentation, core allowlist | 60.3657 | -14.8769 | 9 | – | – | 472.0 |
 | Item 4 - depth signals | 60.3657 | 0.0 | 9 | – | – | 451.5 |
 | Item 5 - boilerplate stoplist | 60.3657 | 0.0 | 9 | – | – | 405.4 |
+| Final-review fixes (lab units, structural numbers) | 60.3657 | 0.0 | 9 | – | – | 603.5 |
 
 ## Item by item
 
@@ -56,10 +57,11 @@ Each row is a full pipeline run after one more item was applied, in this order; 
 | 1 Course segmentation | Split the PDF into courses then modules; keep only the core CS allowlist; record pages without a text layer and allowlisted courses with no readable syllabus | Courses scored 66 → 3; modules 303 → 16; S_comp 75.24 → 60.37; runtime 844 s → 472 s (fewer modules, and each page's text is now extracted once instead of twice) |
 | 4 Depth signals | lab_hours = course practical hours spread across its modules; unit_hours read from the module header line only | No change to S_comp, the top-10 gaps or measured/fallback counts. In v1.1 it only alters BCSE203E Web Programming (P = 4, 7 modules: lab_hours 60 → 8.57 per module), whose topics are outside the 9-skill scoring universe |
 | 5 Boilerplate stoplist | Strip module/annexure/approved/academic council/proceedings/... plus dates, years and bare numbers from syllabus text before RAKE | No change to S_comp or the top-10 gaps; syllabus units matching ≥1 topic 4 → 5 |
+| Final-review fixes | Embedded-course lab experiments become their own unit; only structural numbers (module numbers, hour counts, list numbering, footers) are stripped, so content like "0/1 knapsack" or "2-3 trees" survives | No change to S_comp or the top-10 gaps; syllabus units 16 → 17 (BCSE203E Web Programming's Indicative Experiments), units matching ≥1 topic 5 → 6 |
 | 6 Central config | All frozen constants and rules in `config/scoring_v1.0.json`, loaded once | No output change (values identical) |
 | 7 Security | Upload filenames sanitised before joining paths (path traversal fixed) | API only; no result change |
 | 10 Housekeeping | pydantic v2 `Field(examples=...)`; pytest under `# test` | No result change |
 
 ## Runtime
 
-v1.0: 1050.9 s (re-measured baseline 1116.1 s). v1.1: 412.1 s, of which PDF text extraction is 411.1 s (`stage_timings_seconds`). The pdfplumber pass over the 213-page PDF now dominates.
+v1.0: 1050.9 s (re-measured baseline on this machine: 1116.1 s). v1.1: 603.5 s, of which PDF text extraction is 602.1 s (`stage_timings_seconds`); scoring itself takes under 2 s. Extraction time varies run to run on this machine (the same code measured 405–412 s in runs E and the first v1.1 run), so compare runtimes loosely: the stable gains are batch encoding (item 8) and extracting each page once (item 1).
