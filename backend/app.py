@@ -41,6 +41,12 @@ async def reject_oversized_uploads(request: Request, call_next):
     return await call_next(request)
 
 
+@app.exception_handler(Exception)
+async def unhandled_error(request: Request, exc: Exception):
+    """Any unhandled error: generic 500 + request id to the client, full traceback to the server log."""
+    return routes.internal_error_response(exc, f"{request.method} {request.url.path}")
+
+
 # Register API routes
 app.include_router(api_router)
 

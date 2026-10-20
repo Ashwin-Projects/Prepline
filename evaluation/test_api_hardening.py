@@ -42,6 +42,50 @@ def _upload(content: bytes, name: str = "syllabus.pdf"):
     return client.post("/api/v1/syllabi/upload", files={"file": (name, content, "application/pdf")})
 
 
+# --- M3: 500s are generic + request id; details only in the server log; long names are 400 -------
+
+SECRET = r"boom at C:\Users\someone\AppData\Local\Temp\tmpabc\syllabus.pdf"
+
+
+def _assert_generic_500(response):
+    import re
+    assert response.status_code == 500
+    body = response.json()
+    assert "Users" not in json.dumps(body) and "boom" not in json.dumps(body)
+    assert re.fullmatch(r"[0-9a-f]{32}", body["request_id"])
+    assert body["request_id"] in body["detail"]
+    assert response.headers["x-request-id"] == body["request_id"]
+    return body["request_id"]
+
+
+def test_upload_500_is_generic_and_logged(monkeypatch, caplog):
+    def broken(*args, **kwargs):
+        raise RuntimeError(SECRET)
+
+    monkeypatch.setattr(routes, "parse_syllabus_pdf", broken)
+    with caplog.at_level("ERROR"):
+        request_id = _assert_generic_500(_upload(_pdf_bytes()))
+    logged = [r for r in caplog.records if request_id in r.getMessage()]
+    assert logged and SECRET in (logged[0].exc_text or "") + str(logged[0].exc_info)
+
+
+def test_unhandled_500_is_generic_and_logged(monkeypatch, caplog):
+    def broken(*args, **kwargs):
+        raise RuntimeError(SECRET)
+
+    monkeypatch.setattr(routes, "calculate_syllabus_coverage", broken)
+    routes._cache_syllabus("syl_err_test", {"syllabus_id": "x", "taxonomy_version": "v1.0", "two_pass_mappings": []})
+    with caplog.at_level("ERROR"):
+        request_id = _assert_generic_500(client.post("/api/v1/pipeline/run", json={"syllabus_id": "syl_err_test"}))
+    assert any(request_id in r.getMessage() for r in caplog.records)
+
+
+def test_overlong_filename_is_400():
+    response = _upload(_pdf_bytes(), name="a" * 300 + ".pdf")
+    assert response.status_code == 400
+    assert "filename" in response.json()["detail"].lower()
+
+
 # --- M2: handlers never block the event loop; parsing has a timeout ------------------------------
 
 def _fake_parsed():
