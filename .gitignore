@@ -11,3 +11,5 @@ ENV/
 .DS_Store
 PREPLINE.pdf
 data/raw/syllabi/*.pdf
+CLAUDE-SECURITY-*/
+.superpowers/
