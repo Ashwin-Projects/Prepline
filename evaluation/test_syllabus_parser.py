@@ -151,5 +151,39 @@ class TestSyllabusParser(unittest.TestCase):
         self.assertGreater(bst["coverage"], 0.0)
         self.assertEqual(bst["coverage"], coverage["dsa.trees"]["coverage"])
 
+class TestDepthSignals(unittest.TestCase):
+    """Item 4: unit_hours from the module header line only; lab hours spread across a course's modules."""
+
+    def test_unit_hours_header_only(self):
+        unit_text = "Module: 3 Graph Algorithms\nBFS and DFS, practised over 10 hours of lab sessions."
+        self.assertIsNone(extract_depth_signals(unit_text, {})["unit_hours"])
+
+    def test_unit_hours_no_space(self):
+        unit_text = "Module:5 Fundamentals of Graphs 6hours\nBasic definitions."
+        self.assertEqual(extract_depth_signals(unit_text, {})["unit_hours"], 6)
+
+    def test_lab_hours_spread_across_modules(self):
+        signals = extract_depth_signals("Module:1 Intro 4 hours\nx", {"practical_hours": 2}, module_count=4)
+        self.assertEqual(signals["lab_hours"], 7.5)  # 2 periods/week * 15 weeks / 4 modules
+
+    def test_course_lab_hours_total_equals_practical_hours(self):
+        from pipeline.syllabus_parser import parse_course_modules, segment_courses
+        text = ("BCSE203E Web Programming 1 0 2 2\n"
+                "Module:1 Introduction 2 hours\nWeb basics.\n"
+                "Module:2 HTML 2 hours\nMarkup.\n"
+                "Module:3 CSS 2 hours\nStyles.\n"
+                "Module:4 JavaScript 3 hours\nScripts.\n"
+                "Total Lecture hours: 15 hours\n")
+        modules = parse_course_modules(segment_courses(text)[0])
+        self.assertEqual(len(modules), 4)
+        lab_hours = [m["depth_signals"]["lab_hours"] for m in modules]
+        self.assertEqual(lab_hours, [7.5, 7.5, 7.5, 7.5])
+        self.assertEqual(sum(lab_hours), 2 * 15)  # not 30 per module
+        self.assertEqual([m["depth_signals"]["unit_hours"] for m in modules], [2, 2, 2, 3])
+
+    def test_zero_practical_hours_no_lab_signal(self):
+        self.assertIsNone(extract_depth_signals("Module:1 Intro 4 hours", {"practical_hours": 0}, module_count=3)["lab_hours"])
+
+
 if __name__ == "__main__":
     unittest.main()

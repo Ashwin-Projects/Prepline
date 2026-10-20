@@ -236,12 +236,15 @@ def find_missing_allowlisted(
     return missing, scanned
 
 
-def extract_depth_signals(unit_text: str, course_metadata: Dict[str, Any]) -> Dict[str, Optional[int]]:
+def extract_depth_signals(
+    unit_text: str, course_metadata: Dict[str, Any], module_count: int = 1
+) -> Dict[str, Optional[float]]:
     """
     Extracts depth signals available from a syllabus unit:
-    - unit_hours
+    - unit_hours: read from the module header line only (the first non-empty line)
     - slide_count
-    - lab_hours
+    - lab_hours: the course's practical hours (P per week * semester_weeks) spread evenly
+      across the course's module_count modules
     - lab_count
     - assignment_count
     """
@@ -253,8 +256,9 @@ def extract_depth_signals(unit_text: str, course_metadata: Dict[str, Any]) -> Di
         "assignment_count": None
     }
 
-    # Extract unit_hours (e.g., "6 hours", "8 Hours", "Duration: 5 hrs")
-    hours_match = re.search(r'\b(\d+)\s*(?:hours|hrs|hour|hr)\b', unit_text, re.IGNORECASE)
+    # Extract unit_hours from the module header line (e.g., "Module:1 Digital Logic 8 hours", "... 6hours")
+    header_line = next((line for line in unit_text.splitlines() if line.strip()), "")
+    hours_match = re.search(r'\b(\d+)\s*(?:hours|hrs|hour|hr)\b', header_line, re.IGNORECASE)
     if hours_match:
         depth_signals["unit_hours"] = int(hours_match.group(1))
 
@@ -268,9 +272,10 @@ def extract_depth_signals(unit_text: str, course_metadata: Dict[str, Any]) -> Di
     if lab_exp_matches:
         depth_signals["lab_count"] = len(lab_exp_matches)
 
-    # Extract lab_hours from course practical hours metadata if applicable
+    # Course practical hours (P periods/week * semester weeks), spread across the course's modules
     if course_metadata.get("practical_hours"):
-        depth_signals["lab_hours"] = course_metadata["practical_hours"] * 15  # standard semester hours conversion
+        semester_weeks = load_scoring_config()["semester_weeks"]
+        depth_signals["lab_hours"] = course_metadata["practical_hours"] * semester_weeks / max(module_count, 1)
 
     # Extract assignment_count (e.g., "Assignment 1", "Assessment 2")
     assignment_matches = re.findall(r'\b(?:assignment|assessment|project task)\s*\d+', unit_text, re.IGNORECASE)
@@ -307,7 +312,7 @@ def parse_course_modules(course: Dict[str, Any]) -> List[Dict[str, Any]]:
                 "module_number": module_num,
                 "module_title": module_title or f"Module {module_num}",
                 "unit_text": unit_text,
-                "depth_signals": extract_depth_signals(unit_text, metadata),
+                "depth_signals": extract_depth_signals(unit_text, metadata, module_count=len(headers)),
             })
     else:
         unit_text = text[:bounded_end(0, len(text))].strip()
