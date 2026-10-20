@@ -8,9 +8,10 @@ Implements API endpoints for:
 """
 
 import os
+import re
 import shutil
 import tempfile
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from fastapi import APIRouter, File, UploadFile, HTTPException, status
 
 from backend.schemas import (
@@ -59,6 +60,22 @@ def _get_report_count() -> int:
         report_ids = {row["report_id"].strip() for row in reader if row.get("report_id")}
         return len(report_ids)
 
+_UNSAFE_FILENAME_CHARS = re.compile(r"[^A-Za-z0-9._-]")
+
+
+def safe_upload_filename(name: Optional[str]) -> str:
+    """
+    Reduces a client-supplied upload name to a bare, filesystem-safe PDF filename:
+    no directory components (either separator), only [A-Za-z0-9._-], no leading dots.
+    Anything that ends up empty or without a .pdf extension becomes "upload.pdf".
+    """
+    base = os.path.basename((name or "").replace("\\", "/"))
+    base = _UNSAFE_FILENAME_CHARS.sub("_", base).lstrip(".")
+    if not base.lower().endswith(".pdf"):
+        return "upload.pdf"
+    return base
+
+
 # Storage for uploaded syllabi in memory/temp cache for API prototype
 SYLLABUS_CACHE: Dict[str, Dict[str, Any]] = {}
 
@@ -80,7 +97,7 @@ async def upload_syllabus(file: UploadFile = File(...)):
     Endpoint 1: Syllabus Upload
     Parses uploaded text-selectable PDF syllabus via Phase 7 parser.
     """
-    if not file.filename.lower().endswith(".pdf"):
+    if not (file.filename or "").lower().endswith(".pdf"):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Unsupported file format. Only text-selectable PDF files are accepted."
@@ -88,7 +105,8 @@ async def upload_syllabus(file: UploadFile = File(...)):
 
     # Save uploaded file temporarily for parsing
     temp_dir = tempfile.mkdtemp()
-    temp_path = os.path.join(temp_dir, file.filename)
+    filename = safe_upload_filename(file.filename)
+    temp_path = os.path.join(temp_dir, filename)
 
     try:
         with open(temp_path, "wb") as buffer:
@@ -97,14 +115,14 @@ async def upload_syllabus(file: UploadFile = File(...)):
         # Execute Phase 7 Syllabus Parser
         parsed_syllabus = parse_syllabus_pdf(temp_path, taxonomy_version=TAXONOMY_VERSION)
 
-        syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{file.filename}"
+        syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{filename}"
         SYLLABUS_CACHE[syllabus_id] = parsed_syllabus
 
         course_meta = parsed_syllabus.get("course_metadata", {})
 
         return UploadSyllabusResponse(
             syllabus_id=syllabus_id,
-            filename=file.filename,
+            filename=filename,
             units_count=parsed_syllabus.get("units_count", 0),
             course_code=course_meta.get("course_code"),
             course_title=course_meta.get("course_title"),
