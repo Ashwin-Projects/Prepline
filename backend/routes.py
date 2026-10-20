@@ -11,6 +11,7 @@ import os
 import re
 import shutil
 import tempfile
+from collections import OrderedDict
 from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, status
 
@@ -24,7 +25,7 @@ from backend.schemas import (
     TopicImportanceItem,
     PriorityGapItem
 )
-from pipeline.config import load_scoring_config
+from pipeline.config import load_api_config, load_scoring_config
 from pipeline.interview_parser import count_reports, filter_questions, load_questions_csv
 from pipeline.syllabus_parser import parse_syllabus_pdf, NoCoreCoursesError, UnsupportedPDFError
 from pipeline.scoring import (
@@ -44,6 +45,12 @@ CONFIG = load_scoring_config()
 MIN_REPORTS_REQUIRED = CONFIG["min_reports"]
 TAXONOMY_VERSION = CONFIG["taxonomy_version"]
 SCORING_CONFIG_VERSION = CONFIG["config_version"]
+
+# API safety limits (config/api.json)
+API_CONFIG = load_api_config()
+MAX_UPLOAD_BYTES = API_CONFIG["max_upload_bytes"]
+MAX_PDF_PAGES = API_CONFIG["max_pdf_pages"]
+SYLLABUS_CACHE_SIZE = API_CONFIG["syllabus_cache_size"]
 
 # Dataset Paths
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed")
@@ -81,8 +88,22 @@ def safe_upload_filename(name: Optional[str]) -> str:
     return base
 
 
-# Storage for uploaded syllabi in memory/temp cache for API prototype
-SYLLABUS_CACHE: Dict[str, Dict[str, Any]] = {}
+# Parsed syllabi kept in memory for /pipeline/run: at most SYLLABUS_CACHE_SIZE entries (oldest evicted),
+# and only what scoring needs - never the syllabus text itself.
+SYLLABUS_CACHE: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
+_CACHED_MAPPING_FIELDS = ("source_id", "course_code", "module_number", "matched_topic_ids", "depth_signals")
+
+
+def _cache_syllabus(syllabus_id: str, parsed: Dict[str, Any]) -> None:
+    SYLLABUS_CACHE[syllabus_id] = {
+        "syllabus_id": parsed.get("syllabus_id"),
+        "taxonomy_version": parsed.get("taxonomy_version", TAXONOMY_VERSION),
+        "two_pass_mappings": [
+            {k: m[k] for k in _CACHED_MAPPING_FIELDS if k in m} for m in parsed.get("two_pass_mappings", [])
+        ],
+    }
+    while len(SYLLABUS_CACHE) > SYLLABUS_CACHE_SIZE:
+        SYLLABUS_CACHE.popitem(last=False)
 
 
 @router.get("/supported-targets", response_model=Dict[str, Any])
@@ -114,14 +135,22 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
     temp_path = os.path.join(temp_dir, filename)
 
     try:
+        contents = await file.read(MAX_UPLOAD_BYTES + 1)
+        if len(contents) > MAX_UPLOAD_BYTES:
+            raise HTTPException(
+                status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+                detail=f"Upload exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit."
+            )
         with open(temp_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            buffer.write(contents)
 
         # Execute Phase 7 Syllabus Parser
-        parsed_syllabus = parse_syllabus_pdf(temp_path, taxonomy_version=TAXONOMY_VERSION, core_courses=core_courses)
+        parsed_syllabus = parse_syllabus_pdf(
+            temp_path, taxonomy_version=TAXONOMY_VERSION, core_courses=core_courses, max_pages=MAX_PDF_PAGES
+        )
 
         syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{filename}"
-        SYLLABUS_CACHE[syllabus_id] = parsed_syllabus
+        _cache_syllabus(syllabus_id, parsed_syllabus)
 
         course_meta = parsed_syllabus.get("course_metadata", {})
 
@@ -135,6 +164,8 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
             message="Syllabus successfully uploaded and parsed."
         )
 
+    except HTTPException:
+        raise
     except (UnsupportedPDFError, NoCoreCoursesError) as err:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

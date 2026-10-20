@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_PATH = os.path.join(ROOT, "config", "scoring_v1.1.json")
+API_CONFIG_PATH = os.path.join(ROOT, "config", "api.json")
 
 _cache: Dict[str, Dict[str, Any]] = {}
 
@@ -21,6 +22,11 @@ def load_scoring_config(path: Optional[str] = None) -> Dict[str, Any]:
         with open(path, "r", encoding="utf-8") as f:
             _cache[path] = json.load(f)
     return _cache[path]
+
+
+def load_api_config(path: Optional[str] = None) -> Dict[str, Any]:
+    """API safety limits (upload size, page count, cache size, ...) from config/api.json, read once."""
+    return load_scoring_config(path or API_CONFIG_PATH)
 
 
 def resolve_path(relative_path: str) -> str:

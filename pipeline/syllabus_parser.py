@@ -439,7 +439,8 @@ def parse_course_modules(course: Dict[str, Any]) -> List[Dict[str, Any]]:
 def parse_syllabus_pdf(
     pdf_path: str,
     taxonomy_version: str = DEFAULT_TAXONOMY_VERSION,
-    core_courses: Optional[Iterable[str]] = None
+    core_courses: Optional[Iterable[str]] = None,
+    max_pages: Optional[int] = None
 ) -> Dict[str, Any]:
     """
     Parses a text-selectable VIT syllabus PDF:
@@ -454,6 +455,11 @@ def parse_syllabus_pdf(
         raise FileNotFoundError(f"PDF file not found at path: {pdf_path}")
 
     with pdfplumber.open(pdf_path) as pdf:
+        if max_pages is not None and len(pdf.pages) > max_pages:
+            raise UnsupportedPDFError(
+                f"Unsupported PDF '{os.path.basename(pdf_path)}': it has {len(pdf.pages)} pages; "
+                f"the limit is {max_pages} pages."
+            )
         pages_text = [page.extract_text() or "" for page in pdf.pages]
 
     if sum(len(t.strip()) for t in pages_text) < MIN_TEXT_LENGTH_THRESHOLD:
