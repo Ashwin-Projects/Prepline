@@ -14,14 +14,13 @@ import os
 from typing import List, Dict, Tuple
 from sentence_transformers import SentenceTransformer, util
 
-SIMILARITY_THRESHOLD = 0.50  # MVP baseline (Phase 5.3) - frozen after benchmark
+from pipeline.config import load_scoring_config, resolve_path
 
-DEFAULT_TAXONOMY_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "data",
-    "taxonomy",
-    "taxonomy_v1.0.json"
-)
+_CONFIG = load_scoring_config()
+
+SIMILARITY_THRESHOLD = _CONFIG["similarity_threshold"]  # MVP baseline (Phase 5.3) - frozen after benchmark
+
+DEFAULT_TAXONOMY_PATH = resolve_path(_CONFIG["taxonomy_path"])
 
 _model = None
 _taxonomy_nodes = None
@@ -31,7 +30,8 @@ _taxonomy_embeddings = None
 def load_model():
     global _model
     if _model is None:
-        _model = SentenceTransformer("all-MiniLM-L6-v2")
+        model_cfg = _CONFIG["embedding_model"]
+        _model = SentenceTransformer(model_cfg["name"], revision=model_cfg["revision"])
     return _model
 
 

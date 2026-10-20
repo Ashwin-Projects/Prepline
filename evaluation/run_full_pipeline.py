@@ -7,7 +7,7 @@ reflects this run only, not the shared data/processed/unmapped_terms.log.
 
 Usage:
     python evaluation/run_full_pipeline.py --pdf "path/to/VIT_CSE_2024_2025.pdf"
-    python evaluation/run_full_pipeline.py --pdf syllabus.pdf --out results/amazon_sde1_v1.0.json
+    python evaluation/run_full_pipeline.py --pdf syllabus.pdf --out results/amazon_sde1_<version>.json
 """
 import argparse
 import json
@@ -22,6 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
 import pipeline.unmapped_terms_logger as unmapped_terms_logger
+from pipeline.config import load_scoring_config
 from pipeline.embeddings import SIMILARITY_THRESHOLD
 from pipeline.syllabus_parser import parse_syllabus_pdf
 from pipeline.scoring import (
@@ -36,14 +37,14 @@ from evaluation.review_unmapped_terms import load_log, aggregate
 
 COMPANY = "Amazon"
 ROLE = "SDE-1"
-MIN_REPORTS = 15
-# No scoring config module exists yet; the backend hard-codes this same value (backend/routes.py).
-SCORING_CONFIG_VERSION = "v1.0"
+CONFIG = load_scoring_config()
+MIN_REPORTS = CONFIG["min_reports"]
+SCORING_CONFIG_VERSION = CONFIG["config_version"]
 TOP_N = 10
 
 DEFAULT_QUESTIONS = os.path.join(ROOT, "data", "processed", "questions.csv")
 DEFAULT_REPORTS = os.path.join(ROOT, "data", "processed", "reports.csv")
-DEFAULT_OUT = os.path.join(ROOT, "results", "amazon_sde1_v1.0.json")
+DEFAULT_OUT = os.path.join(ROOT, "results", f"amazon_sde1_{CONFIG['taxonomy_version']}.json")
 
 
 def count_reports(reports_csv: str) -> int:
