@@ -14,6 +14,7 @@ import tempfile
 from fastapi.testclient import TestClient
 
 from backend.app import app
+from backend.routes import get_core_courses
 from reportlab.pdfgen import canvas
 
 client = TestClient(app)
@@ -23,8 +24,11 @@ class TestBackendAPI(unittest.TestCase):
 
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
+        # Test syllabi use course CSE2001; supply a test allowlist instead of the real core-course config.
+        app.dependency_overrides[get_core_courses] = lambda: ["CSE2001"]
 
     def tearDown(self):
+        app.dependency_overrides.clear()
         self.temp_dir.cleanup()
 
     def create_sample_pdf(self, filename: str) -> str:

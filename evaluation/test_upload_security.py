@@ -14,6 +14,14 @@ from backend.app import app
 client = TestClient(app)
 
 
+@pytest.fixture(autouse=True)
+def core_course_allowlist():
+    # The upload fixtures use course CSE2001; supply a test allowlist instead of the real config.
+    app.dependency_overrides[routes.get_core_courses] = lambda: ["CSE2001"]
+    yield
+    app.dependency_overrides.clear()
+
+
 @pytest.mark.parametrize(
     ("raw", "expected"),
     [

@@ -11,8 +11,8 @@ import os
 import re
 import shutil
 import tempfile
-from typing import Dict, Any, Optional
-from fastapi import APIRouter, File, UploadFile, HTTPException, status
+from typing import Dict, Any, List, Optional
+from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, status
 
 from backend.schemas import (
     TargetSelectionRequest,
@@ -26,7 +26,7 @@ from backend.schemas import (
 )
 from pipeline.config import load_scoring_config
 from pipeline.interview_parser import count_reports, filter_questions, load_questions_csv
-from pipeline.syllabus_parser import parse_syllabus_pdf, UnsupportedPDFError
+from pipeline.syllabus_parser import parse_syllabus_pdf, NoCoreCoursesError, UnsupportedPDFError
 from pipeline.scoring import (
     calculate_syllabus_coverage,
     get_interview_importance,
@@ -60,6 +60,11 @@ def _get_report_count() -> int:
     included, _ = filter_questions(load_questions_csv(QUESTIONS_CSV_PATH))
     return count_reports(included)
 
+def get_core_courses() -> List[str]:
+    """Core CS course allowlist for syllabus uploads (config syllabus.core_courses); tests override this dependency."""
+    return list(CONFIG["syllabus"]["core_courses"])
+
+
 _UNSAFE_FILENAME_CHARS = re.compile(r"[^A-Za-z0-9._-]")
 
 
@@ -92,7 +97,7 @@ async def get_supported_targets():
 
 
 @router.post("/syllabi/upload", response_model=UploadSyllabusResponse, status_code=status.HTTP_201_CREATED)
-async def upload_syllabus(file: UploadFile = File(...)):
+async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] = Depends(get_core_courses)):
     """
     Endpoint 1: Syllabus Upload
     Parses uploaded text-selectable PDF syllabus via Phase 7 parser.
@@ -113,7 +118,7 @@ async def upload_syllabus(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
 
         # Execute Phase 7 Syllabus Parser
-        parsed_syllabus = parse_syllabus_pdf(temp_path, taxonomy_version=TAXONOMY_VERSION)
+        parsed_syllabus = parse_syllabus_pdf(temp_path, taxonomy_version=TAXONOMY_VERSION, core_courses=core_courses)
 
         syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{filename}"
         SYLLABUS_CACHE[syllabus_id] = parsed_syllabus
@@ -130,7 +135,7 @@ async def upload_syllabus(file: UploadFile = File(...)):
             message="Syllabus successfully uploaded and parsed."
         )
 
-    except UnsupportedPDFError as err:
+    except (UnsupportedPDFError, NoCoreCoursesError) as err:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(err)

@@ -103,6 +103,7 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
     print("Parsing syllabus PDF (slow on scanned pages)...", flush=True)
     syllabus = parse_syllabus_pdf(pdf_path)
     print(f"  {syllabus['units_count']} units in {time.time() - t0:.0f}s", flush=True)
+    print_course_filter(syllabus["course_filter"], syllabus["courses"], syllabus["text_layer"])
 
     coverage = calculate_syllabus_coverage(syllabus)
     print("Scoring interview questions...", flush=True)
@@ -120,6 +121,9 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         taxonomy_version=composite["taxonomy_version"],
         S_comp=composite["S_comp"],
         scoring_universe_size=composite["scoring_universe_size"],
+        courses_kept=syllabus["courses"],
+        course_filter=syllabus["course_filter"],
+        text_layer=syllabus["text_layer"],
         syllabus_units=syllabus["units_count"],
         units_with_matches=sum(1 for m in syllabus["two_pass_mappings"] if m["matched_topic_ids"]),
         topics_present=len(present),
@@ -141,6 +145,20 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         runtime_seconds=round(time.time() - t0, 1),
     )
     return result
+
+
+def print_course_filter(course_filter: dict, kept_courses: list, text_layer: dict) -> None:
+    print(f"Core courses kept ({len(kept_courses)}):", flush=True)
+    for c in kept_courses:
+        print(f"  KEEP  {c['course_code']:<9} {c['course_title']}")
+    print(f"Courses dropped ({len(course_filter['dropped'])}):")
+    for d in course_filter["dropped"]:
+        print(f"  DROP  {d['course_code']:<9} {d['course_title']}  [{d['drop_reason']}]")
+    missing = course_filter["allowlisted_missing"]
+    print(f"Allowlisted core courses with no readable syllabus ({len(missing)}): {', '.join(missing) or '-'}")
+    print(f"Pages without a text layer: {len(text_layer['pages_without_text'])} of {text_layer['page_count']} "
+          f"{text_layer['pages_without_text']}; scanned core courses: {', '.join(text_layer['scanned_courses']) or '-'}",
+          flush=True)
 
 
 def print_summary(r: dict) -> None:

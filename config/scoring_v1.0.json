@@ -28,6 +28,37 @@
     "exclude_needs_review": true,
     "require_question_text": true
   },
+  "syllabus": {
+    "core_courses_source": "data/raw/syllabi/vit_syllabus_manifest.csv relevant_topics (DSA, DAA, DBMS, OS, CN, other CSE core subjects): VIT B.Tech CSE 2024-25 Discipline Core + CS programming foundation courses + BMAT205L",
+    "core_courses": [
+      "BCSE101E",
+      "BCSE102L",
+      "BCSE102P",
+      "BCSE103E",
+      "BCSE202L",
+      "BCSE202P",
+      "BCSE203E",
+      "BCSE204L",
+      "BCSE204P",
+      "BCSE205L",
+      "BCSE301L",
+      "BCSE301P",
+      "BCSE302L",
+      "BCSE302P",
+      "BCSE303L",
+      "BCSE303P",
+      "BCSE304L",
+      "BCSE305L",
+      "BCSE306L",
+      "BCSE307L",
+      "BCSE307P",
+      "BCSE308L",
+      "BCSE308P",
+      "BCSE309L",
+      "BCSE309P",
+      "BMAT205L"
+    ]
+  },
   "embedding_model": {
     "name": "all-MiniLM-L6-v2",
     "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"

@@ -87,7 +87,7 @@ class TestSyllabusParser(unittest.TestCase):
 
         self.assertFalse(is_scanned_pdf(valid_pdf_path))
         
-        result = parse_syllabus_pdf(valid_pdf_path, taxonomy_version="v1.0")
+        result = parse_syllabus_pdf(valid_pdf_path, taxonomy_version="v1.0", core_courses=["CSE2001"])
         
         self.assertEqual(result["source_type"], "syllabus")
         self.assertEqual(result["taxonomy_version"], "v1.0")
@@ -118,7 +118,7 @@ class TestSyllabusParser(unittest.TestCase):
         c.drawString(100, 685, "Binary search trees: insertion, deletion and search in a BST.")
         c.save()
 
-        result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0")
+        result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0", core_courses=["CSE2002"])
         mapping = result["two_pass_mappings"][0]
         # Syllabus units match only high-level concepts: the BST unit matches BST's parent, dsa.trees
         self.assertIn("dsa.trees", mapping["matched_topic_ids"])
@@ -143,7 +143,7 @@ class TestSyllabusParser(unittest.TestCase):
         c.drawString(100, 685, "Binary search trees: insertion, deletion and search in a BST.")
         c.save()
 
-        result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0")
+        result = parse_syllabus_pdf(pdf_path, taxonomy_version="v1.0", core_courses=["CSE2002"])
         coverage = {t["topic_id"]: t for t in calculate_syllabus_coverage(result)["topic_coverage"]}
         bst = coverage["dsa.trees.bst"]
         self.assertEqual(bst["coverage_source"], "inherited")
