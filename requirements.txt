@@ -9,8 +9,8 @@ fastapi==0.136.1
 uvicorn==0.47.0
 python-multipart==0.0.30
 nltk==3.9.1
-pytest==9.0.3
 
 # test
+pytest==9.0.3
 reportlab==5.0.1
 httpx==0.28.1

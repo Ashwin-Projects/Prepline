@@ -12,8 +12,8 @@ from pydantic import BaseModel, Field
 # --- Request Schemas ---
 
 class TargetSelectionRequest(BaseModel):
-    company: str = Field(..., example="Amazon", description="Target company name")
-    role: str = Field(..., example="SDE-1", description="Target role title")
+    company: str = Field(..., examples=["Amazon"], description="Target company name")
+    role: str = Field(..., examples=["SDE-1"], description="Target role title")
 
 
 class PipelineRunRequest(BaseModel):
@@ -29,7 +29,7 @@ class TopicCoverageItem(BaseModel):
     topic_name: str
     presence: int = Field(..., ge=0, le=1, description="Presence bit C(t): 1 if present, 0 if absent")
     depth: float = Field(..., ge=1.0, le=5.0, description="Normalized depth scale D(t) [1.0 - 5.0]")
-    depth_status: str = Field(..., example="measured", description="'measured' or 'fallback'")
+    depth_status: str = Field(..., examples=["measured"], description="'measured' or 'fallback'")
     depth_signal_count: int = Field(default=0, ge=0)
     coverage: float = Field(..., ge=0.0, le=1.0, description="Normalized coverage Coverage(t) [0.0 - 1.0]")
 
@@ -67,7 +67,7 @@ class ReportCountValidationResponse(BaseModel):
     report_count: int
     min_reports_required: int = 15
     eligible: bool
-    status: str = Field(..., example="ELIGIBLE", description="'ELIGIBLE', 'INSUFFICIENT_DATA', or 'UNSUPPORTED_ROLE'")
+    status: str = Field(..., examples=["ELIGIBLE"], description="'ELIGIBLE', 'INSUFFICIENT_DATA', or 'UNSUPPORTED_ROLE'")
     message: str
 
 
@@ -85,6 +85,6 @@ class PreplineResultResponse(BaseModel):
     priority_gaps: List[PriorityGapItem] = []
     taxonomy_version: str = "v1.0"
     scoring_config_version: str = "v1.0"
-    depth_confidence_status: str = Field(..., example="measured", description="'measured', 'fallback', or 'mixed'")
+    depth_confidence_status: str = Field(..., examples=["measured"], description="'measured', 'fallback', or 'mixed'")
     status: str = Field(default="SUCCESS", description="'SUCCESS', 'INSUFFICIENT_DATA', or 'ERROR'")
     message: Optional[str] = None
