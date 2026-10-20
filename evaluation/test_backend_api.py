@@ -109,7 +109,7 @@ class TestBackendAPI(unittest.TestCase):
         # 3. Assert all required PREPLINE result fields
         self.assertEqual(data["company"], "Amazon")
         self.assertEqual(data["role"], "SDE-1")
-        self.assertEqual(data["report_count"], 21)
+        self.assertEqual(data["report_count"], 18)
         self.assertTrue(data["density_gate_passed"])
         self.assertIsNotNone(data["S_comp"])
         self.assertNotEqual(data["S_comp"], 76.5)  # Must NOT be old hardcoded mock score!

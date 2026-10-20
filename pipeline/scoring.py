@@ -159,7 +159,7 @@ def calculate_syllabus_coverage(
 
 def calculate_topic_importance(
     questions_input: Union[str, List[Dict[str, Any]], Any],
-    total_reports_count: int = 21,
+    total_reports_count: Optional[int] = None,
     taxonomy_nodes: Union[str, List[Dict[str, Any]]] = DEFAULT_TAXONOMY_PATH
 ) -> Dict[str, Any]:
     """
@@ -170,12 +170,15 @@ def calculate_topic_importance(
     - W(r,t) = max_{q in r} (credit(q,t))  (max credit for topic t within report r)
     - I(t) = sum_{r} W(r,t) / total_reports_count
     - 0 <= I(t) <= 1.0
+
+    Questions are filtered first (interview_parser.filter_questions: behavioral rounds,
+    needs_review rows and rows without question_text are excluded). When total_reports_count
+    is None it defaults to the number of reports with at least one included question.
     """
     from pipeline.taxonomy_mapper import map_source_to_taxonomy, DEFAULT_TAXONOMY_VERSION
+    from pipeline.interview_parser import count_reports, filter_questions
 
     nodes = load_taxonomy_nodes(taxonomy_nodes)
-    if total_reports_count <= 0:
-        raise ValueError("total_reports_count must be a positive integer.")
 
     # 1. Parse questions_input into a standardized list of dicts
     question_records: List[Dict[str, Any]] = []
@@ -195,20 +198,23 @@ def calculate_topic_importance(
     else:
         raise ValueError("questions_input must be a CSV file path string, list of dicts, or pandas DataFrame.")
 
+    included, excluded = filter_questions(question_records)
+    included_ids = {id(row) for row in included}
+    if total_reports_count is None:
+        total_reports_count = count_reports(included)
+    if total_reports_count <= 0:
+        raise ValueError("total_reports_count must be a positive integer (no report has an included question).")
+
     # 2. Group question credits by report_id
     # report_credits_map: report_id -> {topic_id -> max_credit}
     report_credits_map: Dict[str, Dict[str, float]] = {}
 
+    # idx is the row's position in the unfiltered input, so source_ids stay stable across filtering.
     for idx, q_rec in enumerate(question_records):
-        report_id = str(q_rec.get("report_id", f"REP_{idx}")).strip()
-        
-        # Determine question raw text
-        q_text = str(q_rec.get("question_text", "")).strip()
-        topic_text = str(q_rec.get("topic", "")).strip()
-
-        raw_text = q_text if q_text and q_text.lower() != "nan" else topic_text
-        if not raw_text or raw_text.lower() == "nan":
+        if id(q_rec) not in included_ids:
             continue
+        report_id = str(q_rec.get("report_id", f"REP_{idx}")).strip()
+        raw_text = str(q_rec.get("question_text", "")).strip()
 
         source_id = f"{report_id}_q{idx}"
         mapping = map_source_to_taxonomy(
@@ -256,6 +262,8 @@ def calculate_topic_importance(
 
     return {
         "total_reports_count": total_reports_count,
+        "questions_included": len(included),
+        "questions_excluded": len(excluded),
         "taxonomy_version": DEFAULT_TAXONOMY_VERSION,
         "interview_importance": interview_importance_list
     }

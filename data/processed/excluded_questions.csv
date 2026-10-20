@@ -1,0 +1,53 @@
+report_id,round,round_type,question_text,topic,needs_review,review_reason,exclusion_reason
+AMZ001,OA,OA,nan,2 coding questions,True,OA mentions 2 coding questions without specific problem names,needs_review;no_question_text
+AMZ001,OA,behavioral,nan,Workstyle,False,nan,behavioral_round;no_question_text
+AMZ001,Round 2,behavioral,nan,behavioral,False,nan,behavioral_round;no_question_text
+AMZ002,OA,behavioral,nan,behavioral,False,nan,behavioral_round;no_question_text
+AMZ002,Round 1,behavioral,nan,project discussion,False,nan,behavioral_round;no_question_text
+AMZ002,Round 1,behavioral,nan,Leadership Principles,False,nan,behavioral_round;no_question_text
+AMZ002,Round 1,technical,nan,technical questions,True,Mentions technical questions generally without specific problem names,needs_review;no_question_text
+AMZ004,OA,OA,nan,priority-queue problem,True,Mentions priority-queue problem without exact problem title,needs_review;no_question_text
+AMZ005,OA,behavioral,nan,workstyle,False,nan,behavioral_round;no_question_text
+AMZ005,Technical rounds,technical,nan,DSA/technical topics,True,General mention of subsequent technical interviews without specific question details,needs_review;no_question_text
+AMZ006,OA,OA,nan,two coding questions,True,OA mentions two coding questions without specific problem names,needs_review;no_question_text
+AMZ007,Technical Round 1,technical,nan,Sliding Window Maximum follow-up,True,Mentions follow-up question to Sliding Window Maximum without details,needs_review;no_question_text
+AMZ007,Technical Round 1,behavioral,nan,Leadership Principles questions,False,nan,behavioral_round;no_question_text
+AMZ008,Four technical rounds,technical,nan,"coding, problem solving, algorithms, data structures",True,High-level summary of four technical rounds without specific problem names,needs_review;no_question_text
+AMZ008,Four technical rounds,technical,nan,CS fundamentals,False,nan,no_question_text
+AMZ008,Four technical rounds,behavioral,nan,Leadership Principles,False,nan,behavioral_round;no_question_text
+AMZ009,Interview,technical,nan,further variations,True,Vague mention of further variations without specific question details,needs_review;no_question_text
+AMZ010,OA,OA,nan,arrays/binary search,False,nan,no_question_text
+AMZ010,OA,OA,nan,sorting by condition,False,nan,no_question_text
+AMZ010,3 interviews,technical,nan,algorithms/DSA,True,Broad topic summary across 3 interviews without specific questions,needs_review;no_question_text
+AMZ010,3 interviews,technical,nan,CS fundamentals,False,nan,no_question_text
+AMZ010,3 interviews,behavioral,nan,hiring-manager discussion,False,nan,behavioral_round;no_question_text
+AMZ011,OA,OA,nan,greedy and dynamic programming coding questions,True,General mention of greedy and dynamic programming questions without exact problem names,needs_review;no_question_text
+AMZ011,OA,behavioral,nan,Leadership Principles,False,nan,behavioral_round;no_question_text
+AMZ011,Rounds 1-4,mixed,nan,DSA with CS concepts,True,High-level summary of Rounds 1-4 combining DSA and CS concepts without specific questions,needs_review;no_question_text
+AMZ013,Technical phone screen,behavioral,nan,resume/project discussion,False,nan,behavioral_round;no_question_text
+AMZ013,Onsite rounds,technical,nan,onsite rounds,True,Mentions onsite rounds followed without specific question or topic details,needs_review;no_question_text
+AMZ014,OA,OA,nan,debugging,False,nan,no_question_text
+AMZ014,OA,behavioral,nan,workstyle,False,nan,behavioral_round;no_question_text
+AMZ014,OA,OA,nan,reasoning,False,nan,no_question_text
+AMZ015,OA,OA,nan,two array-based coding problems,True,Mentions two array-based coding problems without specific problem names,needs_review;no_question_text
+AMZ015,Technical interviews,technical,nan,technical interviews,True,General mention of technical interviews without specific question or topic details,needs_review;no_question_text
+AMZ016,OA,OA,,HackerRank coding problems,True,OA mentions HackerRank coding problems without specific problem names,needs_review;no_question_text
+AMZ016,OA,behavioral,,behavioral assessment,False,,behavioral_round;no_question_text
+AMZ017,OA,OA,,coding problems,True,OA mentions coding problems without specific problem titles,needs_review;no_question_text
+AMZ017,OA,behavioral,,workstyle assessment,False,,behavioral_round;no_question_text
+AMZ018,OA,OA,,two coding problems,True,OA mentions two coding problems without specific problem names,needs_review;no_question_text
+AMZ018,Round 2,behavioral,,Leadership Principles,False,,behavioral_round;no_question_text
+AMZ018,Round 2,behavioral,,project challenges,False,,behavioral_round;no_question_text
+AMZ019,OA,OA,,string manipulation,False,,no_question_text
+AMZ019,Technical Round 2,behavioral,,Leadership Principles,False,,behavioral_round;no_question_text
+AMZ019,Technical Round 2,behavioral,,project deep dive,False,,behavioral_round;no_question_text
+AMZ020,OA,OA,,greedy and dynamic programming problems,True,OA mentions greedy and DP problems without specific problem names,needs_review;no_question_text
+AMZ020,Technical Round 1,technical,,OS and CN fundamentals,False,,no_question_text
+AMZ021,OA,OA,,two coding problems,True,OA mentions two coding problems without specific titles,needs_review;no_question_text
+AMZ021,OA,behavioral,,workstyle,False,,behavioral_round;no_question_text
+AMZ021,Round 2,behavioral,,Leadership Principles,False,,behavioral_round;no_question_text
+AMZ021,Round 2,technical,,CS fundamentals,False,,no_question_text
+AMZ022,OA,OA,,two coding questions,True,OA mentions two coding questions without specific titles,needs_review;no_question_text
+AMZ022,OA,behavioral,,workstyle,False,,behavioral_round;no_question_text
+AMZ022,Technical Round 2,behavioral,,Leadership Principles,False,,behavioral_round;no_question_text
+AMZ022,Technical Round 2,behavioral,,resume discussion,False,,behavioral_round;no_question_text

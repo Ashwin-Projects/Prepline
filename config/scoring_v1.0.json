@@ -16,6 +16,11 @@
   },
   "semester_weeks": 15,
   "min_reports": 15,
+  "interview_filter": {
+    "exclude_round_types": ["behavioral"],
+    "exclude_needs_review": true,
+    "require_question_text": true
+  },
   "embedding_model": {
     "name": "all-MiniLM-L6-v2",
     "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
