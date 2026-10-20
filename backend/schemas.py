@@ -32,6 +32,8 @@ class TopicCoverageItem(BaseModel):
     depth_status: str = Field(..., examples=["measured"], description="'measured' or 'fallback'")
     depth_signal_count: int = Field(default=0, ge=0)
     coverage: float = Field(..., ge=0.0, le=1.0, description="Normalized coverage Coverage(t) [0.0 - 1.0]")
+    coverage_source: str = Field(default="direct", description="'direct', or 'inherited' from the nearest high-level ancestor")
+    inherited_from: Optional[str] = Field(default=None, description="topic_id the coverage was inherited from")
 
 
 class TopicImportanceItem(BaseModel):

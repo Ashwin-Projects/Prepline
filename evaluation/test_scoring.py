@@ -227,6 +227,9 @@ class TestPhase8Scoring(unittest.TestCase):
             self.assertEqual(item["taxonomy_version"], "v1.0")
 
 
+TWO_GRANULAR_QUESTION = "Banker's algorithm deadlock avoidance and normal forms in database normalization"
+
+
 class TestPhase9Scoring(unittest.TestCase):
 
     def setUp(self):
@@ -280,9 +283,11 @@ class TestPhase9Scoring(unittest.TestCase):
         res = calculate_topic_importance(questions, total_reports_count=21, taxonomy_nodes=self.mock_taxonomy_nodes)
         imp_map = {item["topic_id"]: item for item in res["interview_importance"]}
 
-        d_main = imp_map["os.deadlocks"]
+        # Interview questions match only granular skills: the single granular match takes 100% credit
+        d_main = imp_map["os.deadlocks.prevention_avoidance"]
         self.assertEqual(d_main["matched_report_count"], 1)
-        self.assertAlmostEqual(d_main["importance"], 0.6 / 21.0, places=4)
+        self.assertAlmostEqual(d_main["importance"], 1.0 / 21.0, places=4)
+        self.assertEqual(imp_map["os.deadlocks"]["importance"], 0.0)
 
     def test_multiple_questions_same_topic_in_one_report_takes_max_not_sum(self):
         from pipeline.scoring import calculate_topic_importance
@@ -297,37 +302,39 @@ class TestPhase9Scoring(unittest.TestCase):
         res = calculate_topic_importance(questions, total_reports_count=21, taxonomy_nodes=self.mock_taxonomy_nodes)
         imp_map = {item["topic_id"]: item for item in res["interview_importance"]}
 
-        d_main = imp_map["os.deadlocks"]
-        # Must take MAX credit within report (0.6), NOT sum (1.8)!
+        d_main = imp_map["os.deadlocks.prevention_avoidance"]
+        # Must take MAX credit within report (1.0), NOT sum (3.0)!
         self.assertEqual(d_main["matched_report_count"], 1)
-        self.assertAlmostEqual(d_main["importance"], 0.6 / 21.0, places=4)
+        self.assertAlmostEqual(d_main["importance"], 1.0 / 21.0, places=4)
 
     def test_multiple_topics_in_one_report(self):
         from pipeline.scoring import calculate_topic_importance
 
+        # Probed 2026-10-21: matches os.deadlocks.prevention_avoidance (0.624) and dbms.normalization.normal_forms (0.589)
         questions = [
-            {"report_id": "AMZ001", "question_text": "Deadlock Detection and Prevention", "topic": ""}
+            {"report_id": "AMZ001", "question_text": TWO_GRANULAR_QUESTION, "topic": ""}
         ]
 
         res = calculate_topic_importance(questions, total_reports_count=21, taxonomy_nodes=self.mock_taxonomy_nodes)
         imp_map = {item["topic_id"]: item for item in res["interview_importance"]}
 
-        self.assertEqual(imp_map["os.deadlocks"]["matched_report_count"], 1)
         self.assertEqual(imp_map["os.deadlocks.prevention_avoidance"]["matched_report_count"], 1)
+        self.assertEqual(imp_map["dbms.normalization.normal_forms"]["matched_report_count"], 1)
+        self.assertEqual(imp_map["os.deadlocks"]["matched_report_count"], 0)
 
     def test_60_40_credit_split_preservation(self):
         from pipeline.scoring import calculate_topic_importance
 
-        # Deadlock Detection and Prevention triggers 60/40 split between os.deadlocks (0.6) and os.deadlocks.prevention_avoidance (0.4)
+        # Two granular matches: prevention_avoidance is primary (0.6), normal_forms secondary (0.4)
         questions = [
-            {"report_id": "AMZ001", "question_text": "Deadlock Detection and Prevention", "topic": ""}
+            {"report_id": "AMZ001", "question_text": TWO_GRANULAR_QUESTION, "topic": ""}
         ]
 
         res = calculate_topic_importance(questions, total_reports_count=21, taxonomy_nodes=self.mock_taxonomy_nodes)
         imp_map = {item["topic_id"]: item for item in res["interview_importance"]}
 
-        d_main = imp_map["os.deadlocks"]
-        d_sub = imp_map["os.deadlocks.prevention_avoidance"]
+        d_main = imp_map["os.deadlocks.prevention_avoidance"]
+        d_sub = imp_map["dbms.normalization.normal_forms"]
 
         self.assertAlmostEqual(d_main["importance"], 0.6 / 21.0, places=4)
         self.assertAlmostEqual(d_sub["importance"], 0.4 / 21.0, places=4)
@@ -344,9 +351,9 @@ class TestPhase9Scoring(unittest.TestCase):
         res = calculate_topic_importance(questions, total_reports_count=21, taxonomy_nodes=self.mock_taxonomy_nodes)
         imp_map = {item["topic_id"]: item for item in res["interview_importance"]}
 
-        d_main = imp_map["os.deadlocks"]
+        d_main = imp_map["os.deadlocks.prevention_avoidance"]
         self.assertEqual(d_main["matched_report_count"], 2)
-        self.assertAlmostEqual(d_main["importance"], 1.2 / 21.0, places=4)
+        self.assertAlmostEqual(d_main["importance"], 2.0 / 21.0, places=4)
 
     def test_absent_topics_receive_zero_importance(self):
         from pipeline.scoring import calculate_topic_importance

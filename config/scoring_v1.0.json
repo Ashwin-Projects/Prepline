@@ -16,6 +16,13 @@
   },
   "semester_weeks": 15,
   "min_reports": 15,
+  "node_type_rule": {
+    "syllabus": "high_level_concept",
+    "interview": "granular_skill"
+  },
+  "coverage_inheritance": {
+    "granular_skill": "nearest_high_level_ancestor"
+  },
   "interview_filter": {
     "exclude_round_types": ["behavioral"],
     "exclude_needs_review": true,

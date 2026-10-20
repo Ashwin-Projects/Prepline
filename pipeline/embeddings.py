@@ -11,7 +11,7 @@ Output shape matches the existing repo contract in keyword_abstraction.py:
 """
 import json
 import os
-from typing import List, Dict, Tuple
+from typing import List, Dict, Optional, Tuple
 from sentence_transformers import SentenceTransformer, util
 
 from pipeline.config import load_scoring_config, resolve_path
@@ -65,7 +65,7 @@ def _ensure_taxonomy_loaded() -> None:
 
 
 def match_concepts_to_taxonomy(
-    concepts: List[str], threshold: float = SIMILARITY_THRESHOLD
+    concepts: List[str], threshold: float = SIMILARITY_THRESHOLD, node_type: Optional[str] = None
 ) -> Tuple[List[str], Dict[str, float], List[str]]:
     """
     Phase 5, applied across an entire source's `intermediate_concepts` list (i.e. everything two_pass_abstract() extracted for one
@@ -75,6 +75,9 @@ def match_concepts_to_taxonomy(
     Returns (matched_topic_ids, similarity_scores, unmapped_concepts). The first two are in exactly the shape two_pass_abstract()'s output
     dict expects; matched_topic_ids is sorted by similarity descending, exact-score ties broken alphabetically by topic_id (Phase 6.4).
     unmapped_concepts is every concept that scored below threshold against EVERY taxonomy node - this feeds Phase 12.1 logging.
+
+    node_type (e.g. "high_level_concept" or "granular_skill") restricts matching to nodes of that type; a concept that clears
+    the threshold only against other node types counts as unmapped.
     """
     best_by_topic: Dict[str, float] = {}
     unmapped_concepts: List[str] = []
@@ -82,12 +85,17 @@ def match_concepts_to_taxonomy(
         _ensure_taxonomy_loaded()
         concept_embeddings = load_model().encode(list(concepts), convert_to_tensor=True)
         score_rows = util.cos_sim(concept_embeddings, _taxonomy_embeddings).tolist()
+        candidates = [
+            i for i, node in enumerate(_taxonomy_nodes)
+            if node_type is None or node.get("type") == node_type
+        ]
         for concept, scores in zip(concepts, score_rows):
             matched = False
-            for node, score in zip(_taxonomy_nodes, scores):
+            for i in candidates:
+                score = scores[i]
                 if score >= threshold:
                     matched = True
-                    topic_id = node["topic_id"]
+                    topic_id = _taxonomy_nodes[i]["topic_id"]
                     if topic_id not in best_by_topic or score > best_by_topic[topic_id]:
                         best_by_topic[topic_id] = score
             if not matched:
