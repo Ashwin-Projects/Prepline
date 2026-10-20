@@ -58,6 +58,10 @@ _MODULE_TERMINATOR = re.compile(
     r"Text[ \t]+Book|Reference[ \t]+Book|Mode[ \t]+of[ \t]+(?:Evaluation|assessment)|Recommended[ \t]+by|Approved[ \t]+by)",
     re.IGNORECASE | re.MULTILINE,
 )
+# Lab block of an embedded (theory + lab) course, placed after the theory terminators.
+_LAB_BLOCK_HEADER = re.compile(
+    r"^[ \t]*(?:Indicative[ \t]+Experiments|List[ \t]+of[ \t]+Experiments)\b[^\r\n]*$", re.IGNORECASE | re.MULTILINE
+)
 _TRAILING_HOURS = re.compile(r"[ \t]*\(?[ \t]*\d+[ \t]*(?:hours|hrs|hour|hr)[ \t]*\)?[ \t]*$", re.IGNORECASE)
 
 _METADATA_KEYS = ("course_code", "course_title", "lecture_hours", "tutorial_hours",
@@ -302,6 +306,10 @@ def parse_course_modules(course: Dict[str, Any]) -> List[Dict[str, Any]]:
         return terminator.start() if terminator else hard_end
 
     if headers:
+        # An embedded course's lab block ("Indicative Experiments") follows the theory terminators;
+        # it becomes one extra unit (module_number 0) so its experiments are mapped too.
+        lab_block = _LAB_BLOCK_HEADER.search(text, headers[-1].end())
+        unit_count = len(headers) + (1 if lab_block else 0)
         for i, match in enumerate(headers):
             module_num = int(match.group(1))
             module_title = _TRAILING_HOURS.sub("", match.group(2)).strip()
@@ -312,7 +320,16 @@ def parse_course_modules(course: Dict[str, Any]) -> List[Dict[str, Any]]:
                 "module_number": module_num,
                 "module_title": module_title or f"Module {module_num}",
                 "unit_text": unit_text,
-                "depth_signals": extract_depth_signals(unit_text, metadata, module_count=len(headers)),
+                "depth_signals": extract_depth_signals(unit_text, metadata, module_count=unit_count),
+            })
+        if lab_block:
+            unit_text = text[lab_block.start():bounded_end(lab_block.end(), len(text))].strip()
+            modules.append({
+                "course_code": course["course_code"],
+                "module_number": 0,
+                "module_title": f"{course.get('course_title') or course['course_code']} - Indicative Experiments",
+                "unit_text": unit_text,
+                "depth_signals": extract_depth_signals(unit_text, metadata, module_count=unit_count),
             })
     else:
         unit_text = text[:bounded_end(0, len(text))].strip()

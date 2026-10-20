@@ -137,6 +137,43 @@ def test_module_bounded_by_terminators():
         assert boilerplate not in last
 
 
+EMBEDDED_COURSE = """BCSE203E Web Programming 1 0 4 3
+Module:1 Introduction 2 hours
+Web basics.
+Module:2 Hypertext Markup Language 2 hours
+Markup and forms.
+Total Lecture hours: 15 hours
+Text Book(s)
+1. A web programming book
+Mode of Evaluation: CAT, Quiz
+Indicative Experiments
+1. Build a responsive page layout with flexbox
+2. Implement a REST client in JavaScript
+Total Laboratory Hours 60 hours
+Mode of assessment: Continuous assessment and FAT
+"""
+
+
+def test_embedded_course_lab_experiments_become_a_unit():
+    # Final-review finding: the "Indicative Experiments" block of an embedded (theory + lab) course
+    # comes after the theory terminators and was never mapped.
+    modules = parse_course_modules(segment_courses(EMBEDDED_COURSE)[0])
+    assert [m["module_number"] for m in modules] == [1, 2, 0]
+    lab = modules[-1]
+    assert lab["module_title"] == "Web Programming - Indicative Experiments"
+    assert "flexbox" in lab["unit_text"] and "REST client" in lab["unit_text"]
+    for excluded in ("Mode of assessment", "Text Book", "Markup and forms"):
+        assert excluded not in lab["unit_text"]
+    assert "flexbox" not in modules[1]["unit_text"]
+
+
+def test_embedded_course_lab_hours_spread_over_all_units():
+    modules = parse_course_modules(segment_courses(EMBEDDED_COURSE)[0])
+    lab_hours = [m["depth_signals"]["lab_hours"] for m in modules]
+    assert lab_hours == [20.0, 20.0, 20.0]  # 4 periods/week * 15 weeks across 3 units
+    assert sum(lab_hours) == 4 * 15
+
+
 def test_lab_course_without_modules_single_unit():
     lab = segment_courses(LAB_COURSE)[0]
     modules = parse_course_modules(lab)
