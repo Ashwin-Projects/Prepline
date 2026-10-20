@@ -228,13 +228,13 @@ python -m pipeline.scoring --syllabus data/raw/syllabi/sample_syllabus.pdf
 | Sprint | Phase(s) | Description | Status |
 |---|---|---|---|
 | 1 | Phase 1 | Environment & folder scaffolding | Completed |
-| 1 | Phase 2 | Amazon SDE-1 interview dataset ingestion | Pending |
-| 2 | Phase 3 | Versioned taxonomy definition (`taxonomy_v1.0.json`) | Pending |
-| 3 | Phases 4–6 | Two-pass NLP abstraction, local embeddings, credit mapper | Pending |
-| 4 | Phases 7–8 | Syllabus parsing & depth modeling | Pending |
-| 5 | Phases 9–12 | Scoring engine & priority gap ranking | Pending |
+| 1 | Phase 2 | Amazon SDE-1 interview dataset ingestion | Completed |
+| 2 | Phase 3 | Versioned taxonomy definition (`taxonomy_v1.0.json`) | Completed |
+| 3 | Phases 4–6 | Two-pass NLP abstraction, local embeddings, credit mapper | Completed |
+| 4 | Phases 7–8 | Syllabus parsing & depth modeling | Completed |
+| 5 | Phases 9–12 | Scoring engine & priority gap ranking | Completed |
 | 6 | Phase 13 | Ground-truth benchmark & NLP evaluation | Pending |
-| 7 | Phases 14–15 | Backend API & dashboard | Pending |
+| 7 | Phases 14–15 | Backend API & dashboard | In progress (API completed; dashboard pending) |
 | 8 | Phase 16 | Pilot outcome validation & gamma calibration | Pending |
 
 An optional, time-permitting extension (Sprint 9: DSA prerequisite graph and study roadmap generation) is scoped separately and is only attempted once Sprints 1–8 above are complete, benchmarked, and stable.
