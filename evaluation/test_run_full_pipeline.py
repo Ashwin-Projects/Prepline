@@ -1,0 +1,57 @@
+"""
+Item 9: versioned results. run_full_pipeline writes results/amazon_sde1_v1.1.json by default and
+never overwrites an existing results file; compare_results builds the v1.0 -> v1.1 change log.
+"""
+import os
+import sys
+
+import pytest
+
+import evaluation.run_full_pipeline as rfp
+from evaluation.compare_results import build_changes
+
+
+def test_default_out_is_v1_1():
+    assert os.path.basename(rfp.DEFAULT_OUT) == "amazon_sde1_v1.1.json"
+    assert rfp.RESULTS_VERSION == "v1.1"
+
+
+def test_refuses_to_overwrite_existing_results(tmp_path, monkeypatch):
+    out = tmp_path / "amazon_sde1_v1.0.json"
+    out.write_text('{"S_comp": 51.538}', encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["run_full_pipeline.py", "--pdf", str(tmp_path / "missing.pdf"), "--out", str(out)])
+    with pytest.raises(SystemExit) as exc:
+        rfp.main()
+    assert "overwrite" in str(exc.value)
+    assert out.read_text(encoding="utf-8") == '{"S_comp": 51.538}'
+
+
+def _result(s_comp, gaps, runtime, universe=3):
+    return {
+        "S_comp": s_comp,
+        "runtime_seconds": runtime,
+        "scoring_universe_size": universe,
+        "report_count": 21,
+        "top_priority_gaps": [
+            {"rank": i + 1, "topic_id": t, "topic_name": t.title(), "importance": 0.1, "coverage": 0.0, "priority_gap": g}
+            for i, (t, g) in enumerate(gaps)
+        ],
+    }
+
+
+def test_build_changes_tables():
+    old = _result(51.538, [("dsa.heaps", 0.0952), ("dsa.dp.grid", 0.0667)], 1050.9)
+    step_a = _result(46.43, [("dsa.heaps", 0.1111), ("dsa.dp.grid", 0.0778)], 955.0)
+    new = _result(30.0, [("dsa.dp.grid", 0.2), ("os.deadlocks.prevention_avoidance", 0.1)], 400.0)
+    md = build_changes(old, new, [("Item 3 - interview filtering", step_a), ("Item 5 - boilerplate", new)],
+                       notes=["v1.1 covers only 3 core courses."])
+
+    assert "51.538" in md and "30.0" in md
+    assert "1050.9" in md and "400.0" in md
+    assert "v1.1 covers only 3 core courses." in md
+    # side-by-side top gaps: one row per rank
+    assert "| 1 | Dsa.Heaps (`dsa.heaps`) | 0.0952 | Dsa.Dp.Grid (`dsa.dp.grid`) | 0.2 |" in md
+    # attribution: delta per step, and gaps entering/leaving the top 10
+    assert "| Item 3 - interview filtering | 46.43 | -5.108 |" in md
+    assert "| Item 5 - boilerplate | 30.0 | -16.43 |" in md
+    assert "`os.deadlocks.prevention_avoidance`" in md.split("Item 5 - boilerplate", 1)[1]
