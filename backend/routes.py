@@ -58,6 +58,8 @@ MAX_PDF_PAGES = API_CONFIG["max_pdf_pages"]
 SYLLABUS_CACHE_SIZE = API_CONFIG["syllabus_cache_size"]
 PARSE_TIMEOUT_SECONDS = API_CONFIG["parse_timeout_seconds"]
 MAX_FILENAME_LENGTH = API_CONFIG["max_filename_length"]
+# A PDF starts with "%PDF-" (the spec tolerates a little leading junk, hence the first 1024 bytes)
+PDF_MAGIC = b"%PDF-"
 
 logger = logging.getLogger("prepline.api")
 
@@ -186,6 +188,11 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
             raise HTTPException(
                 status_code=status.HTTP_413_CONTENT_TOO_LARGE,
                 detail=f"Upload exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit."
+            )
+        if PDF_MAGIC not in contents[:1024]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="File content is not a PDF (missing the %PDF header)."
             )
         with open(temp_path, "wb") as buffer:
             buffer.write(contents)

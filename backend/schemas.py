@@ -12,18 +12,22 @@ from pipeline.config import load_scoring_config
 
 _CONFIG = load_scoring_config()
 
+# Request field bounds: company/role names, and syllabus ids ("syl_" + 32 hex chars = 36)
+MAX_NAME_LENGTH = 100
+MAX_SYLLABUS_ID_LENGTH = 64
+
 
 # --- Request Schemas ---
 
 class TargetSelectionRequest(BaseModel):
-    company: str = Field(..., examples=["Amazon"], description="Target company name")
-    role: str = Field(..., examples=["SDE-1"], description="Target role title")
+    company: str = Field(..., max_length=MAX_NAME_LENGTH, examples=["Amazon"], description="Target company name")
+    role: str = Field(..., max_length=MAX_NAME_LENGTH, examples=["SDE-1"], description="Target role title")
 
 
 class PipelineRunRequest(BaseModel):
-    syllabus_id: str = Field(..., description="Uploaded syllabus identifier")
-    company: str = Field(default="Amazon", description="Target company name")
-    role: str = Field(default="SDE-1", description="Target role title")
+    syllabus_id: str = Field(..., max_length=MAX_SYLLABUS_ID_LENGTH, description="Uploaded syllabus identifier")
+    company: str = Field(default="Amazon", max_length=MAX_NAME_LENGTH, description="Target company name")
+    role: str = Field(default="SDE-1", max_length=MAX_NAME_LENGTH, description="Target role title")
 
 
 # --- Response Sub-Models for PREPLINE Result ---

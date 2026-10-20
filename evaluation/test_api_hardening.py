@@ -42,6 +42,34 @@ def _upload(content: bytes, name: str = "syllabus.pdf"):
     return client.post("/api/v1/syllabi/upload", files={"file": (name, content, "application/pdf")})
 
 
+# --- L1: uploads must start with the %PDF magic bytes ---------------------------------------------
+
+@pytest.mark.parametrize("content", [b"not a pdf at all", b"", b"\x89PNG\r\n\x1a\n" + b"0" * 100])
+def test_non_pdf_content_rejected(content, monkeypatch):
+    called = []
+    monkeypatch.setattr(routes, "parse_syllabus_pdf", lambda *a, **k: called.append(1))
+    response = _upload(content, name="looks_like.pdf")
+    assert response.status_code == 400
+    assert "pdf" in response.json()["detail"].lower()
+    assert called == []
+
+
+# --- L3: bounded request fields ---------------------------------------------------------------------
+
+@pytest.mark.parametrize("field", ["company", "role"])
+def test_target_fields_have_max_length(field):
+    payload = {"company": "Amazon", "role": "SDE-1"}
+    payload[field] = "x" * 101
+    assert client.post("/api/v1/validate-target", json=payload).status_code == 422
+    payload[field] = "x" * 100
+    assert client.post("/api/v1/validate-target", json=payload).status_code == 200
+
+
+def test_syllabus_id_has_max_length():
+    assert client.post("/api/v1/pipeline/run", json={"syllabus_id": "s" * 65}).status_code == 422
+    assert client.post("/api/v1/pipeline/run", json={"syllabus_id": "s" * 64}).status_code == 404
+
+
 # --- M5: loopback-only dev server; unguessable syllabus ids --------------------------------------
 
 def test_dev_server_binds_loopback_by_default(monkeypatch):
