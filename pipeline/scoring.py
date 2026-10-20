@@ -7,6 +7,8 @@ Phase 10: Overall Composite Alignment Score S_comp (Pending)
 Phase 11: Priority Gap Ranking (Pending)
 """
 
+import copy
+import hashlib
 import json
 import math
 import os
@@ -257,6 +259,47 @@ def calculate_topic_importance(
         "taxonomy_version": DEFAULT_TAXONOMY_VERSION,
         "interview_importance": interview_importance_list
     }
+
+
+_importance_cache: Dict[Tuple, Dict[str, Any]] = {}
+
+
+def _file_sha256(path: str) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def clear_importance_cache() -> None:
+    """Drops every memoised interview-importance result."""
+    _importance_cache.clear()
+
+
+def get_interview_importance(
+    company: str,
+    role: str,
+    questions_csv: str,
+    total_reports_count: Optional[int] = None
+) -> Dict[str, Any]:
+    """
+    Phase 9 importance for one company/role dataset, memoised per
+    (company, role, taxonomy_version, config_version, questions.csv SHA-256, total_reports_count).
+    The file hash means editing the dataset never returns a stale I(t).
+    """
+    key = (
+        company,
+        role,
+        DEFAULT_TAXONOMY_VERSION,
+        _CONFIG["config_version"],
+        _file_sha256(questions_csv),
+        total_reports_count,
+    )
+    if key not in _importance_cache:
+        kwargs = {} if total_reports_count is None else {"total_reports_count": total_reports_count}
+        _importance_cache[key] = calculate_topic_importance(questions_csv, **kwargs)
+    return copy.deepcopy(_importance_cache[key])
 
 
 def _extract_importance_map(

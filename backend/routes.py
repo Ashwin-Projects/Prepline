@@ -27,7 +27,7 @@ from pipeline.config import load_scoring_config
 from pipeline.syllabus_parser import parse_syllabus_pdf, UnsupportedPDFError
 from pipeline.scoring import (
     calculate_syllabus_coverage,
-    calculate_topic_importance,
+    get_interview_importance,
     calculate_composite_score,
     rank_priority_gaps
 )
@@ -214,8 +214,10 @@ async def run_pipeline(request: PipelineRunRequest):
     topic_coverage_list = coverage_res.get("topic_coverage", [])
 
     # 5. Phase 9: Calculate Topic Importance
-    importance_res = calculate_topic_importance(
-        questions_input=QUESTIONS_CSV_PATH,
+    importance_res = get_interview_importance(
+        SUPPORTED_COMPANY,
+        SUPPORTED_ROLE,
+        QUESTIONS_CSV_PATH,
         total_reports_count=report_count
     )
     importance_list = importance_res.get("interview_importance", [])

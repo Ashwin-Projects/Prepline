@@ -56,12 +56,7 @@ def load_taxonomy(taxonomy_path: str) -> int:
     return len(nodes)
 
 
-def _match_single_concept(concept_text: str, threshold: float) -> List[Tuple[str, float]]:
-    """
-    Embed one concept string, return every taxonomy node scoring >=
-    threshold, sorted by similarity descending, exact-score ties broken
-    alphabetically by topic_id (Phase 6.4).
-    """
+def _ensure_taxonomy_loaded() -> None:
     if _taxonomy_nodes is None or _taxonomy_embeddings is None:
         if os.path.exists(DEFAULT_TAXONOMY_PATH):
             load_taxonomy(DEFAULT_TAXONOMY_PATH)
@@ -69,40 +64,34 @@ def _match_single_concept(concept_text: str, threshold: float) -> List[Tuple[str
             raise RuntimeError("Call load_taxonomy(path) before matching.")
 
 
-    model = load_model()
-    concept_emb = model.encode(concept_text, convert_to_tensor=True)
-    scores = util.cos_sim(concept_emb, _taxonomy_embeddings)[0]
-
-    matches = [
-        (_taxonomy_nodes[i]["topic_id"], float(scores[i]))
-        for i in range(len(_taxonomy_nodes))
-        if float(scores[i]) >= threshold
-    ]
-    matches.sort(key=lambda x: (-x[1], x[0]))
-    return matches
-
-
 def match_concepts_to_taxonomy(
     concepts: List[str], threshold: float = SIMILARITY_THRESHOLD
 ) -> Tuple[List[str], Dict[str, float], List[str]]:
     """
     Phase 5, applied across an entire source's `intermediate_concepts` list (i.e. everything two_pass_abstract() extracted for one
-    source_id). Matches each concept independently, then merges results by topic_id - keeping the best score seen for that topic across all
-    concepts belonging to this source.
+    source_id). All concepts are encoded in one batch and scored against every taxonomy node, then results are merged by topic_id -
+    keeping the best score seen for that topic across all concepts belonging to this source.
 
     Returns (matched_topic_ids, similarity_scores, unmapped_concepts). The first two are in exactly the shape two_pass_abstract()'s output
-    dict expects. unmapped_concepts is every concept that scored below threshold against EVERY taxonomy node - this feeds Phase 12.1 logging.
+    dict expects; matched_topic_ids is sorted by similarity descending, exact-score ties broken alphabetically by topic_id (Phase 6.4).
+    unmapped_concepts is every concept that scored below threshold against EVERY taxonomy node - this feeds Phase 12.1 logging.
     """
     best_by_topic: Dict[str, float] = {}
     unmapped_concepts: List[str] = []
-    for concept in concepts:
-        matches = _match_single_concept(concept, threshold)
-        if not matches:
-            unmapped_concepts.append(concept)
-            continue
-        for topic_id, score in matches:
-            if topic_id not in best_by_topic or score > best_by_topic[topic_id]:
-                best_by_topic[topic_id] = score
+    if concepts:
+        _ensure_taxonomy_loaded()
+        concept_embeddings = load_model().encode(list(concepts), convert_to_tensor=True)
+        score_rows = util.cos_sim(concept_embeddings, _taxonomy_embeddings).tolist()
+        for concept, scores in zip(concepts, score_rows):
+            matched = False
+            for node, score in zip(_taxonomy_nodes, scores):
+                if score >= threshold:
+                    matched = True
+                    topic_id = node["topic_id"]
+                    if topic_id not in best_by_topic or score > best_by_topic[topic_id]:
+                        best_by_topic[topic_id] = score
+            if not matched:
+                unmapped_concepts.append(concept)
     ordered = sorted(best_by_topic.items(), key=lambda x: (-x[1], x[0]))
     matched_topic_ids = [topic_id for topic_id, _ in ordered]
     similarity_scores = dict(ordered)
