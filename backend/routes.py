@@ -203,7 +203,7 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
                 detail=f"Syllabus parsing timed out after {PARSE_TIMEOUT_SECONDS:g} seconds."
             )
 
-        syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{filename}"
+        syllabus_id = f"syl_{uuid.uuid4().hex}"  # unguessable; never derived from the filename or upload order
         _cache_syllabus(syllabus_id, parsed_syllabus)
 
         course_meta = parsed_syllabus.get("course_metadata", {})

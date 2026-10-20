@@ -4,6 +4,8 @@ PREPLINE FastAPI Application Entrypoint (Phase 14)
 Initializes FastAPI app, includes API routers, and configures middleware.
 """
 
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -62,6 +64,15 @@ async def root():
     }
 
 
+def dev_server_settings() -> dict:
+    """Dev server binds to loopback only; set PREPLINE_HOST (e.g. 0.0.0.0) to expose it deliberately."""
+    return {
+        "host": os.environ.get("PREPLINE_HOST", "127.0.0.1"),
+        "port": int(os.environ.get("PREPLINE_PORT", "8000")),
+        "reload": True,
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("backend.app:app", **dev_server_settings())
