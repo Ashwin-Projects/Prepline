@@ -7,11 +7,13 @@ Implements API endpoints for:
 3. PREPLINE pipeline execution and result generation
 """
 
+import asyncio
 import os
 import re
 import shutil
 import tempfile
 from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, status
 
@@ -51,6 +53,13 @@ API_CONFIG = load_api_config()
 MAX_UPLOAD_BYTES = API_CONFIG["max_upload_bytes"]
 MAX_PDF_PAGES = API_CONFIG["max_pdf_pages"]
 SYLLABUS_CACHE_SIZE = API_CONFIG["syllabus_cache_size"]
+PARSE_TIMEOUT_SECONDS = API_CONFIG["parse_timeout_seconds"]
+
+# PDF parsing is CPU-bound: it runs on a small dedicated pool, never on the event loop, so other
+# requests keep being served and at most max_concurrent_parses parses run at once.
+_PARSE_EXECUTOR = ThreadPoolExecutor(
+    max_workers=API_CONFIG["max_concurrent_parses"], thread_name_prefix="syllabus-parse"
+)
 
 # Dataset Paths
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed")
@@ -106,6 +115,16 @@ def _cache_syllabus(syllabus_id: str, parsed: Dict[str, Any]) -> None:
         SYLLABUS_CACHE.popitem(last=False)
 
 
+def _parse_uploaded_file(temp_dir: str, temp_path: str, core_courses: List[str]) -> Dict[str, Any]:
+    """Runs on _PARSE_EXECUTOR and always removes its temp dir, even after the request has timed out."""
+    try:
+        return parse_syllabus_pdf(
+            temp_path, taxonomy_version=TAXONOMY_VERSION, core_courses=core_courses, max_pages=MAX_PDF_PAGES
+        )
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
+
 @router.get("/supported-targets", response_model=Dict[str, Any])
 async def get_supported_targets():
     """Returns currently supported company and role combinations (Amazon SDE-1 only in prototype)."""
@@ -131,6 +150,7 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
 
     # Save uploaded file temporarily for parsing
     temp_dir = tempfile.mkdtemp()
+    parse_owns_temp_dir = False
     filename = safe_upload_filename(file.filename)
     temp_path = os.path.join(temp_dir, filename)
 
@@ -144,10 +164,18 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
         with open(temp_path, "wb") as buffer:
             buffer.write(contents)
 
-        # Execute Phase 7 Syllabus Parser
-        parsed_syllabus = parse_syllabus_pdf(
-            temp_path, taxonomy_version=TAXONOMY_VERSION, core_courses=core_courses, max_pages=MAX_PDF_PAGES
+        # Execute Phase 7 Syllabus Parser off the event loop, with a timeout
+        future = asyncio.get_running_loop().run_in_executor(
+            _PARSE_EXECUTOR, _parse_uploaded_file, temp_dir, temp_path, core_courses
         )
+        parse_owns_temp_dir = True
+        try:
+            parsed_syllabus = await asyncio.wait_for(future, timeout=PARSE_TIMEOUT_SECONDS)
+        except asyncio.TimeoutError:
+            raise HTTPException(
+                status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                detail=f"Syllabus parsing timed out after {PARSE_TIMEOUT_SECONDS:g} seconds."
+            )
 
         syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{filename}"
         _cache_syllabus(syllabus_id, parsed_syllabus)
@@ -177,12 +205,12 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
             detail=f"Failed to parse syllabus PDF: {str(err)}"
         )
     finally:
-        if os.path.exists(temp_dir):
+        if not parse_owns_temp_dir:
             shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 @router.post("/validate-target", response_model=ReportCountValidationResponse)
-async def validate_target(request: TargetSelectionRequest):
+def validate_target(request: TargetSelectionRequest):
     """
     Endpoint 2 & 3: Company/Role Selection & Report-Count Density Gate Validation
     Checks if target is Amazon SDE-1 and evaluates report count against MIN_REPORTS_REQUIRED = 15.
@@ -224,7 +252,7 @@ async def validate_target(request: TargetSelectionRequest):
 
 
 @router.post("/pipeline/run", response_model=PreplineResultResponse)
-async def run_pipeline(request: PipelineRunRequest):
+def run_pipeline(request: PipelineRunRequest):
     """
     Endpoint 4 & 5: Pipeline Execution & Return Results
     Orchestrates the PREPLINE pipeline flow and returns real calculated scoring results.

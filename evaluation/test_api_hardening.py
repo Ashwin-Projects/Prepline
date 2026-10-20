@@ -42,6 +42,80 @@ def _upload(content: bytes, name: str = "syllabus.pdf"):
     return client.post("/api/v1/syllabi/upload", files={"file": (name, content, "application/pdf")})
 
 
+# --- M2: handlers never block the event loop; parsing has a timeout ------------------------------
+
+def _fake_parsed():
+    return {"syllabus_id": "x.pdf", "taxonomy_version": "v1.0", "course_metadata": {},
+            "units_count": 0, "two_pass_mappings": []}
+
+
+def _time_quick_request_during(slow_request):
+    """Runs slow_request(shared_client) in a thread, then times a quick request on the SAME event loop.
+    (A TestClient used without `with` starts a new event loop per request, which would hide blocking.)"""
+    import threading
+    import time
+    with TestClient(app, raise_server_exceptions=False) as shared:
+        worker = threading.Thread(target=slow_request, args=(shared,))
+        worker.start()
+        time.sleep(0.3)  # the slow request is now in its handler
+        start = time.perf_counter()
+        quick = shared.get("/api/v1/supported-targets")
+        elapsed = time.perf_counter() - start
+        worker.join()
+    return quick, elapsed
+
+
+def test_slow_parse_does_not_block_other_requests(monkeypatch):
+    import time
+
+    def slow_parse(*args, **kwargs):
+        time.sleep(2.0)
+        return _fake_parsed()
+
+    monkeypatch.setattr(routes, "parse_syllabus_pdf", slow_parse)
+    quick, elapsed = _time_quick_request_during(
+        lambda c: c.post("/api/v1/syllabi/upload", files={"file": ("s.pdf", _pdf_bytes(), "application/pdf")})
+    )
+    assert quick.status_code == 200
+    assert elapsed < 1.0, f"event loop blocked for {elapsed:.2f}s"
+
+
+def test_slow_pipeline_run_does_not_block_other_requests(monkeypatch):
+    import time
+    real = routes.calculate_syllabus_coverage
+
+    def slow_coverage(*args, **kwargs):
+        time.sleep(2.0)
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(routes, "calculate_syllabus_coverage", slow_coverage)
+    routes._cache_syllabus("syl_block_test", _fake_parsed())
+    quick, elapsed = _time_quick_request_during(
+        lambda c: c.post("/api/v1/pipeline/run", json={"syllabus_id": "syl_block_test"})
+    )
+    assert quick.status_code == 200
+    assert elapsed < 1.0, f"event loop blocked for {elapsed:.2f}s"
+
+
+def test_parse_timeout_returns_504(monkeypatch):
+    import time
+
+    def stuck_parse(*args, **kwargs):
+        time.sleep(3.0)
+        return _fake_parsed()
+
+    monkeypatch.setattr(routes, "parse_syllabus_pdf", stuck_parse)
+    monkeypatch.setattr(routes, "PARSE_TIMEOUT_SECONDS", 0.5)
+    start = time.perf_counter()
+    response = _upload(_pdf_bytes())
+    assert response.status_code == 504
+    assert time.perf_counter() - start < 2.5
+
+
+def test_parse_timeout_in_config():
+    assert load_api_config()["parse_timeout_seconds"] > 0
+
+
 # --- M1: upload size, page count, cache size, no raw text in the cache ---------------------------
 
 def test_api_limits_in_config():
