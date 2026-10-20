@@ -1,0 +1,6 @@
+{
+  "description": "API safety limits (not scoring parameters; changing them does not change results).",
+  "max_upload_bytes": 10485760,
+  "max_pdf_pages": 300,
+  "syllabus_cache_size": 50
+}

@@ -4,9 +4,16 @@ PREPLINE FastAPI Application Entrypoint (Phase 14)
 Initializes FastAPI app, includes API routers, and configures middleware.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+import backend.routes as routes
 from backend.routes import router as api_router
+
+# Multipart framing around the file is small; anything this far over the file limit is rejected
+# from its Content-Length before the body is read or spooled to disk.
+_MULTIPART_OVERHEAD_BYTES = 64 * 1024
 
 app = FastAPI(
     title="PREPLINE API Engine",
@@ -22,6 +29,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def reject_oversized_uploads(request: Request, call_next):
+    declared = request.headers.get("content-length", "")
+    if declared.isdigit() and int(declared) > routes.MAX_UPLOAD_BYTES + _MULTIPART_OVERHEAD_BYTES:
+        return JSONResponse(
+            status_code=413,
+            content={"detail": f"Upload exceeds the {routes.MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit."},
+        )
+    return await call_next(request)
+
 
 # Register API routes
 app.include_router(api_router)
