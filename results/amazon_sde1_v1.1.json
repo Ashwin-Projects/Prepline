@@ -19,7 +19,7 @@
       "assignments": 5.0
     }
   },
-  "generated_at": "2026-10-20T20:29:54.981673+00:00",
+  "generated_at": "2026-10-20T20:53:30.740496+00:00",
   "granular_without_high_level_ancestor": [],
   "interview_filter": {
     "questions_total": 98,
@@ -510,9 +510,9 @@
       "BCSE309P"
     ]
   },
-  "syllabus_units": 16,
-  "modules_with_depth_signals": 16,
-  "units_with_matches": 5,
+  "syllabus_units": 17,
+  "modules_with_depth_signals": 17,
+  "units_with_matches": 6,
   "topics_present": 22,
   "topics_in_taxonomy": 83,
   "depth_counts": {
@@ -599,80 +599,80 @@
     }
   ],
   "unmapped_terms_summary": {
-    "distinct_terms": 267,
+    "distinct_terms": 282,
     "distinct_terms_by_source_type": {
-      "syllabus": 217,
+      "syllabus": 232,
       "interview": 50
     },
-    "total_occurrences": 274
+    "total_occurrences": 335
   },
   "top_unmapped_terms": [
     {
-      "term": "functions",
-      "source_type": "syllabus",
-      "occurrences": 2,
-      "frequency": 2
-    },
-    {
-      "term": "heap",
-      "source_type": "interview",
-      "occurrences": 2,
-      "frequency": 2
-    },
-    {
       "term": "javascript",
       "source_type": "syllabus",
-      "occurrences": 2,
-      "frequency": 2
+      "occurrences": 3,
+      "frequency": 3
     },
     {
-      "term": "maximum units",
-      "source_type": "interview",
-      "occurrences": 2,
-      "frequency": 2
-    },
-    {
-      "term": "random pointer",
-      "source_type": "interview",
-      "occurrences": 2,
-      "frequency": 2
-    },
-    {
-      "term": "sliding window maximum",
-      "source_type": "interview",
-      "occurrences": 2,
-      "frequency": 2
-    },
-    {
-      "term": "truck",
-      "source_type": "interview",
-      "occurrences": 2,
-      "frequency": 2
-    },
-    {
-      "term": "able",
+      "term": "article",
       "source_type": "syllabus",
-      "occurrences": 1,
-      "frequency": 1
+      "occurrences": 2,
+      "frequency": 2
     },
     {
-      "term": "accessing memory locations",
+      "term": "aside elements",
       "source_type": "syllabus",
-      "occurrences": 1,
-      "frequency": 1
+      "occurrences": 2,
+      "frequency": 2
     },
     {
-      "term": "advanced javascript",
+      "term": "building dynamic web applications",
       "source_type": "syllabus",
-      "occurrences": 1,
-      "frequency": 1
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "canvas",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "case studies",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "checkboxes",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "demonstrate",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "deploying react",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
+    },
+    {
+      "term": "drawing",
+      "source_type": "syllabus",
+      "occurrences": 2,
+      "frequency": 2
     }
   ],
   "stage_timings_seconds": {
-    "parse": 411.1,
+    "parse": 602.1,
     "coverage": 0.0,
-    "importance": 0.9,
+    "importance": 1.4,
     "scoring": 0.0
   },
-  "runtime_seconds": 412.1
+  "runtime_seconds": 603.5
 }
