@@ -43,11 +43,11 @@ def _get_rake():
 _DATE = re.compile(r"\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b")
 _YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
 _STRUCTURAL_NUMBERS = (
-    re.compile(r"\b(?:Module|Unit)\s*[:\-]?\s*\d+", re.IGNORECASE),     # "Module:1", "Unit 2"
+    re.compile(r"\b(?:Module|Unit)[\s:\-]*\d+", re.IGNORECASE),         # "Module:1", "Unit 2" (one class: linear)
     re.compile(r"\b\d+\s*(?:hours|hrs|hour|hr)\b", re.IGNORECASE),        # "8 hours", "6hours"
     re.compile(r"^[ \t]*\d+[.)](?=\s)", re.MULTILINE),                    # list numbering "1. ", "2) "
     re.compile(r"\bItem\s+\d+(?:/\d+)?", re.IGNORECASE),                  # footer "Item 66/22"
-    re.compile(r"\bAnnexure\s*-?\s*\d+", re.IGNORECASE),                  # "Annexure - 18"
+    re.compile(r"\bAnnexure[\s\-]*\d+", re.IGNORECASE),                   # "Annexure - 18" (one class: linear)
     re.compile(r"\bNo\.\s*\d+", re.IGNORECASE),                           # "Academic Council No. 63"
 )
 # Replacement acts as a phrase delimiter so RAKE never fuses the words on either side.
