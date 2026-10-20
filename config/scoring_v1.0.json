@@ -1,0 +1,23 @@
+{
+  "config_version": "v1.0",
+  "description": "PREPLINE scoring configuration. tau, gamma, depth reference values, min_reports and the taxonomy version are FROZEN (CLAUDE.md skills policy); change them only with explicit owner approval and a new config version.",
+  "taxonomy_version": "v1.0",
+  "taxonomy_path": "data/taxonomy/taxonomy_v1.0.json",
+  "similarity_threshold": 0.50,
+  "gamma": 0.5,
+  "depth_reference_values": {
+    "unit_hours": 10.0,
+    "slide_count": 20.0,
+    "slides": 20.0,
+    "lab_hours": 10.0,
+    "lab_count": 5.0,
+    "assignment_count": 5.0,
+    "assignments": 5.0
+  },
+  "semester_weeks": 15,
+  "min_reports": 15,
+  "embedding_model": {
+    "name": "all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  }
+}

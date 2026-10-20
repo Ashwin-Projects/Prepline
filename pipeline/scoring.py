@@ -12,26 +12,16 @@ import math
 import os
 from typing import Dict, Any, List, Optional, Union, Tuple
 
-DEFAULT_TAXONOMY_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "data",
-    "taxonomy",
-    "taxonomy_v1.0.json"
-)
+from pipeline.config import load_scoring_config, resolve_path
 
-DEFAULT_TAXONOMY_VERSION = "v1.0"
-GAMMA_DEFAULT = 0.5  # MVP baseline depth decay constant
+_CONFIG = load_scoring_config()
 
-# Exact MVP reference values for depth signal normalization
-MVP_REFERENCE_VALUES = {
-    "unit_hours": 10.0,
-    "slide_count": 20.0,
-    "slides": 20.0,
-    "lab_hours": 10.0,
-    "lab_count": 5.0,
-    "assignment_count": 5.0,
-    "assignments": 5.0
-}
+DEFAULT_TAXONOMY_PATH = resolve_path(_CONFIG["taxonomy_path"])
+DEFAULT_TAXONOMY_VERSION = _CONFIG["taxonomy_version"]
+GAMMA_DEFAULT = _CONFIG["gamma"]  # MVP baseline depth decay constant (frozen)
+
+# Exact MVP reference values for depth signal normalization (frozen)
+MVP_REFERENCE_VALUES = _CONFIG["depth_reference_values"]
 
 
 def load_taxonomy_nodes(taxonomy_input: Union[str, List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
@@ -359,7 +349,7 @@ def _extract_coverage_map(
     return cov_map, name_map, taxonomy_version
 
 
-MIN_REPORTS = 15
+MIN_REPORTS = _CONFIG["min_reports"]
 
 
 def calculate_composite_score(

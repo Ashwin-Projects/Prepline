@@ -11,7 +11,9 @@ Every mapping preserves taxonomy_version.
 from typing import List, Dict, Any, Optional
 from rake_nltk import Rake
 
-DEFAULT_TAXONOMY_VERSION = "v1.0"
+from pipeline.config import load_scoring_config
+
+DEFAULT_TAXONOMY_VERSION = load_scoring_config()["taxonomy_version"]
 
 _rake = None
 

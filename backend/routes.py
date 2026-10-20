@@ -23,6 +23,7 @@ from backend.schemas import (
     TopicImportanceItem,
     PriorityGapItem
 )
+from pipeline.config import load_scoring_config
 from pipeline.syllabus_parser import parse_syllabus_pdf, UnsupportedPDFError
 from pipeline.scoring import (
     calculate_syllabus_coverage,
@@ -36,7 +37,11 @@ router = APIRouter(prefix="/api/v1", tags=["PREPLINE Alignment Engine"])
 # Prototype Scope Constants
 SUPPORTED_COMPANY = "Amazon"
 SUPPORTED_ROLE = "SDE-1"
-MIN_REPORTS_REQUIRED = 15
+
+CONFIG = load_scoring_config()
+MIN_REPORTS_REQUIRED = CONFIG["min_reports"]
+TAXONOMY_VERSION = CONFIG["taxonomy_version"]
+SCORING_CONFIG_VERSION = CONFIG["config_version"]
 
 # Dataset Paths
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed")
@@ -90,7 +95,7 @@ async def upload_syllabus(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
 
         # Execute Phase 7 Syllabus Parser
-        parsed_syllabus = parse_syllabus_pdf(temp_path, taxonomy_version="v1.0")
+        parsed_syllabus = parse_syllabus_pdf(temp_path, taxonomy_version=TAXONOMY_VERSION)
 
         syllabus_id = f"syl_{len(SYLLABUS_CACHE) + 1:03d}_{file.filename}"
         SYLLABUS_CACHE[syllabus_id] = parsed_syllabus
@@ -103,7 +108,7 @@ async def upload_syllabus(file: UploadFile = File(...)):
             units_count=parsed_syllabus.get("units_count", 0),
             course_code=course_meta.get("course_code"),
             course_title=course_meta.get("course_title"),
-            taxonomy_version=parsed_syllabus.get("taxonomy_version", "v1.0"),
+            taxonomy_version=parsed_syllabus.get("taxonomy_version", TAXONOMY_VERSION),
             message="Syllabus successfully uploaded and parsed."
         )
 
@@ -197,8 +202,8 @@ async def run_pipeline(request: PipelineRunRequest):
             topic_coverage=[],
             interview_importance=[],
             priority_gaps=[],
-            taxonomy_version="v1.0",
-            scoring_config_version="v1.0",
+            taxonomy_version=TAXONOMY_VERSION,
+            scoring_config_version=SCORING_CONFIG_VERSION,
             depth_confidence_status="fallback",
             status="INSUFFICIENT_DATA",
             message="Report count < 15. Pipeline stopped per density gate requirement."
@@ -239,7 +244,7 @@ async def run_pipeline(request: PipelineRunRequest):
     else:
         overall_depth_status = "fallback"
 
-    taxonomy_ver = syllabus_data.get("taxonomy_version", "v1.0")
+    taxonomy_ver = syllabus_data.get("taxonomy_version", TAXONOMY_VERSION)
 
     return PreplineResultResponse(
         company=SUPPORTED_COMPANY,
@@ -251,7 +256,7 @@ async def run_pipeline(request: PipelineRunRequest):
         interview_importance=[TopicImportanceItem(**item) for item in importance_list],
         priority_gaps=[PriorityGapItem(**item) for item in priority_gaps_list],
         taxonomy_version=taxonomy_ver,
-        scoring_config_version="v1.0",
+        scoring_config_version=SCORING_CONFIG_VERSION,
         depth_confidence_status=overall_depth_status,
         status="SUCCESS",
         message="PREPLINE alignment calculation completed successfully."
