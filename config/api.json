@@ -2,5 +2,8 @@
   "description": "API safety limits (not scoring parameters; changing them does not change results).",
   "max_upload_bytes": 10485760,
   "max_pdf_pages": 300,
-  "syllabus_cache_size": 50
+  "syllabus_cache_size": 50,
+  "parse_timeout_seconds": 900,
+  "parse_timeout_note": "Safety net, not a target: the real 213-page VIT PDF takes 410-600 s to parse locally (image-only pages).",
+  "max_concurrent_parses": 2
 }
