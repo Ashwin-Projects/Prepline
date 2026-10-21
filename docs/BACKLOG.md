@@ -14,6 +14,11 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 - **Duplicate module numbers inside one course give duplicate `source_id`s.** A repeated "Module:3", or a body line starting with "Unit 2", yields two `<code>_mod_3` records; only duplicate courses are guarded. *Impact: id-keyed consumers (unmapped-term dedup, versioning lookups) conflate two different units.*
 - **A header with "L T P C" on its own line is not recognised.** The layout "CODE Title" / "L T P C" / "3 0 0 3" matches neither header pattern. *Impact: the course silently disappears, and if the catalogue lists it, it is mis-reported as scanned.*
 
+## Matching and scoring (owner decision; tau and taxonomy are frozen)
+
+- **Taxonomy nodes are embedded by description only, never by name.** `embeddings.load_taxonomy` encodes `description`; in the v1.2 course run DAA's "Dynamic Programming" module scores 0.450 against `dsa.dp` (below tau = 0.50; 0.731 with the name prepended), while Computer Architecture and Compiler Design modules match `dsa.dp` at 0.50. *Impact: real coverage is missed and spurious coverage is credited (see results/CHANGES_v1.2.md, "Mapping quality"); fixing it changes matching and needs a new config/results version.*
+- **Depth is the mean of normalised signals, so an extra signal can lower it.** A topic matched by a 7-hour module (0.7) and a 3-hour lab experiment (0.3) gets less depth than from the module alone; in the v1.2 run lab signals lowered depth for 6 of 13 theory+lab topics (mean change -0.04). *Impact: small; labs do not add depth the way a reader might expect.*
+
 ## API / dashboard
 
 - **Multi-file syllabus upload (dashboard task).** `POST /api/v1/syllabi/upload` takes one PDF; combining course PDFs (`parse_syllabus_pdfs`) is CLI-only (`run_full_pipeline.py --pdf-dir`). *Impact: the dashboard cannot score a course-by-course syllabus until the upload accepts several files and returns one syllabus_id.*
