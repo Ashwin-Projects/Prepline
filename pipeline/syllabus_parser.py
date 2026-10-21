@@ -22,6 +22,8 @@ from pipeline.taxonomy_mapper import map_source_to_taxonomy
 
 # Minimum text threshold to detect scanned / non-text PDFs and pages
 MIN_TEXT_LENGTH_THRESHOLD = 50
+# Words in the VIT course PDFs sit ~2pt apart; pdfplumber's default x_tolerance (3) glues them together.
+EXTRACT_X_TOLERANCE = 1.5
 
 _CODE = r"[A-Z]{3,4}\d{3,4}[A-Z]?"
 
@@ -57,9 +59,14 @@ _LAB_BLOCK_HEADER = re.compile(
     r"^[ \t]*(?:Indicative[ \t]+Experiments|List[ \t]+of[ \t]+Experiments)\b[^\r\n]*$", re.IGNORECASE | re.MULTILINE
 )
 _TRAILING_HOURS = re.compile(r"\(?\d+[ \t]*(?:hours|hrs|hour|hr)\)?$", re.IGNORECASE)
+_TOTAL_LAB_HOURS = re.compile(r"^[ \t]*Total[ \t]+Laboratory[ \t]+Hours[ \t:]*(\d+)", re.IGNORECASE | re.MULTILINE)
+
+# VIT running page lines: "Agenda Item 65/39 - Annexure - 35" (header) and
+# "Proceedings of the 65th Academic Council (17.03.2022) 973" (footer).
+_RUNNING_LINES = (("Agenda Item", "Annexure"), ("Proceedings of the", "Academic Council"))
 
 _METADATA_KEYS = ("course_code", "course_title", "lecture_hours", "tutorial_hours",
-                  "practical_hours", "project_hours", "credits")
+                  "practical_hours", "project_hours", "credits", "ltpc_status")
 
 
 class UnsupportedPDFError(ValueError):
@@ -95,8 +102,33 @@ def is_scanned_pdf(pdf_path: str) -> bool:
     return total_text_length < MIN_TEXT_LENGTH_THRESHOLD
 
 
-def _ltpjc(numbers: str) -> Dict[str, Optional[int]]:
-    """Maps 4 numbers (L T P C) or 5 numbers (L T P J C) to hour/credit fields."""
+def extract_pages_text(pdf_path: str, max_pages: Optional[int] = None) -> List[str]:
+    """Each page's text (EXTRACT_X_TOLERANCE word spacing); "" for a page without a text layer."""
+    with pdfplumber.open(pdf_path) as pdf:
+        if max_pages is not None and len(pdf.pages) > max_pages:
+            raise UnsupportedPDFError(
+                f"Unsupported PDF '{os.path.basename(pdf_path)}': it has {len(pdf.pages)} pages; "
+                f"the limit is {max_pages} pages."
+            )
+        return [page.extract_text(x_tolerance=EXTRACT_X_TOLERANCE) or "" for page in pdf.pages]
+
+
+def strip_running_lines(text: str) -> str:
+    """Drops VIT page header/footer lines, which otherwise land inside modules that cross a page break."""
+    kept = []
+    for line in text.splitlines(keepends=True):
+        stripped = line.strip()
+        if any(stripped.startswith(start) and marker in stripped for start, marker in _RUNNING_LINES):
+            continue
+        kept.append(line)
+    return "".join(kept)
+
+
+def _ltpjc(numbers: Optional[str]) -> Dict[str, Any]:
+    """Maps 4 numbers (L T P C) or 5 numbers (L T P J C) to hour/credit fields; None -> all None, "incomplete"."""
+    if numbers is None:
+        return {"lecture_hours": None, "tutorial_hours": None, "practical_hours": None,
+                "project_hours": None, "credits": None, "ltpc_status": "incomplete"}
     values = [int(n) for n in numbers.split()]
     if len(values) == 4:
         lecture, tutorial, practical, credits = values
@@ -109,6 +141,7 @@ def _ltpjc(numbers: str) -> Dict[str, Optional[int]]:
         "practical_hours": practical,
         "project_hours": project,
         "credits": credits,
+        "ltpc_status": "complete",
     }
 
 
@@ -121,6 +154,7 @@ def _empty_metadata() -> Dict[str, Any]:
         "practical_hours": None,
         "project_hours": None,
         "credits": None,
+        "ltpc_status": "incomplete",
     }
 
 
@@ -147,8 +181,17 @@ def _numbers_line(line: Optional[str]) -> Optional[str]:
     return None
 
 
-def _vit_header(lines: List[Tuple[int, str]], i: int) -> Optional[Tuple[str, str, str]]:
-    """(code, title, numbers) when line i opens a VIT-format course, else None."""
+def _partial_numbers_line(line: Optional[str]) -> bool:
+    """True for a line of only 1-3 integers: an L-T-P-C row whose other digits are missing from the text layer."""
+    if line is None or len(line) > MAX_HEADER_LINE:
+        return False
+    tokens = line.split()
+    return 1 <= len(tokens) <= 3 and all(_is_int(t) for t in tokens)
+
+
+def _vit_header(lines: List[Tuple[int, str]], i: int) -> Optional[Tuple[str, str, Optional[str]]]:
+    """(code, title, numbers) when line i opens a VIT-format course, else None. numbers is None when the
+    "L T P C" row is incomplete (its columns cannot be told apart, so no value is guessed)."""
     line = lines[i][1]
     if len(line) > MAX_HEADER_LINE:
         return None
@@ -178,6 +221,8 @@ def _vit_header(lines: List[Tuple[int, str]], i: int) -> Optional[Tuple[str, str
             numbers = _numbers_line(nxt)
             if numbers:
                 return m.group("code"), title, numbers
+            if _partial_numbers_line(nxt):
+                return m.group("code"), title, None
             cont = (nxt or "").strip()
             if cont and len(cont) <= MAX_HEADER_LINE and not cont[0].isdigit():
                 numbers = _numbers_line(lines[i + 2][1] if i + 2 < len(lines) else None)
@@ -227,9 +272,7 @@ def _find_headers(full_text: str) -> List[Tuple[int, Dict[str, Any]]]:
         title = _LABELLED_TITLE.search(block)
         if title:
             meta["course_title"] = title.group(1).strip()
-        numbers = _labelled_ltpjc(block)
-        if numbers:
-            meta.update(_ltpjc(numbers))
+        meta.update(_ltpjc(_labelled_ltpjc(block)))
         headers.append((m.start(), meta))
 
     headers.sort(key=lambda h: h[0])
@@ -383,56 +426,121 @@ def _module_headers(text: str) -> List[Tuple[int, int, int, str]]:
     return found
 
 
+def split_experiments(text: str) -> List[str]:
+    """
+    Splits an "Indicative Experiments" list into one string per experiment. Items are numbered
+    1, 2, 3, ... followed by ".", ")" or whitespace; a line that does not carry the next number in the
+    sequence (e.g. a wrapped "8 bit and 16 bit variants") continues the previous item.
+    """
+    items: List[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        digits = len(stripped) - len(stripped.lstrip("0123456789"))
+        rest = stripped[digits:]
+        if 0 < digits <= 2 and int(stripped[:digits]) == len(items) + 1 and rest[:1] in (".", ")", " ", "	"):
+            title = rest[1:].strip() if rest[:1] in (".", ")") else rest.strip()
+            if title:
+                items.append(title)
+                continue
+        if items:
+            items[-1] = f"{items[-1]} {stripped}"
+    return items
+
+
+def course_group_of(course_code: str) -> str:
+    """The course a theory/lab component belongs to: BCSE202L and BCSE202P -> BCSE202."""
+    return course_code[:-1] if course_code[-1:].isalpha() else course_code
+
+
+def _total_lab_hours(text: str, metadata: Dict[str, Any]) -> Optional[float]:
+    """The course's "Total Laboratory Hours", else practical periods/week * semester weeks, else None."""
+    stated = _TOTAL_LAB_HOURS.search(text)
+    if stated:
+        return float(stated.group(1))
+    if metadata.get("practical_hours"):
+        return float(metadata["practical_hours"] * load_scoring_config()["semester_weeks"])
+    return None
+
+
 def parse_course_modules(course: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
-    Splits one course into modules. A module runs from its "Module:N" header to the next module
-    header or the first terminator line (Total Lecture hours, Text Book, Reference Books, Mode of
-    Evaluation, Recommended by, Approved by, ...). A course without module headers (e.g. a lab
-    course) yields one unit, module_number 0, bounded by the first terminator.
+    Splits one course into units, each tagged with source_id, course_group, component (theory|lab) and
+    empty (True when the module has no body text; callers do not map those).
+    - Theory modules run from their "Module:N" header to the next module header or the first terminator
+      line (Total Lecture hours, Text Book, Reference Books, Mode of Evaluation, Recommended by, ...).
+    - A lab-only course (no module headers) becomes one unit per "Indicative Experiments" item:
+      lab_hours = the course's lab hours spread across its experiments, and the experiment count is a
+      course-level signal (course_signals.lab_count) that scoring counts once per (topic, course).
+      Without a readable experiment list it yields one unit bounded by the first terminator.
+    - An embedded (theory + lab) course keeps its lab block as one extra unit, module_number 0.
     """
     text = course["text"]
+    code = course["course_code"]
     metadata = course_metadata_of(course)
     headers = _module_headers(text)
+    group = course_group_of(code)
     modules = []
 
     def bounded_end(start: int, hard_end: int) -> int:
         terminator = _MODULE_TERMINATOR.search(text, start, hard_end)
         return terminator.start() if terminator else hard_end
 
+    def unit(source_id, number, title, unit_text, component, depth_signals, empty=False, course_signals=None):
+        return {
+            "source_id": source_id,
+            "course_code": code,
+            "course_group": group,
+            "component": component,
+            "module_number": number,
+            "module_title": title,
+            "unit_text": unit_text,
+            "empty": empty,
+            "depth_signals": depth_signals,
+            "course_signals": course_signals,
+        }
+
     if headers:
         # An embedded course's lab block ("Indicative Experiments") follows the theory terminators;
         # it becomes one extra unit (module_number 0) so its experiments are mapped too.
         lab_block = _LAB_BLOCK_HEADER.search(text, headers[-1][1])
-        unit_count = len(headers) + (1 if lab_block else 0)
+        spans = []
         for i, (line_start, line_end, module_num, module_title) in enumerate(headers):
             next_start = headers[i + 1][0] if i + 1 < len(headers) else len(text)
-            unit_text = text[line_start:bounded_end(line_end, next_start)].strip()
-            modules.append({
-                "course_code": course["course_code"],
-                "module_number": module_num,
-                "module_title": module_title or f"Module {module_num}",
-                "unit_text": unit_text,
-                "depth_signals": extract_depth_signals(unit_text, metadata, module_count=unit_count),
-            })
+            end = bounded_end(line_end, next_start)
+            spans.append((line_start, end, module_num, module_title, not text[line_end:end].strip()))
+        unit_count = sum(1 for span in spans if not span[4]) + (1 if lab_block else 0)
+        for line_start, end, module_num, module_title, empty in spans:
+            unit_text = text[line_start:end].strip()
+            modules.append(unit(
+                f"{code}_mod_{module_num}", module_num, module_title or f"Module {module_num}", unit_text, "theory",
+                extract_depth_signals(unit_text, metadata, module_count=unit_count), empty=empty,
+            ))
         if lab_block:
             unit_text = text[lab_block.start():bounded_end(lab_block.end(), len(text))].strip()
-            modules.append({
-                "course_code": course["course_code"],
-                "module_number": 0,
-                "module_title": f"{course.get('course_title') or course['course_code']} - Indicative Experiments",
-                "unit_text": unit_text,
-                "depth_signals": extract_depth_signals(unit_text, metadata, module_count=unit_count),
-            })
-    else:
-        unit_text = text[:bounded_end(0, len(text))].strip()
-        modules.append({
-            "course_code": course["course_code"],
-            "module_number": 0,
-            "module_title": course.get("course_title") or "Full Syllabus",
-            "unit_text": unit_text,
-            "depth_signals": extract_depth_signals(unit_text, metadata),
-        })
+            modules.append(unit(
+                f"{code}_mod_0", 0, f"{course.get('course_title') or code} - Indicative Experiments", unit_text, "lab",
+                extract_depth_signals(unit_text, metadata, module_count=unit_count),
+            ))
+        return modules
 
+    lab_block = _LAB_BLOCK_HEADER.search(text)
+    experiments = split_experiments(text[lab_block.end():bounded_end(lab_block.end(), len(text))]) if lab_block else []
+    if experiments:
+        lab_hours = _total_lab_hours(text, metadata)
+        per_experiment = lab_hours / len(experiments) if lab_hours is not None else None
+        for n, experiment in enumerate(experiments, start=1):
+            signals = {"unit_hours": None, "slide_count": None, "lab_hours": per_experiment,
+                       "lab_count": None, "assignment_count": None}
+            modules.append(unit(f"{code}_exp_{n}", n, experiment, experiment, "lab", signals,
+                                course_signals={"lab_count": len(experiments)}))
+        return modules
+
+    unit_text = text[:bounded_end(0, len(text))].strip()
+    component = "lab" if metadata.get("practical_hours") and not metadata.get("lecture_hours") else "theory"
+    modules.append(unit(f"{code}_mod_0", 0, course.get("course_title") or "Full Syllabus", unit_text, component,
+                        extract_depth_signals(unit_text, metadata)))
     return modules
 
 
@@ -524,3 +632,4 @@ def parse_syllabus_pdf(
         "units_count": len(two_pass_mappings),
         "two_pass_mappings": two_pass_mappings
     }
+
