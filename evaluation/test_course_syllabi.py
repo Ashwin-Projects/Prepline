@@ -350,3 +350,52 @@ def test_manifest_has_one_row_per_core_course_file():
     assert by_code["BCSE203E"][0]["text_layer"] == "missing"
     programme = [r for r in rows if r["component"] == "programme"]
     assert len(programme) == 1 and programme[0]["used_in_course_run"] == "no"
+
+
+# --- manual transcriptions for PDFs without a text layer (2026-10-22) ----------------
+
+TRANSCRIBED_THEORY = """# Manual transcription of BCSE102L (vector-outline PDF, no text layer).
+BCSE102L Structured and Object-Oriented Programming L T P C
+2 0 0 2
+Module:1 C Programming Fundamentals 2 hours
+Variables - Data Types - Operators - Branching and Looping.
+Module:2 Arrays and Functions 4 hours
+One Dimensional array - Recursive functions.
+Total Lecture hours: 30 hours
+"""
+
+
+def _transcribed_dir(tmp_path, code, text):
+    folder = tmp_path / "transcribed"
+    folder.mkdir(exist_ok=True)
+    (folder / f"{code}.txt").write_text(text, encoding="utf-8")
+    return str(folder)
+
+
+def test_transcription_used_when_pdf_has_no_text_layer(tmp_path):
+    blank = _write_pdf(tmp_path / "BCSE102L_SOOP_TH_63 ACP.pdf", [[], []])
+    folder = _transcribed_dir(tmp_path, "BCSE102L", TRANSCRIBED_THEORY)
+    result = parse_syllabus_pdfs([blank], syllabus_id="s", core_courses=["BCSE102L"], transcriptions_dir=folder)
+    assert result["file_errors"] == []
+    assert [m["source_id"] for m in result["two_pass_mappings"]] == ["BCSE102L_mod_1", "BCSE102L_mod_2"]
+    assert all("Manual transcription" not in m["raw_text"] for m in result["two_pass_mappings"])
+    assert result["text_layer"]["files"] == [{"file": "BCSE102L_SOOP_TH_63 ACP.pdf", "page_count": 2,
+                                              "pages_without_text": [1, 2], "text_source": "manual_transcription"}]
+    course = result["courses"][0]
+    assert (course["course_code"], course["lecture_hours"], course["text_source"]) == ("BCSE102L", 2, "manual_transcription")
+
+
+def test_transcription_ignored_when_pdf_has_text(tmp_path):
+    lab = _lab_pdf(tmp_path)
+    folder = _transcribed_dir(tmp_path, "BCSE202P", TRANSCRIBED_THEORY.replace("BCSE102L", "BCSE202P"))
+    result = parse_syllabus_pdfs([lab], syllabus_id="s", core_courses=CORE, transcriptions_dir=folder)
+    assert result["text_layer"]["files"][0]["text_source"] == "pdf"
+    assert result["courses"][0]["text_source"] == "pdf"
+    assert [m["source_id"] for m in result["two_pass_mappings"]][:1] == ["BCSE202P_exp_1"]
+
+
+def test_no_text_and_no_transcription_is_still_a_file_error(tmp_path):
+    blank = _write_pdf(tmp_path / "BCSE999L_scanned.pdf", [[]])
+    folder = _transcribed_dir(tmp_path, "BCSE102L", TRANSCRIBED_THEORY)
+    result = parse_syllabus_pdfs([blank, _lab_pdf(tmp_path)], syllabus_id="s", core_courses=CORE, transcriptions_dir=folder)
+    assert [e["file"] for e in result["file_errors"]] == ["BCSE999L_scanned.pdf"]

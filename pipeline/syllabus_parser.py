@@ -551,24 +551,49 @@ def collect_syllabus_pdfs(folder: str, pattern: str = "BCSE*.pdf") -> List[str]:
     return sorted(glob.glob(os.path.join(glob.escape(folder), pattern)))
 
 
-def _read_courses(pdf_path: str, max_pages: Optional[int]) -> Tuple[List[str], str, List[Dict[str, Any]]]:
-    """(pages_text, full_text, courses) of one PDF; UnsupportedPDFError when it has no text or no course header."""
+def _transcription_for(pdf_path: str, transcriptions_dir: Optional[str]) -> Optional[str]:
+    """
+    The manual transcription <transcriptions_dir>/<CODE>.txt of a course PDF named "<CODE>_...pdf", without its
+    "#" comment lines (provenance notes); None when there is none.
+    """
+    code = os.path.basename(pdf_path).split("_")[0]
+    if not transcriptions_dir or not code.isalnum():
+        return None
+    path = os.path.join(transcriptions_dir, f"{code}.txt")
+    if not os.path.isfile(path):
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        return "".join(line for line in f if not line.lstrip().startswith("#"))
+
+
+def _read_courses(
+    pdf_path: str, max_pages: Optional[int], transcription: Optional[str] = None
+) -> Tuple[List[str], str, List[Dict[str, Any]], str]:
+    """
+    (pages_text, full_text, courses, text_source) of one PDF; UnsupportedPDFError when it has no text or no course
+    header. A PDF without a text layer is read from its manual transcription when one is given
+    (text_source "manual_transcription"; never used for a PDF that has text).
+    """
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF file not found at path: {pdf_path}")
     pages_text = extract_pages_text(pdf_path, max_pages)
-    if sum(len(t.strip()) for t in pages_text) < MIN_TEXT_LENGTH_THRESHOLD:
+    if sum(len(t.strip()) for t in pages_text) >= MIN_TEXT_LENGTH_THRESHOLD:
+        text, text_source = "\n".join(t for t in pages_text if t), "pdf"
+    elif transcription is not None:
+        text, text_source = transcription, "manual_transcription"
+    else:
         raise UnsupportedPDFError(
             f"Unsupported PDF '{os.path.basename(pdf_path)}': Document is a scanned image or contains no extractable text. "
             "OCR processing is excluded from MVP scope."
         )
-    full_text = strip_running_lines("\n".join(t for t in pages_text if t))
+    full_text = strip_running_lines(text)
     courses = segment_courses(full_text)
     if not courses:
         raise UnsupportedPDFError(
             f"Unsupported PDF '{os.path.basename(pdf_path)}': no course headers found "
             "(expected a course code, title and L-T-P-C line per course)."
         )
-    return pages_text, full_text, courses
+    return pages_text, full_text, courses, text_source
 
 
 def _pages_without_text(pages_text: List[str]) -> List[int]:
@@ -640,6 +665,7 @@ def _map_courses(kept: List[Dict[str, Any]], taxonomy_version: str):
             "course_group": course_group_of(course["course_code"]),
             "component": _course_component(units),
             "source_file": source_file,
+            "text_source": course.get("text_source", "pdf"),
             "experiment_count": len(experiments) or None,
             "lab_hours_total": round(sum(lab_hours), 4) if lab_hours else None,
         })
@@ -696,7 +722,7 @@ def parse_syllabus_pdf(
     4. Maps each non-empty unit to taxonomy topics via map_source_to_taxonomy preserving taxonomy_version;
        body-less modules are listed in skipped_modules.
     """
-    pages_text, full_text, courses = _read_courses(pdf_path, max_pages)
+    pages_text, full_text, courses, _ = _read_courses(pdf_path, max_pages)
     kept, course_filter, scanned_courses = _filter_or_raise(courses, full_text, _allowlist(core_courses))
     mappings, skipped, records = _map_courses(kept, taxonomy_version)
     text_layer = {
@@ -713,13 +739,15 @@ def parse_syllabus_pdfs(
     syllabus_id: str,
     taxonomy_version: str = DEFAULT_TAXONOMY_VERSION,
     core_courses: Optional[Iterable[str]] = None,
-    max_pages: Optional[int] = None
+    max_pages: Optional[int] = None,
+    transcriptions_dir: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Builds ONE combined syllabus from several course PDFs (e.g. a theory BCSE202L and its lab BCSE202P).
     Each file is read and segmented on its own; the courses are merged and the allowlist/duplicate filter
     runs once over all of them. A file without text or course headers is recorded in file_errors and the
     others are still scored; no readable file -> UnsupportedPDFError, no core course -> NoCoreCoursesError.
+    A PDF without a text layer is read from transcriptions_dir/<CODE>.txt when that manual transcription exists.
     Same schema as parse_syllabus_pdf plus source_files, file_errors and per-file text_layer.files.
     """
     paths = list(pdf_paths)
@@ -727,15 +755,18 @@ def parse_syllabus_pdfs(
     for path in paths:
         name = os.path.basename(path)
         try:
-            pages_text, full_text, file_courses = _read_courses(path, max_pages)
+            pages_text, full_text, file_courses, text_source = _read_courses(
+                path, max_pages, _transcription_for(path, transcriptions_dir))
         except UnsupportedPDFError as err:
             file_errors.append({"file": name, "error": str(err)})
             continue
         for course in file_courses:
             course["source_file"] = name
+            course["text_source"] = text_source
         courses.extend(file_courses)
         texts.append(full_text)
-        files.append({"file": name, "page_count": len(pages_text), "pages_without_text": _pages_without_text(pages_text)})
+        files.append({"file": name, "page_count": len(pages_text), "pages_without_text": _pages_without_text(pages_text),
+                      "text_source": text_source})
     if not courses:
         raise UnsupportedPDFError(
             "No readable course syllabus in: " + ", ".join(os.path.basename(p) for p in paths) + ". "
