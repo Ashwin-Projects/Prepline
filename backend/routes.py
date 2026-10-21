@@ -122,7 +122,8 @@ def safe_upload_filename(name: Optional[str]) -> str:
 # Parsed syllabi kept in memory for /pipeline/run: at most SYLLABUS_CACHE_SIZE entries (oldest evicted),
 # and only what scoring needs - never the syllabus text itself.
 SYLLABUS_CACHE: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
-_CACHED_MAPPING_FIELDS = ("source_id", "course_code", "module_number", "matched_topic_ids", "depth_signals")
+_CACHED_MAPPING_FIELDS = ("source_id", "course_code", "module_number", "matched_topic_ids", "depth_signals",
+                          "course_signals")
 
 
 def _cache_syllabus(syllabus_id: str, parsed: Dict[str, Any]) -> None:

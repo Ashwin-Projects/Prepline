@@ -167,3 +167,45 @@ def test_extraction_separates_closely_spaced_words(tmp_path):
         x += c.stringWidth(word, "Helvetica", 12) + 2.0
     c.save()
     assert extract_pages_text(path)[0].strip() == "Data Structures and Algorithms"
+
+
+# --- scoring: course-level signals -------------------------------------------
+
+NODES = [{"topic_id": "t", "name": "T", "type": "high_level_concept"}]
+
+
+def _experiment(course_code, n, lab_count):
+    return {"source_id": f"{course_code}_exp_{n}", "course_code": course_code, "matched_topic_ids": ["t"],
+            "depth_signals": {"unit_hours": None, "slide_count": None, "lab_hours": 3.0, "lab_count": None,
+                              "assignment_count": None},
+            "course_signals": {"lab_count": lab_count}}
+
+
+def _topic(mappings):
+    from pipeline.scoring import calculate_syllabus_coverage
+    result = calculate_syllabus_coverage({"two_pass_mappings": mappings}, taxonomy_nodes=NODES)
+    return result["topic_coverage"][0]
+
+
+def test_lab_count_counted_once_per_course():
+    # three experiments of one lab match t: three lab_hours signals, one lab_count signal
+    topic = _topic([_experiment("BCSE202P", n, 10) for n in (1, 2, 3)])
+    assert topic["depth_signal_count"] == 4
+    # N: lab_hours 3/10 = 0.3 (x3), lab_count min(10/5, 1) = 1.0 -> D_norm 0.475 -> D = 1 + 4 * 0.475
+    assert topic["depth"] == pytest.approx(2.9)
+
+
+def test_lab_count_counted_again_for_another_course():
+    topic = _topic([_experiment("BCSE202P", 1, 10), _experiment("BCSE202P", 2, 10), _experiment("BCSE204P", 1, 11)])
+    assert topic["depth_signal_count"] == 5
+
+
+def test_api_cache_keeps_course_signals():
+    import backend.routes as routes
+    parsed = {"syllabus_id": "s", "two_pass_mappings": [_experiment("BCSE202P", 1, 10)]}
+    routes._cache_syllabus("test_course_signals", parsed)
+    try:
+        cached = routes.SYLLABUS_CACHE["test_course_signals"]["two_pass_mappings"][0]
+        assert cached["course_signals"] == {"lab_count": 10}
+    finally:
+        routes.SYLLABUS_CACHE.pop("test_course_signals", None)

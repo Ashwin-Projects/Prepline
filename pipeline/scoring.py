@@ -91,23 +91,28 @@ def calculate_syllabus_coverage(
     # 1. Collect matched topic IDs and depth signals across all syllabus modules
     topic_signals_map: Dict[str, List[float]] = {}
     present_topics = set()
+    # course_signals (e.g. a lab's experiment count) describe a whole course, so they enter a topic's
+    # signals once per (topic, course) however many of that course's units match the topic.
+    course_signals_seen = set()
+
+    def _normalized(signals: Dict[str, Any]) -> List[float]:
+        values = (normalize_signal(sig_key, raw_val) for sig_key, raw_val in signals.items())
+        return [v for v in values if v is not None]
 
     for mapping in two_pass_mappings:
         matched_ids = mapping.get("matched_topic_ids", [])
-        depth_signals = mapping.get("depth_signals", {}) or {}
-
-        # Extract non-None normalized depth signals from this module
-        module_norm_signals = []
-        for sig_key, raw_val in depth_signals.items():
-            norm_val = normalize_signal(sig_key, raw_val)
-            if norm_val is not None:
-                module_norm_signals.append(norm_val)
+        module_norm_signals = _normalized(mapping.get("depth_signals", {}) or {})
+        course_norm_signals = _normalized(mapping.get("course_signals") or {})
 
         for topic_id in matched_ids:
             present_topics.add(topic_id)
             if topic_id not in topic_signals_map:
                 topic_signals_map[topic_id] = []
             topic_signals_map[topic_id].extend(module_norm_signals)
+            key = (topic_id, mapping.get("course_code"))
+            if course_norm_signals and key not in course_signals_seen:
+                course_signals_seen.add(key)
+                topic_signals_map[topic_id].extend(course_norm_signals)
 
     # Pre-calculate gamma normalization denominator: 1 - exp(-5 * gamma)
     denom = 1.0 - math.exp(-5.0 * gamma)
