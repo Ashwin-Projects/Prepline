@@ -36,8 +36,8 @@ Score the owner's complete core syllabus — 20 individual VIT course PDFs in `d
    `BCSE*.pdf`), and `--syllabus-id`; it logs per-file counts and stage timings and never overwrites results.
    `RESULTS_VERSION = "v1.2"`.
 6. **Manifest.** `vit_syllabus_manifest.csv`: one row per course file plus the existing programme row
-   (marked unused). New columns: `course_code, course_group, component, course_title, l_t_p_j_c,
-   ltpc_status, used_in_course_run, source`. URLs blank for course rows; `source` = "VIT official course
+   (marked unused). New columns: `course_code, course_group, component, course_title, l_t_p_c` (no file has a J column),
+   `ltpc_status, used_in_course_run, source`. URLs blank for course rows; `source` = "VIT official course
    syllabus PDF, downloaded by user 2026-10-21".
 7. **API.** Single upload unchanged. Multi-file upload → `docs/BACKLOG.md` (dashboard task).
 8. **Outputs.** `results/amazon_sde1_v1.2_course_syllabi.json`; `results/CHANGES_v1.2.md` compares it with

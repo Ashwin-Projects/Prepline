@@ -4,13 +4,19 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 
 ## Data
 
-- **Core CS syllabi are scanned images.** 23 of the 26 allowlisted core courses (DSA, DAA, OS, DBMS, CN, …) sit on pages with no text layer, so v1.1 scores only BCSE102P, BMAT205L and BCSE203E. *Impact: S_comp does not yet measure the core curriculum; supply text-layer or offline-OCR'd PDFs as a separate step.*
+- ~~**Core CS syllabi are scanned images.**~~ Resolved on `data/course-syllabi` (2026-10-21): the owner supplied 20 text-layer course PDFs (`data/raw/syllabi/BCSE*.pdf`), scored as one combined syllabus under config v1.2.
+- **BCSE205L L-T-P-C is incomplete in its PDF.** The text layer holds only "3" (L) and "0" (P); the parser records `ltpc_status: "incomplete"` and leaves the values blank. *Impact: none on depth (theory depth comes from module hours); credits are missing from course metadata until the owner verifies the official values.*
 
 ## Syllabus parsing (`pipeline/syllabus_parser.py`)
 
-- **Lab-only course units include objectives and outcomes.** A course without `Module:` headers becomes one unit that starts at its header, not at "Indicative Experiments". *Impact: outcome prose ("propose solutions through inheritance…") can create topic presence that the experiments themselves do not support.*
+- **Lab-only course units include objectives and outcomes when no experiment list is found.** Lab courses with an "Indicative Experiments" list are now split into one unit per experiment; a lab course without a readable list still becomes one unit that starts at its header. *Impact: outcome prose can create topic presence the experiments do not support (none of the 8 supplied lab PDFs is affected).*
+- **An experiment line that wraps onto a line starting with the next item's number is read as a new item.** Experiments are numbered 1, 2, 3, ...; a continuation line is only told apart when its leading number breaks the sequence. *Impact: rare mis-split of one experiment into two units (not seen in the supplied PDFs).*
 - **Duplicate module numbers inside one course give duplicate `source_id`s.** A repeated "Module:3", or a body line starting with "Unit 2", yields two `<code>_mod_3` records; only duplicate courses are guarded. *Impact: id-keyed consumers (unmapped-term dedup, versioning lookups) conflate two different units.*
 - **A header with "L T P C" on its own line is not recognised.** The layout "CODE Title" / "L T P C" / "3 0 0 3" matches neither header pattern. *Impact: the course silently disappears, and if the catalogue lists it, it is mis-reported as scanned.*
+
+## API / dashboard
+
+- **Multi-file syllabus upload (dashboard task).** `POST /api/v1/syllabi/upload` takes one PDF; combining course PDFs (`parse_syllabus_pdfs`) is CLI-only (`run_full_pipeline.py --pdf-dir`). *Impact: the dashboard cannot score a course-by-course syllabus until the upload accepts several files and returns one syllabus_id.*
 
 ## Security (from the 2026-10-21 manual security review)
 

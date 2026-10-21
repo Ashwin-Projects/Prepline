@@ -1,13 +1,15 @@
 """
-Full Phase 7-12 pipeline run for one company/role + one syllabus PDF, saved as a versioned result file.
+Full Phase 7-12 pipeline run for one company/role + one syllabus, saved as a versioned result file.
 
-Mirrors the backend /api/v1 flow (density gate -> coverage -> importance -> S_comp -> priority gaps) and adds
-the run's top unmapped terms (Phase 12). Unmapped terms are logged to a run-specific log so the summary
-reflects this run only, not the shared data/processed/unmapped_terms.log.
+The syllabus is one PDF, or several course PDFs combined into one syllabus (--pdf repeated, or --pdf-dir with
+--glob; e.g. theory BCSE202L + lab BCSE202P). Mirrors the backend /api/v1 flow (density gate -> coverage ->
+importance -> S_comp -> priority gaps) and adds the run's top unmapped terms (Phase 12). Unmapped terms are
+logged to a run-specific log so the summary reflects this run only, not the shared data/processed/unmapped_terms.log.
 
 Usage:
     python evaluation/run_full_pipeline.py --pdf "path/to/VIT_CSE_2024_2025.pdf"
-    python evaluation/run_full_pipeline.py --pdf syllabus.pdf --out results/amazon_sde1_<version>.json
+    python evaluation/run_full_pipeline.py --pdf-dir data/raw/syllabi --glob "BCSE*.pdf" \\
+        --syllabus-id VIT_CSE_2024_25_courses --out results/amazon_sde1_<version>_course_syllabi.json
 """
 import argparse
 import json
@@ -30,7 +32,7 @@ from pipeline.interview_parser import (
     load_questions_csv,
     write_excluded_questions,
 )
-from pipeline.syllabus_parser import parse_syllabus_pdf
+from pipeline.syllabus_parser import collect_syllabus_pdfs, parse_syllabus_pdf, parse_syllabus_pdfs
 from pipeline.taxonomy_tree import find_granular_without_high_level_ancestor
 from pipeline.scoring import (
     calculate_syllabus_coverage,
@@ -53,12 +55,24 @@ TOP_N = 10
 
 DEFAULT_QUESTIONS = os.path.join(ROOT, "data", "processed", "questions.csv")
 DEFAULT_EXCLUDED = os.path.join(ROOT, "data", "processed", "excluded_questions.csv")
-# Results files are versioned and never overwritten (Deprecation & Migration): v1.1 = scoring-correctness fixes.
-RESULTS_VERSION = "v1.1"
+# Results files are versioned and never overwritten (Deprecation & Migration): v1.1 = scoring-correctness fixes,
+# v1.2 = core allowlist from the owner's course syllabi + course-PDF parsing.
+RESULTS_VERSION = "v1.2"
 DEFAULT_OUT = os.path.join(ROOT, "results", f"amazon_sde1_{RESULTS_VERSION}.json")
+DEFAULT_GLOB = "BCSE*.pdf"
 
 
-def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
+def resolve_pdf_paths(pdfs: list, pdf_dir: str = None, pattern: str = DEFAULT_GLOB) -> list:
+    """Explicit --pdf files first, then the --pdf-dir files matching pattern; each path once."""
+    paths = list(pdfs) + (collect_syllabus_pdfs(pdf_dir, pattern) if pdf_dir else [])
+    return list(dict.fromkeys(paths))
+
+
+def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = None) -> dict:
+    """pdf_paths: one path, or a list. Several paths (or a syllabus_id) build one combined syllabus."""
+    if isinstance(pdf_paths, str):
+        pdf_paths = [pdf_paths]
+    combined = len(pdf_paths) > 1 or syllabus_id is not None
     included, excluded = filter_questions(load_questions_csv(questions_csv))
     write_excluded_questions(excluded, excluded_out)
     report_count = count_reports(included)
@@ -78,7 +92,10 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         "company": COMPANY,
         "role": ROLE,
         "report_count": report_count,
-        "syllabus_file": os.path.basename(pdf_path),
+        "syllabus_file": None if combined else os.path.basename(pdf_paths[0]),
+        "syllabus_id": syllabus_id if combined else os.path.basename(pdf_paths[0]),
+        "syllabus_files": [os.path.basename(p) for p in pdf_paths],
+        "core_courses": CONFIG["syllabus"]["core_courses"],
         "taxonomy_version": None,
         "scoring_config_version": SCORING_CONFIG_VERSION,
         "scoring_config": {
@@ -105,10 +122,14 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
     unmapped_terms_logger.LOG_PATH = run_log
 
     t0 = time.time()
-    print("Parsing syllabus PDF (slow on scanned pages)...", flush=True)
-    syllabus = parse_syllabus_pdf(pdf_path)
+    print(f"Parsing {len(pdf_paths)} syllabus PDF(s) (slow on scanned pages)...", flush=True)
+    if combined:
+        syllabus = parse_syllabus_pdfs(pdf_paths, syllabus_id=syllabus_id or "combined_syllabus")
+    else:
+        syllabus = parse_syllabus_pdf(pdf_paths[0])
     print(f"  {syllabus['units_count']} units in {time.time() - t0:.0f}s", flush=True)
     print_course_filter(syllabus["course_filter"], syllabus["courses"], syllabus["text_layer"])
+    print_units(syllabus)
 
     t_parse = time.time() - t0
 
@@ -142,9 +163,13 @@ def run(pdf_path: str, questions_csv: str, excluded_out: str) -> dict:
         S_comp=composite["S_comp"],
         scoring_universe_size=composite["scoring_universe_size"],
         courses_kept=syllabus["courses"],
+        course_groups=syllabus["course_groups"],
         course_filter=syllabus["course_filter"],
         text_layer=syllabus["text_layer"],
+        file_errors=syllabus.get("file_errors", []),
+        skipped_modules=syllabus["skipped_modules"],
         syllabus_units=syllabus["units_count"],
+        units_by_component=dict(Counter(m["component"] for m in syllabus["two_pass_mappings"])),
         modules_with_depth_signals=sum(
             1 for m in syllabus["two_pass_mappings"] if any(v is not None for v in m["depth_signals"].values())
         ),
@@ -185,9 +210,24 @@ def print_course_filter(course_filter: dict, kept_courses: list, text_layer: dic
           flush=True)
 
 
+def print_units(syllabus: dict) -> None:
+    """Per-course unit counts (theory modules, lab experiments, lab hours), skipped modules and file errors."""
+    units = Counter(m["course_code"] for m in syllabus["two_pass_mappings"])
+    print("Units per course:")
+    for c in syllabus["courses"]:
+        extra = f", {c['experiment_count']} experiments, lab hours {c['lab_hours_total']}" if c["experiment_count"] else ""
+        print(f"  {c['course_code']:<9} {c['component']:<8} {units[c['course_code']]:>3} units{extra}"
+              f"  [L-T-P-C {c['ltpc_status']}]")
+    skipped = [f"{s['course_code']} M{s['module_number']}" for s in syllabus["skipped_modules"]]
+    print(f"Skipped body-less modules ({len(skipped)}): {', '.join(skipped) or '-'}")
+    for e in syllabus.get("file_errors", []):
+        print(f"  FILE ERROR {e['file']}: {e['error']}")
+    sys.stdout.flush()
+
+
 def print_summary(r: dict) -> None:
     print("\n" + "=" * 70)
-    print(f"PREPLINE - {r['company']} {r['role']}  ({r['syllabus_file']})")
+    print(f"PREPLINE - {r['company']} {r['role']}  ({r['syllabus_id']}, {len(r['syllabus_files'])} file(s))")
     print("=" * 70)
     print(f"Status:                 {r['status']}")
     print(f"Report count:           {r['report_count']} (reports with >=1 included question)")
@@ -216,7 +256,10 @@ def print_summary(r: dict) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Run the full Prepline pipeline and save a versioned result.")
-    parser.add_argument("--pdf", required=True)
+    parser.add_argument("--pdf", action="append", default=[], help="a syllabus PDF; repeat to combine several")
+    parser.add_argument("--pdf-dir", help="folder of course syllabus PDFs, combined into one syllabus")
+    parser.add_argument("--glob", default=DEFAULT_GLOB, help=f"file pattern inside --pdf-dir (default {DEFAULT_GLOB})")
+    parser.add_argument("--syllabus-id", help="id of the combined syllabus, e.g. VIT_CSE_2024_25_courses")
     parser.add_argument("--questions", default=DEFAULT_QUESTIONS)
     parser.add_argument("--excluded-out", default=DEFAULT_EXCLUDED)
     parser.add_argument("--out", default=DEFAULT_OUT)
@@ -224,10 +267,14 @@ def main():
 
     if os.path.exists(args.out):
         sys.exit(f"Refusing to overwrite existing results file: {args.out} (results are versioned; choose a new --out)")
-    if not os.path.exists(args.pdf):
-        sys.exit(f"Syllabus PDF not found: {args.pdf}")
+    pdf_paths = resolve_pdf_paths(args.pdf, args.pdf_dir, args.glob)
+    if not pdf_paths:
+        sys.exit(f"No syllabus PDFs given (--pdf) or found in --pdf-dir matching '{args.glob}'")
+    missing = [p for p in pdf_paths if not os.path.exists(p)]
+    if missing:
+        sys.exit(f"Syllabus PDF not found: {', '.join(missing)}")
 
-    result = run(args.pdf, args.questions, args.excluded_out)
+    result = run(pdf_paths, args.questions, args.excluded_out, syllabus_id=args.syllabus_id)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
