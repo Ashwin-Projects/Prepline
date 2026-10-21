@@ -1,0 +1,85 @@
+{
+  "config_version": "v1.2",
+  "description": "PREPLINE scoring configuration v1.2: identical to v1.1 except the core-course allowlist, rebuilt from exactly the 20 course syllabus PDFs the project owner supplied as the complete core syllabus (2026-10-21). tau, gamma, depth reference values, min_reports, semester weeks, the taxonomy version and the embedding model are FROZEN (CLAUDE.md skills policy) and unchanged from v1.1.",
+  "supersedes": "config/scoring_v1.1.json",
+  "taxonomy_version": "v1.0",
+  "taxonomy_path": "data/taxonomy/taxonomy_v1.0.json",
+  "similarity_threshold": 0.5,
+  "gamma": 0.5,
+  "depth_reference_values": {
+    "unit_hours": 10.0,
+    "slide_count": 20.0,
+    "slides": 20.0,
+    "lab_hours": 10.0,
+    "lab_count": 5.0,
+    "assignment_count": 5.0,
+    "assignments": 5.0
+  },
+  "semester_weeks": 15,
+  "min_reports": 15,
+  "node_type_rule": {
+    "syllabus": "high_level_concept",
+    "interview": "granular_skill"
+  },
+  "coverage_inheritance": {
+    "granular_skill": "nearest_high_level_ancestor"
+  },
+  "interview_filter": {
+    "exclude_round_types": [
+      "behavioral"
+    ],
+    "exclude_needs_review": true,
+    "require_question_text": true,
+    "require_report_id": true
+  },
+  "syllabus": {
+    "core_courses_source": "data/raw/syllabi/vit_syllabus_manifest.csv course rows: the owner's complete core syllabus, exactly the course codes of the BCSE*.pdf files supplied 2026-10-21 (theory L + lab P). Courses on the v1.1 allowlist without a file here (BCSE101E, BCSE102L, BCSE102P, BCSE103E, BCSE203E, BMAT205L) are not in the owner's core.",
+    "core_courses": [
+      "BCSE202L",
+      "BCSE202P",
+      "BCSE204L",
+      "BCSE204P",
+      "BCSE205L",
+      "BCSE301L",
+      "BCSE301P",
+      "BCSE302L",
+      "BCSE302P",
+      "BCSE303L",
+      "BCSE303P",
+      "BCSE304L",
+      "BCSE305L",
+      "BCSE306L",
+      "BCSE307L",
+      "BCSE307P",
+      "BCSE308L",
+      "BCSE308P",
+      "BCSE309L",
+      "BCSE309P"
+    ],
+    "boilerplate_note": "Applied to syllabus text before RAKE, together with built-in date, year and bare-number patterns.",
+    "boilerplate_stoplist": [
+      "module",
+      "annexure",
+      "approved",
+      "academic council",
+      "proceedings",
+      "board of studies",
+      "recommended by",
+      "syllabus version",
+      "pre-requisite",
+      "course objectives",
+      "course outcomes",
+      "text book",
+      "text books",
+      "reference books",
+      "mode of evaluation",
+      "total lecture hours",
+      "total laboratory hours",
+      "hours"
+    ]
+  },
+  "embedding_model": {
+    "name": "all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  }
+}

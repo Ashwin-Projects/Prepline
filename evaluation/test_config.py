@@ -1,5 +1,5 @@
 """
-Central scoring config (config/scoring_v1.1.json; config/scoring_v1.0.json is kept as a deprecated record).
+Central scoring config (config/scoring_v1.2.json; config/scoring_v1.1.json and config/scoring_v1.0.json are kept as records).
 
 The frozen values below are the Constraint-Driven Development guard: tau, gamma,
 the depth reference values, MIN_REPORTS and the taxonomy version must not change
@@ -44,12 +44,37 @@ def _read(rel):
         return json.load(f)
 
 
-def test_code_points_at_v1_1_config():
-    assert os.path.basename(CONFIG_PATH) == "scoring_v1.1.json"
+# The owner's complete core syllabus: exactly the course PDFs supplied on 2026-10-21.
+V1_2_CORE_COURSES = [
+    "BCSE202L", "BCSE202P", "BCSE204L", "BCSE204P", "BCSE205L",
+    "BCSE301L", "BCSE301P", "BCSE302L", "BCSE302P", "BCSE303L", "BCSE303P",
+    "BCSE304L", "BCSE305L", "BCSE306L", "BCSE307L", "BCSE307P",
+    "BCSE308L", "BCSE308P", "BCSE309L", "BCSE309P",
+]
+
+
+def test_code_points_at_v1_2_config():
+    assert os.path.basename(CONFIG_PATH) == "scoring_v1.2.json"
     cfg = load_scoring_config()
-    assert cfg["config_version"] == "v1.1"
+    assert cfg["config_version"] == "v1.2"
     for key in V1_1_RULE_KEYS:
         assert key in cfg, key
+
+
+def test_v1_2_changes_only_core_courses():
+    old, new = _read("config/scoring_v1.1.json"), _read("config/scoring_v1.2.json")
+    assert old["config_version"] == "v1.1"
+    assert new["supersedes"] == "config/scoring_v1.1.json"
+    assert new["syllabus"]["core_courses"] == V1_2_CORE_COURSES
+    assert new["syllabus"]["core_courses_source"] != old["syllabus"]["core_courses_source"]
+    changed_top = {"config_version", "description", "supersedes", "syllabus"}
+    assert set(old) == set(new)
+    for key in set(old) - changed_top:
+        assert old[key] == new[key], key
+    changed_syllabus = {"core_courses", "core_courses_source"}
+    assert set(old["syllabus"]) == set(new["syllabus"])
+    for key in set(old["syllabus"]) - changed_syllabus:
+        assert old["syllabus"][key] == new["syllabus"][key], key
 
 
 def test_v1_0_config_kept_as_deprecated_record():
