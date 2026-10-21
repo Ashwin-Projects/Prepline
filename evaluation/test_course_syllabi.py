@@ -330,14 +330,23 @@ def test_manifest_has_one_row_per_core_course_file():
     with open(os.path.join(ROOT, "data", "raw", "syllabi", "vit_syllabus_manifest.csv"), encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
     course_rows = [r for r in rows if r["component"] in ("theory", "lab")]
-    assert [r["course_code"] for r in course_rows] == load_scoring_config()["syllabus"]["core_courses"]
+    # every core course has at least one row, in allowlist order (embedded E courses have a theory and a lab file)
+    assert list(dict.fromkeys(r["course_code"] for r in course_rows)) == load_scoring_config()["syllabus"]["core_courses"]
     for row in course_rows:
-        assert row["expected_local_filename"].startswith(row["course_code"] + "_"), row
         assert row["course_group"] == row["course_code"][:-1]
-        assert row["component"] == ("lab" if row["course_code"].endswith("P") else "theory")
-        assert row["used_in_course_run"] == "yes"
         assert row["official_source_url"] == ""
-        assert row["source"] == "VIT official course syllabus PDF, downloaded by user 2026-10-21"
-    assert {r["course_code"]: r["ltpc_status"] for r in course_rows}["BCSE205L"] == "incomplete"
+        if row["text_layer"] == "missing":  # file not supplied
+            assert row["expected_local_filename"] == "" and row["used_in_course_run"] == "no"
+            continue
+        assert row["expected_local_filename"].startswith(row["course_code"] + "_"), row
+        assert row["source"].startswith("VIT official course syllabus PDF, downloaded by user 2026-10-2")
+        assert row["used_in_course_run"] == ("yes" if row["text_layer"] == "yes" else "no"), row
+    by_code = {}
+    for r in course_rows:
+        by_code.setdefault(r["course_code"], []).append(r)
+    assert by_code["BCSE205L"][0]["ltpc_status"] == "incomplete"
+    assert [r["component"] for r in by_code["BCSE101E"]] == ["theory", "lab"]
+    assert {r["text_layer"] for r in by_code["BCSE102L"]} == {"no"}
+    assert by_code["BCSE203E"][0]["text_layer"] == "missing"
     programme = [r for r in rows if r["component"] == "programme"]
     assert len(programme) == 1 and programme[0]["used_in_course_run"] == "no"

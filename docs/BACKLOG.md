@@ -7,6 +7,8 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 - ~~**Core CS syllabi are scanned images.**~~ Resolved on `data/course-syllabi` (2026-10-21): the owner supplied 20 text-layer course PDFs (`data/raw/syllabi/BCSE*.pdf`), scored as one combined syllabus under config v1.2.
 - **BCSE205L L-T-P-C is incomplete in its PDF.** The text layer holds only "3" (L) and "0" (P); the parser records `ltpc_status: "incomplete"` and leaves the values blank. *Impact: none on depth (theory depth comes from module hours); credits are missing from course metadata until the owner verifies the official values.*
 
+- **4 of the 26 core courses have no readable syllabus.** BCSE101E (theory + lab), BCSE102L and BCSE103E (theory + lab) were supplied as Microsoft Print-to-PDF files whose text is drawn as vector outlines (no text layer, no images), and no BCSE203E file was supplied. *Impact: v1.2 scores 22 of 26 core courses; supply text-layer PDFs (or OCR, outside the MVP) and re-run.*
+
 ## Syllabus parsing (`pipeline/syllabus_parser.py`)
 
 - **Lab-only course units include objectives and outcomes when no experiment list is found.** Lab courses with an "Indicative Experiments" list are now split into one unit per experiment; a lab course without a readable list still becomes one unit that starts at its header. *Impact: outcome prose can create topic presence the experiments do not support (none of the 8 supplied lab PDFs is affected).*
@@ -22,6 +24,8 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 ## API / dashboard
 
 - **Multi-file syllabus upload (dashboard task).** `POST /api/v1/syllabi/upload` takes one PDF; combining course PDFs (`parse_syllabus_pdfs`) is CLI-only (`run_full_pipeline.py --pdf-dir`). *Impact: the dashboard cannot score a course-by-course syllabus until the upload accepts several files and returns one syllabus_id.*
+
+- **Optional per-student electives mode (after the MVP).** Score the official core plus the electives a student actually took, as a per-student syllabus on top of the fixed core allowlist (config v1.2). *Impact: today every student gets the same core-only S_comp; electives that cover interview topics (e.g. system design) are not credited.*
 
 ## Security (from the 2026-10-21 manual security review)
 

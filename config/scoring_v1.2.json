@@ -1,6 +1,6 @@
 {
   "config_version": "v1.2",
-  "description": "PREPLINE scoring configuration v1.2: identical to v1.1 except the core-course allowlist, rebuilt from exactly the 20 course syllabus PDFs the project owner supplied as the complete core syllabus (2026-10-21). tau, gamma, depth reference values, min_reports, semester weeks, the taxonomy version and the embedding model are FROZEN (CLAUDE.md skills policy) and unchanged from v1.1.",
+  "description": "PREPLINE scoring configuration v1.2: identical to v1.1 except the core-course allowlist, which is the official 26-course VIT B.Tech CSE core supplied by the project owner as individual course syllabus PDFs (2026-10-21/22). tau, gamma, depth reference values, min_reports, semester weeks, the taxonomy version and the embedding model are FROZEN (CLAUDE.md skills policy) and unchanged from v1.1.",
   "supersedes": "config/scoring_v1.1.json",
   "taxonomy_version": "v1.0",
   "taxonomy_path": "data/taxonomy/taxonomy_v1.0.json",
@@ -33,10 +33,15 @@
     "require_report_id": true
   },
   "syllabus": {
-    "core_courses_source": "data/raw/syllabi/vit_syllabus_manifest.csv course rows: the owner's complete core syllabus, exactly the course codes of the BCSE*.pdf files supplied 2026-10-21 (theory L + lab P). Courses on the v1.1 allowlist without a file here (BCSE101E, BCSE102L, BCSE102P, BCSE103E, BCSE203E, BMAT205L) are not in the owner's core.",
+    "core_courses_source": "data/raw/syllabi/vit_syllabus_manifest.csv course rows: the owner's official 26-course core (theory L, lab P, embedded E and BMAT205L), supplied as individual course syllabus PDFs on 2026-10-21 (20) and 2026-10-22 (BCSE101E, BCSE102L, BCSE102P, BCSE103E, BCSE203E, BMAT205L).",
     "core_courses": [
+      "BCSE101E",
+      "BCSE102L",
+      "BCSE102P",
+      "BCSE103E",
       "BCSE202L",
       "BCSE202P",
+      "BCSE203E",
       "BCSE204L",
       "BCSE204P",
       "BCSE205L",
@@ -54,7 +59,8 @@
       "BCSE308L",
       "BCSE308P",
       "BCSE309L",
-      "BCSE309P"
+      "BCSE309P",
+      "BMAT205L"
     ],
     "boilerplate_note": "Applied to syllabus text before RAKE, together with built-in date, year and bare-number patterns.",
     "boilerplate_stoplist": [

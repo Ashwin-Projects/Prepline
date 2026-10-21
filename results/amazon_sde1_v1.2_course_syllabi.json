@@ -6,6 +6,12 @@
   "syllabus_file": null,
   "syllabus_id": "VIT_CSE_2024_25_courses",
   "syllabus_files": [
+    "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+    "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+    "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf",
+    "BCSE102P_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING-LAB_LO_1.0_67_BCSE102P_63 ACP.pdf",
+    "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
+    "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
     "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
     "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
     "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
@@ -25,11 +31,17 @@
     "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
     "BCSE308P_COMPUTER-NETWORKS-LAB_LO_1.0_70_BCSE308P.pdf",
     "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
-    "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf"
+    "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
+    "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf"
   ],
   "core_courses": [
+    "BCSE101E",
+    "BCSE102L",
+    "BCSE102P",
+    "BCSE103E",
     "BCSE202L",
     "BCSE202P",
+    "BCSE203E",
     "BCSE204L",
     "BCSE204P",
     "BCSE205L",
@@ -47,7 +59,8 @@
     "BCSE308L",
     "BCSE308P",
     "BCSE309L",
-    "BCSE309P"
+    "BCSE309P",
+    "BMAT205L"
   ],
   "taxonomy_version": "v1.0",
   "scoring_config_version": "v1.2",
@@ -65,7 +78,7 @@
       "assignments": 5.0
     }
   },
-  "generated_at": "2026-10-21T18:20:52.736602+00:00",
+  "generated_at": "2026-10-21T19:25:36.485687+00:00",
   "granular_without_high_level_ancestor": [],
   "interview_filter": {
     "questions_total": 98,
@@ -79,9 +92,24 @@
     "excluded_questions_file": "data/processed/excluded_questions.csv"
   },
   "status": "SUCCESS",
-  "S_comp": 88.7456,
+  "S_comp": 89.8072,
   "scoring_universe_size": 9,
   "courses_kept": [
+    {
+      "course_code": "BCSE102P",
+      "course_title": "Structured and Object-Oriented Programming Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 4,
+      "project_hours": null,
+      "credits": 2,
+      "ltpc_status": "complete",
+      "course_group": "BCSE102",
+      "component": "lab",
+      "source_file": "BCSE102P_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING-LAB_LO_1.0_67_BCSE102P_63 ACP.pdf",
+      "experiment_count": 8,
+      "lab_hours_total": 60.0
+    },
     {
       "course_code": "BCSE202L",
       "course_title": "Data Structures and Algorithms",
@@ -381,9 +409,30 @@
       "source_file": "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
       "experiment_count": 10,
       "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BMAT205L",
+      "course_title": "Discrete Mathematics and Graph Theory",
+      "lecture_hours": 3,
+      "tutorial_hours": 1,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 4,
+      "ltpc_status": "complete",
+      "course_group": "BMAT205",
+      "component": "theory",
+      "source_file": "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
     }
   ],
   "course_groups": [
+    {
+      "course_group": "BCSE102",
+      "course_title": "Structured and Object-Oriented Programming",
+      "theory": null,
+      "lab": "BCSE102P"
+    },
     {
       "course_group": "BCSE202",
       "course_title": "Data Structures and Algorithms",
@@ -455,10 +504,17 @@
       "course_title": "Cryptography and Network Security",
       "theory": "BCSE309L",
       "lab": "BCSE309P"
+    },
+    {
+      "course_group": "BMAT205",
+      "course_title": "Discrete Mathematics and Graph Theory",
+      "theory": "BMAT205L",
+      "lab": null
     }
   ],
   "course_filter": {
     "kept": [
+      "BCSE102P",
       "BCSE202L",
       "BCSE202P",
       "BCSE204L",
@@ -478,16 +534,27 @@
       "BCSE308L",
       "BCSE308P",
       "BCSE309L",
-      "BCSE309P"
+      "BCSE309P",
+      "BMAT205L"
     ],
     "dropped": [],
-    "allowlisted_missing": []
+    "allowlisted_missing": [
+      "BCSE101E",
+      "BCSE102L",
+      "BCSE103E",
+      "BCSE203E"
+    ]
   },
   "text_layer": {
-    "page_count": 32,
+    "page_count": 35,
     "pages_without_text": [],
     "scanned_courses": [],
     "files": [
+      {
+        "file": "BCSE102P_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING-LAB_LO_1.0_67_BCSE102P_63 ACP.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
       {
         "file": "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
         "page_count": 2,
@@ -587,10 +654,36 @@
         "file": "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
         "page_count": 1,
         "pages_without_text": []
+      },
+      {
+        "file": "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
       }
     ]
   },
-  "file_errors": [],
+  "file_errors": [
+    {
+      "file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+      "error": "Unsupported PDF 'BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
+    },
+    {
+      "file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+      "error": "Unsupported PDF 'BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
+    },
+    {
+      "file": "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf",
+      "error": "Unsupported PDF 'BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
+    },
+    {
+      "file": "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
+      "error": "Unsupported PDF 'BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
+    },
+    {
+      "file": "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
+      "error": "Unsupported PDF 'BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
+    }
+  ],
   "skipped_modules": [
     {
       "course_code": "BCSE202L",
@@ -675,15 +768,22 @@
       "module_title": "Contemporary Issues",
       "source_file": "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
       "reason": "no_body"
+    },
+    {
+      "course_code": "BMAT205L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf",
+      "reason": "no_body"
     }
   ],
-  "syllabus_units": 162,
+  "syllabus_units": 177,
   "units_by_component": {
-    "theory": 84,
-    "lab": 78
+    "lab": 86,
+    "theory": 91
   },
-  "modules_with_depth_signals": 162,
-  "units_with_matches": 67,
+  "modules_with_depth_signals": 177,
+  "units_with_matches": 72,
   "topics_present": 78,
   "topics_in_taxonomy": 83,
   "depth_counts": {
@@ -701,8 +801,8 @@
       "topic_id": "dsa.linked_lists.traversal_reversal",
       "topic_name": "Linked List Manipulation & Cycle Detection",
       "importance": 0.2222,
-      "coverage": 0.8802,
-      "priority_gap": 0.0266
+      "coverage": 0.9181,
+      "priority_gap": 0.0182
     },
     {
       "rank": 2,
@@ -717,15 +817,15 @@
       "topic_id": "dsa.trees.lowest_common_ancestor",
       "topic_name": "Lowest Common Ancestor",
       "importance": 0.1111,
-      "coverage": 0.898,
-      "priority_gap": 0.0113
+      "coverage": 0.8975,
+      "priority_gap": 0.0114
     },
     {
       "rank": 4,
       "topic_id": "dsa.graphs.shortest_path",
       "topic_name": "Shortest Path Algorithms",
       "importance": 0.0889,
-      "coverage": 0.8948,
+      "coverage": 0.894,
       "priority_gap": 0.0094
     },
     {
@@ -757,25 +857,25 @@
       "topic_id": "dsa.trees.bst",
       "topic_name": "Binary Search Trees",
       "importance": 0.0444,
-      "coverage": 0.898,
-      "priority_gap": 0.0045
+      "coverage": 0.8975,
+      "priority_gap": 0.0046
     },
     {
       "rank": 9,
       "topic_id": "dsa.trees.traversal",
       "topic_name": "Tree Traversals",
       "importance": 0.0333,
-      "coverage": 0.898,
+      "coverage": 0.8975,
       "priority_gap": 0.0034
     }
   ],
   "unmapped_terms_summary": {
-    "distinct_terms": 1060,
+    "distinct_terms": 1119,
     "distinct_terms_by_source_type": {
-      "syllabus": 1013,
+      "syllabus": 1072,
       "interview": 50
     },
-    "total_occurrences": 1249
+    "total_occurrences": 1317
   },
   "top_unmapped_terms": [
     {
@@ -833,17 +933,17 @@
       "frequency": 5
     },
     {
-      "term": "overview",
+      "term": "fundamentals",
       "source_type": "syllabus",
       "occurrences": 5,
       "frequency": 5
     }
   ],
   "stage_timings_seconds": {
-    "parse": 17.0,
+    "parse": 90.7,
     "coverage": 0.0,
-    "importance": 0.7,
+    "importance": 1.4,
     "scoring": 0.0
   },
-  "runtime_seconds": 17.8
+  "runtime_seconds": 92.2
 }
