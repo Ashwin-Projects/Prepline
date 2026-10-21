@@ -11,6 +11,7 @@ Parses text-selectable VIT syllabus PDFs using pdfplumber:
   preserving taxonomy_version, with per-module depth signals.
 """
 
+import glob
 import re
 import os
 from typing import Dict, Any, Iterable, List, Optional, Tuple
@@ -544,6 +545,140 @@ def parse_course_modules(course: Dict[str, Any]) -> List[Dict[str, Any]]:
     return modules
 
 
+def collect_syllabus_pdfs(folder: str, pattern: str = "BCSE*.pdf") -> List[str]:
+    """Sorted paths of the PDFs in folder whose names match pattern (default: VIT course syllabi only)."""
+    return sorted(glob.glob(os.path.join(glob.escape(folder), pattern)))
+
+
+def _read_courses(pdf_path: str, max_pages: Optional[int]) -> Tuple[List[str], str, List[Dict[str, Any]]]:
+    """(pages_text, full_text, courses) of one PDF; UnsupportedPDFError when it has no text or no course header."""
+    if not os.path.exists(pdf_path):
+        raise FileNotFoundError(f"PDF file not found at path: {pdf_path}")
+    pages_text = extract_pages_text(pdf_path, max_pages)
+    if sum(len(t.strip()) for t in pages_text) < MIN_TEXT_LENGTH_THRESHOLD:
+        raise UnsupportedPDFError(
+            f"Unsupported PDF '{os.path.basename(pdf_path)}': Document is a scanned image or contains no extractable text. "
+            "OCR processing is excluded from MVP scope."
+        )
+    full_text = strip_running_lines("\n".join(t for t in pages_text if t))
+    courses = segment_courses(full_text)
+    if not courses:
+        raise UnsupportedPDFError(
+            f"Unsupported PDF '{os.path.basename(pdf_path)}': no course headers found "
+            "(expected a course code, title and L-T-P-C line per course)."
+        )
+    return pages_text, full_text, courses
+
+
+def _pages_without_text(pages_text: List[str]) -> List[int]:
+    return [i + 1 for i, t in enumerate(pages_text) if not page_has_text_layer(t)]
+
+
+def _allowlist(core_courses: Optional[Iterable[str]]) -> List[str]:
+    if core_courses is None:
+        core_courses = load_scoring_config()["syllabus"]["core_courses"]
+    return list(core_courses)
+
+
+def _filter_or_raise(
+    courses: List[Dict[str, Any]], full_text: str, allowlist: List[str]
+) -> Tuple[List[Dict[str, Any]], Dict[str, Any], List[str]]:
+    """(kept courses, course_filter report, scanned_courses); NoCoreCoursesError when nothing is kept."""
+    kept, dropped = filter_core_courses(courses, allowlist)
+    allowlisted_missing, scanned_courses = find_missing_allowlisted(full_text, courses, allowlist)
+    if not kept:
+        found = ", ".join(c["course_code"] for c in courses)
+        raise NoCoreCoursesError(f"No allowlisted core CS course found in the syllabus. Courses found: {found}.")
+    course_filter = {
+        "kept": [c["course_code"] for c in kept],
+        "dropped": [
+            {"course_code": d["course_code"], "course_title": d["course_title"], "drop_reason": d["drop_reason"]}
+            for d in dropped
+        ],
+        "allowlisted_missing": allowlisted_missing,
+    }
+    return kept, course_filter, scanned_courses
+
+
+def _course_component(units: List[Dict[str, Any]]) -> str:
+    components = {u["component"] for u in units}
+    return components.pop() if len(components) == 1 else "embedded"
+
+
+def _map_courses(kept: List[Dict[str, Any]], taxonomy_version: str):
+    """
+    Maps every non-empty unit of the kept courses to taxonomy topics via map_source_to_taxonomy
+    (preserving taxonomy_version). Returns (mappings, skipped_modules, course records).
+    """
+    mappings, skipped, records = [], [], []
+    for course in kept:
+        source_file = course.get("source_file")
+        units = parse_course_modules(course)
+        for mod in units:
+            if mod["empty"]:
+                skipped.append({"course_code": mod["course_code"], "module_number": mod["module_number"],
+                                "module_title": mod["module_title"], "source_file": source_file, "reason": "no_body"})
+                continue
+            mapping = map_source_to_taxonomy(
+                source_id=mod["source_id"],
+                raw_text=mod["unit_text"],
+                source_type="syllabus",
+                taxonomy_version=taxonomy_version
+            )
+            # Attach depth signals and unit tags to the mapping output for Phase 8 consumption
+            for key in ("depth_signals", "course_signals", "course_code", "course_group", "component",
+                        "module_number", "module_title"):
+                mapping[key] = mod[key]
+            mapping["source_file"] = source_file
+            mappings.append(mapping)
+        mapped = [u for u in units if not u["empty"]]
+        lab_hours = [u["depth_signals"]["lab_hours"] for u in mapped if u["depth_signals"]["lab_hours"] is not None]
+        experiments = [u for u in mapped if u["source_id"].startswith(f"{course['course_code']}_exp_")]
+        records.append({
+            **course_metadata_of(course),
+            "course_group": course_group_of(course["course_code"]),
+            "component": _course_component(units),
+            "source_file": source_file,
+            "experiment_count": len(experiments) or None,
+            "lab_hours_total": round(sum(lab_hours), 4) if lab_hours else None,
+        })
+    return mappings, skipped, records
+
+
+def _course_groups(records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """One entry per course group, pairing its theory (or embedded) and lab components."""
+    by_code = {r["course_code"]: r for r in records}
+    groups: Dict[str, Dict[str, Any]] = {}
+    for record in records:
+        group = groups.setdefault(record["course_group"], {
+            "course_group": record["course_group"], "course_title": None, "theory": None, "lab": None})
+        slot = "lab" if record["component"] == "lab" else "theory"
+        group[slot] = group[slot] or record["course_code"]
+    for group in groups.values():
+        if group["theory"]:
+            group["course_title"] = by_code[group["theory"]]["course_title"]
+        else:
+            title = by_code[group["lab"]]["course_title"]
+            group["course_title"] = title[:-4] if title.endswith(" Lab") else title
+    return list(groups.values())
+
+
+def _result(syllabus_id, taxonomy_version, kept, course_filter, records, mappings, skipped, text_layer):
+    return {
+        "syllabus_id": syllabus_id,
+        "source_type": "syllabus",
+        "taxonomy_version": taxonomy_version,
+        "course_metadata": course_metadata_of(kept[0]),
+        "courses": records,
+        "course_groups": _course_groups(records),
+        "course_filter": course_filter,
+        "text_layer": text_layer,
+        "skipped_modules": skipped,
+        "units_count": len(mappings),
+        "two_pass_mappings": mappings
+    }
+
+
 def parse_syllabus_pdf(
     pdf_path: str,
     taxonomy_version: str = DEFAULT_TAXONOMY_VERSION,
@@ -551,85 +686,70 @@ def parse_syllabus_pdf(
     max_pages: Optional[int] = None
 ) -> Dict[str, Any]:
     """
-    Parses a text-selectable VIT syllabus PDF:
+    Parses one text-selectable VIT syllabus PDF:
     1. Extracts each page's text once; records pages without a text layer. A PDF with no
        extractable text raises UnsupportedPDFError.
-    2. Splits the text into courses, then modules. No course header -> UnsupportedPDFError.
+    2. Drops running page lines, splits the text into courses, then units. No course header -> UnsupportedPDFError.
     3. Keeps only allowlisted core courses (core_courses, default config syllabus.core_courses);
        none kept -> NoCoreCoursesError.
-    4. Maps each module to taxonomy topics via map_source_to_taxonomy preserving taxonomy_version.
+    4. Maps each non-empty unit to taxonomy topics via map_source_to_taxonomy preserving taxonomy_version;
+       body-less modules are listed in skipped_modules.
     """
-    if not os.path.exists(pdf_path):
-        raise FileNotFoundError(f"PDF file not found at path: {pdf_path}")
+    pages_text, full_text, courses = _read_courses(pdf_path, max_pages)
+    kept, course_filter, scanned_courses = _filter_or_raise(courses, full_text, _allowlist(core_courses))
+    mappings, skipped, records = _map_courses(kept, taxonomy_version)
+    text_layer = {
+        "page_count": len(pages_text),
+        "pages_without_text": _pages_without_text(pages_text),
+        "scanned_courses": scanned_courses,
+    }
+    return _result(os.path.basename(pdf_path), taxonomy_version, kept, course_filter, records, mappings, skipped,
+                   text_layer)
 
-    with pdfplumber.open(pdf_path) as pdf:
-        if max_pages is not None and len(pdf.pages) > max_pages:
-            raise UnsupportedPDFError(
-                f"Unsupported PDF '{os.path.basename(pdf_path)}': it has {len(pdf.pages)} pages; "
-                f"the limit is {max_pages} pages."
-            )
-        pages_text = [page.extract_text() or "" for page in pdf.pages]
 
-    if sum(len(t.strip()) for t in pages_text) < MIN_TEXT_LENGTH_THRESHOLD:
-        raise UnsupportedPDFError(
-            f"Unsupported PDF '{os.path.basename(pdf_path)}': Document is a scanned image or contains no extractable text. "
-            "OCR processing is excluded from MVP scope."
-        )
-
-    full_text = "\n".join(t for t in pages_text if t)
-    courses = segment_courses(full_text)
+def parse_syllabus_pdfs(
+    pdf_paths: Iterable[str],
+    syllabus_id: str,
+    taxonomy_version: str = DEFAULT_TAXONOMY_VERSION,
+    core_courses: Optional[Iterable[str]] = None,
+    max_pages: Optional[int] = None
+) -> Dict[str, Any]:
+    """
+    Builds ONE combined syllabus from several course PDFs (e.g. a theory BCSE202L and its lab BCSE202P).
+    Each file is read and segmented on its own; the courses are merged and the allowlist/duplicate filter
+    runs once over all of them. A file without text or course headers is recorded in file_errors and the
+    others are still scored; no readable file -> UnsupportedPDFError, no core course -> NoCoreCoursesError.
+    Same schema as parse_syllabus_pdf plus source_files, file_errors and per-file text_layer.files.
+    """
+    paths = list(pdf_paths)
+    courses, texts, files, file_errors = [], [], [], []
+    for path in paths:
+        name = os.path.basename(path)
+        try:
+            pages_text, full_text, file_courses = _read_courses(path, max_pages)
+        except UnsupportedPDFError as err:
+            file_errors.append({"file": name, "error": str(err)})
+            continue
+        for course in file_courses:
+            course["source_file"] = name
+        courses.extend(file_courses)
+        texts.append(full_text)
+        files.append({"file": name, "page_count": len(pages_text), "pages_without_text": _pages_without_text(pages_text)})
     if not courses:
         raise UnsupportedPDFError(
-            f"Unsupported PDF '{os.path.basename(pdf_path)}': no course headers found "
-            "(expected a course code, title and L-T-P-C line per course)."
+            "No readable course syllabus in: " + ", ".join(os.path.basename(p) for p in paths) + ". "
+            + " ".join(e["error"] for e in file_errors)
         )
 
-    if core_courses is None:
-        core_courses = load_scoring_config()["syllabus"]["core_courses"]
-    allowlist = list(core_courses)
-    kept, dropped = filter_core_courses(courses, allowlist)
-    allowlisted_missing, scanned_courses = find_missing_allowlisted(full_text, courses, allowlist)
-    if not kept:
-        found = ", ".join(c["course_code"] for c in courses)
-        raise NoCoreCoursesError(f"No allowlisted core CS course found in the syllabus. Courses found: {found}.")
-
-    two_pass_mappings = []
-    for course in kept:
-        for mod in parse_course_modules(course):
-            source_id = f"{mod['course_code']}_mod_{mod['module_number']}"
-            mapping = map_source_to_taxonomy(
-                source_id=source_id,
-                raw_text=mod["unit_text"],
-                source_type="syllabus",
-                taxonomy_version=taxonomy_version
-            )
-            # Attach depth signals to the mapping output for Phase 8 consumption
-            mapping["depth_signals"] = mod["depth_signals"]
-            mapping["course_code"] = mod["course_code"]
-            mapping["module_number"] = mod["module_number"]
-            mapping["module_title"] = mod["module_title"]
-            two_pass_mappings.append(mapping)
-
-    return {
-        "syllabus_id": os.path.basename(pdf_path),
-        "source_type": "syllabus",
-        "taxonomy_version": taxonomy_version,
-        "course_metadata": course_metadata_of(kept[0]),
-        "courses": [course_metadata_of(c) for c in kept],
-        "course_filter": {
-            "kept": [c["course_code"] for c in kept],
-            "dropped": [
-                {"course_code": d["course_code"], "course_title": d["course_title"], "drop_reason": d["drop_reason"]}
-                for d in dropped
-            ],
-            "allowlisted_missing": allowlisted_missing,
-        },
-        "text_layer": {
-            "page_count": len(pages_text),
-            "pages_without_text": [i + 1 for i, t in enumerate(pages_text) if not page_has_text_layer(t)],
-            "scanned_courses": scanned_courses,
-        },
-        "units_count": len(two_pass_mappings),
-        "two_pass_mappings": two_pass_mappings
+    kept, course_filter, scanned_courses = _filter_or_raise(courses, "\n".join(texts), _allowlist(core_courses))
+    mappings, skipped, records = _map_courses(kept, taxonomy_version)
+    text_layer = {
+        "page_count": sum(f["page_count"] for f in files),
+        "pages_without_text": [f"{f['file']} p{n}" for f in files for n in f["pages_without_text"]],
+        "scanned_courses": scanned_courses,
+        "files": files,
     }
-
+    result = _result(syllabus_id, taxonomy_version, kept, course_filter, records, mappings, skipped, text_layer)
+    result["source_files"] = [os.path.basename(p) for p in paths]
+    result["file_errors"] = file_errors
+    return result

@@ -209,3 +209,111 @@ def test_api_cache_keeps_course_signals():
         assert cached["course_signals"] == {"lab_count": 10}
     finally:
         routes.SYLLABUS_CACHE.pop("test_course_signals", None)
+
+
+# --- combined syllabus from several PDFs ---------------------------------------
+
+from pipeline.syllabus_parser import (  # noqa: E402
+    NoCoreCoursesError,
+    UnsupportedPDFError,
+    collect_syllabus_pdfs,
+    parse_syllabus_pdf,
+    parse_syllabus_pdfs,
+)
+
+CORE = ["BCSE202L", "BCSE202P"]
+
+
+def _write_pdf(path, pages):
+    c = canvas.Canvas(str(path))
+    for lines in pages:
+        for i, line in enumerate(lines):
+            c.drawString(72, 780 - 14 * i, line)
+        c.showPage()
+    c.save()
+    return str(path)
+
+
+def _theory_pdf(tmp_path, name="BCSE202L_DSA_TH.pdf"):
+    # Module 3 has no body: only the page footer and the next page's header follow it.
+    page1 = THEORY.split("Total Lecture hours")[0].splitlines() + [
+        "Proceedings of the 65th Academic Council (17.03.2022) 973"]
+    page2 = ["Agenda Item 65/39 - Annexure - 35", "Total Lecture hours: 45 hours", "Text Book",
+             "1. Mark A. Weiss, Data Structures & Algorithm Analysis in C++"]
+    return _write_pdf(tmp_path / name, [["Agenda Item 65/39 - Annexure - 35"] + page1, page2])
+
+
+def _lab_pdf(tmp_path, name="BCSE202P_DSA_LAB.pdf"):
+    return _write_pdf(tmp_path / name, [["Agenda Item 65/39 - Annexure - 35"] + LAB.splitlines()])
+
+
+def test_parse_syllabus_pdfs_builds_one_combined_syllabus(tmp_path):
+    theory, lab = _theory_pdf(tmp_path), _lab_pdf(tmp_path)
+    result = parse_syllabus_pdfs([theory, lab], syllabus_id="VIT_CSE_2024_25_courses", core_courses=CORE)
+
+    assert result["syllabus_id"] == "VIT_CSE_2024_25_courses"
+    assert result["source_files"] == ["BCSE202L_DSA_TH.pdf", "BCSE202P_DSA_LAB.pdf"]
+    assert result["file_errors"] == []
+    mappings = result["two_pass_mappings"]
+    assert [m["source_id"] for m in mappings] == [
+        "BCSE202L_mod_1", "BCSE202L_mod_2", "BCSE202P_exp_1", "BCSE202P_exp_2", "BCSE202P_exp_3", "BCSE202P_exp_4"]
+    assert result["units_count"] == 6
+    assert {m["course_group"] for m in mappings} == {"BCSE202"}
+    assert [m["component"] for m in mappings] == ["theory"] * 2 + ["lab"] * 4
+    assert {m["source_file"] for m in mappings if m["component"] == "lab"} == {"BCSE202P_DSA_LAB.pdf"}
+    assert all(m["course_signals"] == {"lab_count": 4} for m in mappings if m["component"] == "lab")
+    assert all(m["course_signals"] is None for m in mappings if m["component"] == "theory")
+    assert result["skipped_modules"] == [{"course_code": "BCSE202L", "module_number": 3,
+                                          "module_title": "Contemporary Issues", "source_file": "BCSE202L_DSA_TH.pdf",
+                                          "reason": "no_body"}]
+    assert result["course_groups"] == [{"course_group": "BCSE202", "course_title": "Data Structures and Algorithms",
+                                        "theory": "BCSE202L", "lab": "BCSE202P"}]
+    lab_course = next(c for c in result["courses"] if c["course_code"] == "BCSE202P")
+    assert (lab_course["experiment_count"], lab_course["lab_hours_total"]) == (4, 30.0)
+    assert result["text_layer"]["page_count"] == 3
+    assert [f["file"] for f in result["text_layer"]["files"]] == result["source_files"]
+    assert result["course_filter"]["allowlisted_missing"] == []
+
+
+def test_unreadable_file_is_recorded_and_the_rest_scored(tmp_path):
+    blank = _write_pdf(tmp_path / "BCSE999L_scanned.pdf", [[]])
+    result = parse_syllabus_pdfs([blank, _lab_pdf(tmp_path)], syllabus_id="s", core_courses=CORE)
+    assert [e["file"] for e in result["file_errors"]] == ["BCSE999L_scanned.pdf"]
+    assert "no extractable text" in result["file_errors"][0]["error"]
+    assert result["course_filter"]["kept"] == ["BCSE202P"]
+    assert result["course_filter"]["allowlisted_missing"] == ["BCSE202L"]
+
+
+def test_duplicate_file_keeps_source_ids_unique(tmp_path):
+    lab, copy = _lab_pdf(tmp_path), _lab_pdf(tmp_path, "BCSE202P_DSA_LAB (1).pdf")
+    result = parse_syllabus_pdfs([lab, copy], syllabus_id="s", core_courses=CORE)
+    ids = [m["source_id"] for m in result["two_pass_mappings"]]
+    assert len(ids) == len(set(ids)) == 4
+    assert result["course_filter"]["dropped"] == [
+        {"course_code": "BCSE202P", "course_title": "Data Structures and Algorithms Lab", "drop_reason": "duplicate"}]
+
+
+def test_no_core_course_in_any_file_raises(tmp_path):
+    with pytest.raises(NoCoreCoursesError, match="BCSE202P"):
+        parse_syllabus_pdfs([_lab_pdf(tmp_path)], syllabus_id="s", core_courses=["XYZ999"])
+
+
+def test_all_files_unreadable_raises(tmp_path):
+    blank = _write_pdf(tmp_path / "blank.pdf", [[]])
+    with pytest.raises(UnsupportedPDFError, match="blank.pdf"):
+        parse_syllabus_pdfs([blank], syllabus_id="s", core_courses=CORE)
+
+
+def test_single_pdf_parse_skips_empty_modules_and_tags_units(tmp_path):
+    result = parse_syllabus_pdf(_theory_pdf(tmp_path), core_courses=CORE)
+    assert result["syllabus_id"] == "BCSE202L_DSA_TH.pdf"
+    assert [m["source_id"] for m in result["two_pass_mappings"]] == ["BCSE202L_mod_1", "BCSE202L_mod_2"]
+    assert [s["module_number"] for s in result["skipped_modules"]] == [3]
+    assert result["text_layer"]["pages_without_text"] == []
+
+
+def test_collect_syllabus_pdfs_matches_glob_only(tmp_path):
+    for name in ("BCSE202P_lab.pdf", "BCSE202L_th.pdf", "B.Tech_CSE_2024_2025.pdf", "BCSE_notes.txt"):
+        (tmp_path / name).write_bytes(b"%PDF-1.4")
+    assert collect_syllabus_pdfs(str(tmp_path)) == [str(tmp_path / "BCSE202L_th.pdf"), str(tmp_path / "BCSE202P_lab.pdf")]
+    assert collect_syllabus_pdfs(str(tmp_path), pattern="B.Tech*.pdf") == [str(tmp_path / "B.Tech_CSE_2024_2025.pdf")]
