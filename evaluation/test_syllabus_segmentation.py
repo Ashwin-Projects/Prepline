@@ -174,12 +174,22 @@ def test_embedded_course_lab_hours_spread_over_all_units():
     assert sum(lab_hours) == 4 * 15
 
 
-def test_lab_course_without_modules_single_unit():
+def test_lab_course_without_modules_one_unit_per_experiment():
+    # Course-syllabi run (2026-10-21): a lab-only course is split into its Indicative Experiments.
     lab = segment_courses(LAB_COURSE)[0]
+    modules = parse_course_modules(lab)
+    assert [m["source_id"] for m in modules] == ["BCSE202P_exp_1", "BCSE202P_exp_2"]
+    assert "Implement a stack" in modules[0]["unit_text"]
+    assert all("Mode of assessment" not in m["unit_text"] for m in modules)
+
+
+def test_lab_course_without_experiment_list_single_unit():
+    lab = segment_courses(LAB_COURSE.replace("Indicative Experiments\n", ""))[0]
     modules = parse_course_modules(lab)
     assert len(modules) == 1
     assert modules[0]["module_number"] == 0
     assert modules[0]["module_title"] == "Data Structures and Algorithms Lab"
+    assert modules[0]["component"] == "lab"
     assert "Implement a stack" in modules[0]["unit_text"]
     assert "Mode of assessment" not in modules[0]["unit_text"]
 
