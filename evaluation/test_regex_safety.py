@@ -25,14 +25,8 @@ CASES = {
     "module header + 10k spaces": ("modules", "ABC1234 Title 3 0 0 3\nModule" + W + ":" + W + "x\n"),
     "module title + 10k spaces before hours": ("modules", "ABC1234 Title 3 0 0 3\nModule:1 Trees" + W + "(" + W + "x\n"),
     "boilerplate: Module + 10k spaces": ("strip", "Module" + W + ":" + W + "x"),
-    "lab experiments + 10k spaces": ("modules", "ABC1234P Lab L T P C
-0 0 2 1
-Indicative Experiments
-1" + W
-                                     + "x
-2." + W + "
-Total Laboratory Hours" + W + "x
-"),
+    "lab experiments + 10k spaces": ("modules", "ABC1234P Lab L T P C\n0 0 2 1\nIndicative Experiments\n1" + W
+                                     + "x\n2." + W + "\nTotal Laboratory Hours" + W + "x\n"),
 }
 
 _RUNNER = textwrap.dedent(
