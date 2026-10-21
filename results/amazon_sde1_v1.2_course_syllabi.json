@@ -1,0 +1,849 @@
+{
+  "results_version": "v1.2",
+  "company": "Amazon",
+  "role": "SDE-1",
+  "report_count": 18,
+  "syllabus_file": null,
+  "syllabus_id": "VIT_CSE_2024_25_courses",
+  "syllabus_files": [
+    "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
+    "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
+    "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
+    "BCSE204P_DESIGN-AND-ANALYSIS-OF-ALGORITHMS-LAB_LO_1.0_70_BCSE204P.pdf",
+    "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
+    "BCSE301L_SOFTWARE-ENGINEERING_TH_1.0_70_BCSE301L.pdf",
+    "BCSE301P_SOFTWARE-ENGINEERING-LAB_LO_1.0_70_BCSE301P.pdf",
+    "BCSE302L_DATABASE-SYSTEMS_TH_1.0_70_BCSE302L.pdf",
+    "BCSE302P_DATABASE-SYSTEMS-LAB_LO_1.0_70_BCSE302P.pdf",
+    "BCSE303L_OPERATING-SYSTEMS_TH_1.0_70_BCSE303L.pdf",
+    "BCSE303P_OPERATING-SYSTEMS-LAB_LO_1.0_70_BCSE303P.pdf",
+    "BCSE304L_THEORY-OF-COMPUTATION_TH_1.0_70_BCSE304L.pdf",
+    "BCSE305L_EMBEDDED-SYSTEMS_TH_1.0_70_BCSE305L.pdf",
+    "BCSE306L_ARTIFICIAL-INTELLIGENCE_TH_1.0_70_BCSE306L.pdf",
+    "BCSE307L_COMPILER-DESIGN_TH_1.0_70_BCSE307L (1).pdf",
+    "BCSE307P_COMPILER-DESIGN-LAB_LO_1.0_70_BCSE307P.pdf",
+    "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
+    "BCSE308P_COMPUTER-NETWORKS-LAB_LO_1.0_70_BCSE308P.pdf",
+    "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
+    "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf"
+  ],
+  "core_courses": [
+    "BCSE202L",
+    "BCSE202P",
+    "BCSE204L",
+    "BCSE204P",
+    "BCSE205L",
+    "BCSE301L",
+    "BCSE301P",
+    "BCSE302L",
+    "BCSE302P",
+    "BCSE303L",
+    "BCSE303P",
+    "BCSE304L",
+    "BCSE305L",
+    "BCSE306L",
+    "BCSE307L",
+    "BCSE307P",
+    "BCSE308L",
+    "BCSE308P",
+    "BCSE309L",
+    "BCSE309P"
+  ],
+  "taxonomy_version": "v1.0",
+  "scoring_config_version": "v1.2",
+  "scoring_config": {
+    "config_file": "config/scoring_v1.2.json",
+    "gamma": 0.5,
+    "similarity_threshold": 0.5,
+    "depth_reference_values": {
+      "unit_hours": 10.0,
+      "slide_count": 20.0,
+      "slides": 20.0,
+      "lab_hours": 10.0,
+      "lab_count": 5.0,
+      "assignment_count": 5.0,
+      "assignments": 5.0
+    }
+  },
+  "generated_at": "2026-10-21T18:20:52.736602+00:00",
+  "granular_without_high_level_ancestor": [],
+  "interview_filter": {
+    "questions_total": 98,
+    "questions_included": 46,
+    "questions_excluded": 52,
+    "excluded_by_reason": {
+      "behavioral_round": 23,
+      "needs_review": 20,
+      "no_question_text": 52
+    },
+    "excluded_questions_file": "data/processed/excluded_questions.csv"
+  },
+  "status": "SUCCESS",
+  "S_comp": 88.7456,
+  "scoring_universe_size": 9,
+  "courses_kept": [
+    {
+      "course_code": "BCSE202L",
+      "course_title": "Data Structures and Algorithms",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE202",
+      "component": "theory",
+      "source_file": "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE202P",
+      "course_title": "Data Structures and Algorithms Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE202",
+      "component": "lab",
+      "source_file": "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
+      "experiment_count": 10,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE204L",
+      "course_title": "Design and Analysis of Algorithms",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE204",
+      "component": "theory",
+      "source_file": "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE204P",
+      "course_title": "Design and Analysis of Algorithms Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE204",
+      "component": "lab",
+      "source_file": "BCSE204P_DESIGN-AND-ANALYSIS-OF-ALGORITHMS-LAB_LO_1.0_70_BCSE204P.pdf",
+      "experiment_count": 11,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE205L",
+      "course_title": "Computer Architecture and Organization",
+      "lecture_hours": null,
+      "tutorial_hours": null,
+      "practical_hours": null,
+      "project_hours": null,
+      "credits": null,
+      "ltpc_status": "incomplete",
+      "course_group": "BCSE205",
+      "component": "theory",
+      "source_file": "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE301L",
+      "course_title": "Software Engineering",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE301",
+      "component": "theory",
+      "source_file": "BCSE301L_SOFTWARE-ENGINEERING_TH_1.0_70_BCSE301L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE301P",
+      "course_title": "Software Engineering Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE301",
+      "component": "lab",
+      "source_file": "BCSE301P_SOFTWARE-ENGINEERING-LAB_LO_1.0_70_BCSE301P.pdf",
+      "experiment_count": 10,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE302L",
+      "course_title": "Database Systems",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE302",
+      "component": "theory",
+      "source_file": "BCSE302L_DATABASE-SYSTEMS_TH_1.0_70_BCSE302L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE302P",
+      "course_title": "Database Systems Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE302",
+      "component": "lab",
+      "source_file": "BCSE302P_DATABASE-SYSTEMS-LAB_LO_1.0_70_BCSE302P.pdf",
+      "experiment_count": 6,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE303L",
+      "course_title": "Operating Systems",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE303",
+      "component": "theory",
+      "source_file": "BCSE303L_OPERATING-SYSTEMS_TH_1.0_70_BCSE303L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE303P",
+      "course_title": "Operating Systems Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE303",
+      "component": "lab",
+      "source_file": "BCSE303P_OPERATING-SYSTEMS-LAB_LO_1.0_70_BCSE303P.pdf",
+      "experiment_count": 12,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE304L",
+      "course_title": "Theory of Computation",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE304",
+      "component": "theory",
+      "source_file": "BCSE304L_THEORY-OF-COMPUTATION_TH_1.0_70_BCSE304L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE305L",
+      "course_title": "Embedded Systems",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE305",
+      "component": "theory",
+      "source_file": "BCSE305L_EMBEDDED-SYSTEMS_TH_1.0_70_BCSE305L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE306L",
+      "course_title": "Artificial Intelligence",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE306",
+      "component": "theory",
+      "source_file": "BCSE306L_ARTIFICIAL-INTELLIGENCE_TH_1.0_70_BCSE306L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE307L",
+      "course_title": "Compiler Design",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE307",
+      "component": "theory",
+      "source_file": "BCSE307L_COMPILER-DESIGN_TH_1.0_70_BCSE307L (1).pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE307P",
+      "course_title": "Compiler Design Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE307",
+      "component": "lab",
+      "source_file": "BCSE307P_COMPILER-DESIGN-LAB_LO_1.0_70_BCSE307P.pdf",
+      "experiment_count": 10,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE308L",
+      "course_title": "Computer Networks",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE308",
+      "component": "theory",
+      "source_file": "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE308P",
+      "course_title": "Computer Networks Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE308",
+      "component": "lab",
+      "source_file": "BCSE308P_COMPUTER-NETWORKS-LAB_LO_1.0_70_BCSE308P.pdf",
+      "experiment_count": 9,
+      "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE309L",
+      "course_title": "Cryptography and Network Security",
+      "lecture_hours": 3,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE309",
+      "component": "theory",
+      "source_file": "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
+    {
+      "course_code": "BCSE309P",
+      "course_title": "Cryptography and Network Security Lab",
+      "lecture_hours": 0,
+      "tutorial_hours": 0,
+      "practical_hours": 2,
+      "project_hours": null,
+      "credits": 1,
+      "ltpc_status": "complete",
+      "course_group": "BCSE309",
+      "component": "lab",
+      "source_file": "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
+      "experiment_count": 10,
+      "lab_hours_total": 30.0
+    }
+  ],
+  "course_groups": [
+    {
+      "course_group": "BCSE202",
+      "course_title": "Data Structures and Algorithms",
+      "theory": "BCSE202L",
+      "lab": "BCSE202P"
+    },
+    {
+      "course_group": "BCSE204",
+      "course_title": "Design and Analysis of Algorithms",
+      "theory": "BCSE204L",
+      "lab": "BCSE204P"
+    },
+    {
+      "course_group": "BCSE205",
+      "course_title": "Computer Architecture and Organization",
+      "theory": "BCSE205L",
+      "lab": null
+    },
+    {
+      "course_group": "BCSE301",
+      "course_title": "Software Engineering",
+      "theory": "BCSE301L",
+      "lab": "BCSE301P"
+    },
+    {
+      "course_group": "BCSE302",
+      "course_title": "Database Systems",
+      "theory": "BCSE302L",
+      "lab": "BCSE302P"
+    },
+    {
+      "course_group": "BCSE303",
+      "course_title": "Operating Systems",
+      "theory": "BCSE303L",
+      "lab": "BCSE303P"
+    },
+    {
+      "course_group": "BCSE304",
+      "course_title": "Theory of Computation",
+      "theory": "BCSE304L",
+      "lab": null
+    },
+    {
+      "course_group": "BCSE305",
+      "course_title": "Embedded Systems",
+      "theory": "BCSE305L",
+      "lab": null
+    },
+    {
+      "course_group": "BCSE306",
+      "course_title": "Artificial Intelligence",
+      "theory": "BCSE306L",
+      "lab": null
+    },
+    {
+      "course_group": "BCSE307",
+      "course_title": "Compiler Design",
+      "theory": "BCSE307L",
+      "lab": "BCSE307P"
+    },
+    {
+      "course_group": "BCSE308",
+      "course_title": "Computer Networks",
+      "theory": "BCSE308L",
+      "lab": "BCSE308P"
+    },
+    {
+      "course_group": "BCSE309",
+      "course_title": "Cryptography and Network Security",
+      "theory": "BCSE309L",
+      "lab": "BCSE309P"
+    }
+  ],
+  "course_filter": {
+    "kept": [
+      "BCSE202L",
+      "BCSE202P",
+      "BCSE204L",
+      "BCSE204P",
+      "BCSE205L",
+      "BCSE301L",
+      "BCSE301P",
+      "BCSE302L",
+      "BCSE302P",
+      "BCSE303L",
+      "BCSE303P",
+      "BCSE304L",
+      "BCSE305L",
+      "BCSE306L",
+      "BCSE307L",
+      "BCSE307P",
+      "BCSE308L",
+      "BCSE308P",
+      "BCSE309L",
+      "BCSE309P"
+    ],
+    "dropped": [],
+    "allowlisted_missing": []
+  },
+  "text_layer": {
+    "page_count": 32,
+    "pages_without_text": [],
+    "scanned_courses": [],
+    "files": [
+      {
+        "file": "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE204P_DESIGN-AND-ANALYSIS-OF-ALGORITHMS-LAB_LO_1.0_70_BCSE204P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE301L_SOFTWARE-ENGINEERING_TH_1.0_70_BCSE301L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE301P_SOFTWARE-ENGINEERING-LAB_LO_1.0_70_BCSE301P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE302L_DATABASE-SYSTEMS_TH_1.0_70_BCSE302L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE302P_DATABASE-SYSTEMS-LAB_LO_1.0_70_BCSE302P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE303L_OPERATING-SYSTEMS_TH_1.0_70_BCSE303L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE303P_OPERATING-SYSTEMS-LAB_LO_1.0_70_BCSE303P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE304L_THEORY-OF-COMPUTATION_TH_1.0_70_BCSE304L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE305L_EMBEDDED-SYSTEMS_TH_1.0_70_BCSE305L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE306L_ARTIFICIAL-INTELLIGENCE_TH_1.0_70_BCSE306L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE307L_COMPILER-DESIGN_TH_1.0_70_BCSE307L (1).pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE307P_COMPILER-DESIGN-LAB_LO_1.0_70_BCSE307P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE308P_COMPUTER-NETWORKS-LAB_LO_1.0_70_BCSE308P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
+        "page_count": 2,
+        "pages_without_text": []
+      },
+      {
+        "file": "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
+        "page_count": 1,
+        "pages_without_text": []
+      }
+    ]
+  },
+  "file_errors": [],
+  "skipped_modules": [
+    {
+      "course_code": "BCSE202L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE204L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE205L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE301L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE301L_SOFTWARE-ENGINEERING_TH_1.0_70_BCSE301L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE302L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE302L_DATABASE-SYSTEMS_TH_1.0_70_BCSE302L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE303L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE303L_OPERATING-SYSTEMS_TH_1.0_70_BCSE303L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE304L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE304L_THEORY-OF-COMPUTATION_TH_1.0_70_BCSE304L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE305L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE305L_EMBEDDED-SYSTEMS_TH_1.0_70_BCSE305L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE306L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE306L_ARTIFICIAL-INTELLIGENCE_TH_1.0_70_BCSE306L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE307L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE307L_COMPILER-DESIGN_TH_1.0_70_BCSE307L (1).pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE308L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
+      "reason": "no_body"
+    },
+    {
+      "course_code": "BCSE309L",
+      "module_number": 8,
+      "module_title": "Contemporary Issues",
+      "source_file": "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
+      "reason": "no_body"
+    }
+  ],
+  "syllabus_units": 162,
+  "units_by_component": {
+    "theory": 84,
+    "lab": 78
+  },
+  "modules_with_depth_signals": 162,
+  "units_with_matches": 67,
+  "topics_present": 78,
+  "topics_in_taxonomy": 83,
+  "depth_counts": {
+    "all_topics": {
+      "measured": 78,
+      "fallback": 5
+    },
+    "present_topics": {
+      "measured": 78
+    }
+  },
+  "top_priority_gaps": [
+    {
+      "rank": 1,
+      "topic_id": "dsa.linked_lists.traversal_reversal",
+      "topic_name": "Linked List Manipulation & Cycle Detection",
+      "importance": 0.2222,
+      "coverage": 0.8802,
+      "priority_gap": 0.0266
+    },
+    {
+      "rank": 2,
+      "topic_id": "dsa.stacks_queues.monotonic_stack",
+      "topic_name": "Monotonic Stack and Queue",
+      "importance": 0.1111,
+      "coverage": 0.8802,
+      "priority_gap": 0.0133
+    },
+    {
+      "rank": 3,
+      "topic_id": "dsa.trees.lowest_common_ancestor",
+      "topic_name": "Lowest Common Ancestor",
+      "importance": 0.1111,
+      "coverage": 0.898,
+      "priority_gap": 0.0113
+    },
+    {
+      "rank": 4,
+      "topic_id": "dsa.graphs.shortest_path",
+      "topic_name": "Shortest Path Algorithms",
+      "importance": 0.0889,
+      "coverage": 0.8948,
+      "priority_gap": 0.0094
+    },
+    {
+      "rank": 5,
+      "topic_id": "dsa.heaps.top_k",
+      "topic_name": "Top K Elements and K-Way Merge",
+      "importance": 0.0556,
+      "coverage": 0.8463,
+      "priority_gap": 0.0085
+    },
+    {
+      "rank": 6,
+      "topic_id": "dsa.dp.grid",
+      "topic_name": "Grid Path Dynamic Programming",
+      "importance": 0.0778,
+      "coverage": 0.9265,
+      "priority_gap": 0.0057
+    },
+    {
+      "rank": 7,
+      "topic_id": "dsa.sorting_searching.binary_search",
+      "topic_name": "Binary Search",
+      "importance": 0.0333,
+      "coverage": 0.8582,
+      "priority_gap": 0.0047
+    },
+    {
+      "rank": 8,
+      "topic_id": "dsa.trees.bst",
+      "topic_name": "Binary Search Trees",
+      "importance": 0.0444,
+      "coverage": 0.898,
+      "priority_gap": 0.0045
+    },
+    {
+      "rank": 9,
+      "topic_id": "dsa.trees.traversal",
+      "topic_name": "Tree Traversals",
+      "importance": 0.0333,
+      "coverage": 0.898,
+      "priority_gap": 0.0034
+    }
+  ],
+  "unmapped_terms_summary": {
+    "distinct_terms": 1060,
+    "distinct_terms_by_source_type": {
+      "syllabus": 1013,
+      "interview": 50
+    },
+    "total_occurrences": 1249
+  },
+  "top_unmapped_terms": [
+    {
+      "term": "introduction",
+      "source_type": "syllabus",
+      "occurrences": 16,
+      "frequency": 16
+    },
+    {
+      "term": "implementation",
+      "source_type": "syllabus",
+      "occurrences": 9,
+      "frequency": 9
+    },
+    {
+      "term": "applications",
+      "source_type": "syllabus",
+      "occurrences": 8,
+      "frequency": 8
+    },
+    {
+      "term": "develop",
+      "source_type": "syllabus",
+      "occurrences": 7,
+      "frequency": 7
+    },
+    {
+      "term": "algorithm",
+      "source_type": "syllabus",
+      "occurrences": 6,
+      "frequency": 6
+    },
+    {
+      "term": "implement",
+      "source_type": "syllabus",
+      "occurrences": 6,
+      "frequency": 6
+    },
+    {
+      "term": "non",
+      "source_type": "syllabus",
+      "occurrences": 6,
+      "frequency": 6
+    },
+    {
+      "term": "types",
+      "source_type": "syllabus",
+      "occurrences": 6,
+      "frequency": 6
+    },
+    {
+      "term": "design",
+      "source_type": "syllabus",
+      "occurrences": 5,
+      "frequency": 5
+    },
+    {
+      "term": "overview",
+      "source_type": "syllabus",
+      "occurrences": 5,
+      "frequency": 5
+    }
+  ],
+  "stage_timings_seconds": {
+    "parse": 17.0,
+    "coverage": 0.0,
+    "importance": 0.7,
+    "scoring": 0.0
+  },
+  "runtime_seconds": 17.8
+}
