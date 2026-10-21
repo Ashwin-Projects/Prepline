@@ -75,3 +75,10 @@ def test_build_changes_tables():
     assert "| Item 3 - interview filtering | 46.43 | -5.108 |" in md
     assert "| Item 5 - boilerplate | 30.0 | -16.43 |" in md
     assert "`os.deadlocks.prevention_avoidance`" in md.split("Item 5 - boilerplate", 1)[1]
+
+
+def test_default_transcriptions_dir(tmp_path):
+    assert rfp.default_transcriptions_dir(str(tmp_path)) is None
+    (tmp_path / "transcribed").mkdir()
+    assert rfp.default_transcriptions_dir(str(tmp_path)) == str(tmp_path / "transcribed")
+    assert rfp.default_transcriptions_dir(None) is None

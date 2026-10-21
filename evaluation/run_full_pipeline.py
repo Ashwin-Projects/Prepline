@@ -68,7 +68,14 @@ def resolve_pdf_paths(pdfs: list, pdf_dir: str = None, pattern: str = DEFAULT_GL
     return list(dict.fromkeys(paths))
 
 
-def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = None) -> dict:
+def default_transcriptions_dir(pdf_dir: str = None) -> str:
+    """<pdf_dir>/transcribed when it exists: manual transcriptions of course PDFs without a text layer."""
+    folder = os.path.join(pdf_dir, "transcribed") if pdf_dir else None
+    return folder if folder and os.path.isdir(folder) else None
+
+
+def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = None,
+        transcriptions_dir: str = None) -> dict:
     """pdf_paths: one path, or a list. Several paths (or a syllabus_id) build one combined syllabus."""
     if isinstance(pdf_paths, str):
         pdf_paths = [pdf_paths]
@@ -95,6 +102,7 @@ def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = Non
         "syllabus_file": None if combined else os.path.basename(pdf_paths[0]),
         "syllabus_id": syllabus_id if combined else os.path.basename(pdf_paths[0]),
         "syllabus_files": [os.path.basename(p) for p in pdf_paths],
+        "transcriptions_dir": os.path.relpath(transcriptions_dir, ROOT).replace(os.sep, "/") if transcriptions_dir else None,
         "core_courses": CONFIG["syllabus"]["core_courses"],
         "taxonomy_version": None,
         "scoring_config_version": SCORING_CONFIG_VERSION,
@@ -124,7 +132,8 @@ def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = Non
     t0 = time.time()
     print(f"Parsing {len(pdf_paths)} syllabus PDF(s) (slow on scanned pages)...", flush=True)
     if combined:
-        syllabus = parse_syllabus_pdfs(pdf_paths, syllabus_id=syllabus_id or "combined_syllabus")
+        syllabus = parse_syllabus_pdfs(pdf_paths, syllabus_id=syllabus_id or "combined_syllabus",
+                                       transcriptions_dir=transcriptions_dir)
     else:
         syllabus = parse_syllabus_pdf(pdf_paths[0])
     print(f"  {syllabus['units_count']} units in {time.time() - t0:.0f}s", flush=True)
@@ -216,6 +225,7 @@ def print_units(syllabus: dict) -> None:
     print("Units per course:")
     for c in syllabus["courses"]:
         extra = f", {c['experiment_count']} experiments, lab hours {c['lab_hours_total']}" if c["experiment_count"] else ""
+        extra += "  (manual transcription)" if c.get("text_source") == "manual_transcription" else ""
         print(f"  {c['course_code']:<9} {c['component']:<8} {units[c['course_code']]:>3} units{extra}"
               f"  [L-T-P-C {c['ltpc_status']}]")
     skipped = [f"{s['course_code']} M{s['module_number']}" for s in syllabus["skipped_modules"]]
@@ -260,6 +270,8 @@ def main():
     parser.add_argument("--pdf-dir", help="folder of course syllabus PDFs, combined into one syllabus")
     parser.add_argument("--glob", default=DEFAULT_GLOB, help=f"file pattern inside --pdf-dir (default {DEFAULT_GLOB})")
     parser.add_argument("--syllabus-id", help="id of the combined syllabus, e.g. VIT_CSE_2024_25_courses")
+    parser.add_argument("--transcriptions-dir", help="manual transcriptions (<CODE>.txt) of PDFs without a text layer "
+                                                     "(default: <pdf-dir>/transcribed if it exists)")
     parser.add_argument("--questions", default=DEFAULT_QUESTIONS)
     parser.add_argument("--excluded-out", default=DEFAULT_EXCLUDED)
     parser.add_argument("--out", default=DEFAULT_OUT)
@@ -274,7 +286,9 @@ def main():
     if missing:
         sys.exit(f"Syllabus PDF not found: {', '.join(missing)}")
 
-    result = run(pdf_paths, args.questions, args.excluded_out, syllabus_id=args.syllabus_id)
+    transcriptions_dir = args.transcriptions_dir or default_transcriptions_dir(args.pdf_dir)
+    result = run(pdf_paths, args.questions, args.excluded_out, syllabus_id=args.syllabus_id,
+                 transcriptions_dir=transcriptions_dir)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
