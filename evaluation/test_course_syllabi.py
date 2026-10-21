@@ -340,13 +340,18 @@ def test_manifest_has_one_row_per_core_course_file():
             continue
         assert row["expected_local_filename"].startswith(row["course_code"] + "_"), row
         assert row["source"].startswith("VIT official course syllabus PDF, downloaded by user 2026-10-2")
-        assert row["used_in_course_run"] == ("yes" if row["text_layer"] == "yes" else "no"), row
+        # text-layer PDFs and manual transcriptions are scored; a byte-identical copy of another file is not
+        assert row["text_source"] in ("pdf", "manual_transcription", "duplicate_file"), row
+        assert row["text_source"] == ("pdf" if row["text_layer"] == "yes" else row["text_source"]), row
+        assert row["used_in_course_run"] == ("no" if row["text_source"] == "duplicate_file" else "yes"), row
     by_code = {}
     for r in course_rows:
         by_code.setdefault(r["course_code"], []).append(r)
     assert by_code["BCSE205L"][0]["ltpc_status"] == "incomplete"
     assert [r["component"] for r in by_code["BCSE101E"]] == ["theory", "lab"]
-    assert {r["text_layer"] for r in by_code["BCSE102L"]} == {"no"}
+    assert [(r["text_layer"], r["text_source"]) for r in by_code["BCSE102L"]] == [("no", "manual_transcription")]
+    for code in ("BCSE101E", "BCSE103E"):  # identical theory/lab copies: the run reads one, the other is a duplicate
+        assert sorted(r["text_source"] for r in by_code[code]) == ["duplicate_file", "manual_transcription"]
     assert by_code["BCSE203E"][0]["text_layer"] == "missing"
     programme = [r for r in rows if r["component"] == "programme"]
     assert len(programme) == 1 and programme[0]["used_in_course_run"] == "no"

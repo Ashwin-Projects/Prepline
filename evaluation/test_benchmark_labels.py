@@ -101,7 +101,7 @@ def test_shipped_sheet_is_valid_and_unlabelled():
     rows = vl.load_labels(vl.DEFAULT_LABELS)
     report = vl.validate_rows(rows, vl.load_node_types())
     assert report["errors"] == []
-    assert report["by_source_type"] == {"syllabus": {"total": 177, "labelled": 0},
+    assert report["by_source_type"] == {"syllabus": {"total": 201, "labelled": 0},
                                         "interview": {"total": 46, "labelled": 0}}
     assert len(vl.load_node_types()) == 83
     assert os.path.basename(vl.DEFAULT_LABELS) == "labels_v1.0.csv"

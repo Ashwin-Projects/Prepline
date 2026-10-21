@@ -1,0 +1,51 @@
+# Manual transcription of BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf
+# (the ..._ELA_... file is a byte-identical copy). Source PDF has no text layer (Microsoft Print-to-PDF, text drawn
+# as vector outlines). Transcribed by Claude from page renders on 2026-10-22; spot-check against the PDF.
+# Lines starting with # are ignored by the parser. Embedded course: theory modules + Indicative Experiments.
+BCSE101E Computer Programming: Python L T P C
+1 0 4 3
+Pre-requisite NIL Syllabus version
+1.0
+Course Objectives
+1. To provide exposure to basic problem-solving techniques using computers.
+2. To inculcate the art of logical thinking abilities and propose novel solutions for real world problems through programming language constructs.
+Course Outcome
+1. Classify various algorithmic approaches, categorize the appropriate data representation, and demonstrate various control constructs.
+2. Choose appropriate programming paradigms, interpret and handle data using files to propose solution through reusable modules; idealize the importance of modules and packages.
+Module:1 Introduction to Problem Solving 1 hour
+Problem Solving: Definition and Steps, Problem Analysis Chart, Developing an Algorithm, Flowchart and Pseudocode.
+Module:2 Python Programming Fundamentals 2 hours
+Introduction to python - Interactive and Script Mode - Indentation - Comments - Variables - Reserved Words - Data Types - Operators and their precedence - Expressions - Built-in Functions - Importing from Packages.
+Module:3 Control Structures 2 hours
+Decision Making and Branching: if, if-else, nested if, multi-way if-elif statements - Looping: while loop, for loop - else clauses in loops, nested loops - break, continue and pass statements.
+Module:4 Collections 3 hours
+Lists: Create, Access, Slicing, Negative indices, List methods, List comprehensions - Tuples: Create, Indexing and slicing, Operations on tuples - Dictionary: Create, add, and replace values, Operations on dictionaries - Sets: Creation and operations.
+Module:5 Strings and Regular Expressions 2 hours
+Strings: Comparison, Formatting, Slicing, Splitting, Stripping - Regular Expressions: Matching, Search and replace, Patterns.
+Module:6 Functions and Files 3 hours
+Functions - Parameters and Arguments: Positional arguments, Keyword arguments, Parameters with default values - Local and Global scope of variables - Functions with Arbitrary arguments - Recursive Functions - Lambda Function. Files: Create, Open, Read, Write, Append and Close - tell and seek methods.
+Module:7 Modules and Packages 2 hours
+Built-in modules - User-Defined modules - Overview of Numpy and Pandas packages.
+Total Lecture hours: 15 hours
+Text Book(s)
+1. Eric Matthes, Python Crash Course: A Hands-On, Project-Based Introduction to Programming, 2nd Edition, No starch Press, 2019
+Reference Books
+1. Martic C Brown, Python: The Complete Reference, 4th Edition, McGraw Hill Publishers, 2018.
+2. John V. Guttag, Introduction to computation and programming using python: with applications to understanding data. 2nd Edition, MIT Press, 2016.
+Mode of Evaluation: No separate evaluation for theory component.
+Indicative Experiments
+1. Problem Analysis Chart, Flowchart and Pseudocode Practices.
+2. Sequential Constructs using Python Operators, Expressions.
+3. Branching (if, if-else, nested if, multi-way if-elif statements) and Looping (for, while, nested looping, break, continue, else in loops).
+4. List, Tuples, Dictionaries & Sets.
+5. Strings, Regular Expressions.
+6. Functions, Lambda, Recursive Functions and Files.
+7. Modules and Packages (NumPy and Pandas)
+Total Laboratory Hours 60 hours
+Text Book(s)
+1. Mariano Anaya, Clean Code in Python: Develop maintainable and efficient code, 2nd Edition, Packt Publishing Limited, 2021.
+Reference Books
+1. Harsh Bhasin, Python for beginners, 1st Edition, New Age International (P) Ltd., 2019,
+Mode of assessment: Continuous assessments and FAT
+Recommended by Board of Studies 03.07.2021
+Approved by Academic Council No. 63 Date 23.09.2021

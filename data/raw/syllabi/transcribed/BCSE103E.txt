@@ -1,0 +1,53 @@
+# Manual transcription of BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf
+# (the ..._ELA_... file is a byte-identical copy). Source PDF has no text layer (Microsoft Print-to-PDF, text drawn
+# as vector outlines). Transcribed by Claude from page renders on 2026-10-22; spot-check against the PDF.
+# Lines starting with # are ignored by the parser. Embedded course: theory modules + Indicative Experiments.
+BCSE103E Computer Programming : Java L T P C
+1 0 4 3
+Pre-requisite NIL Syllabus version
+1.0
+Course Objectives:
+1. To introduce the core language features of Java and understand the fundamentals of Object -Oriented programming in Java.
+2. To develop the ability of using Java to solve real world problems.
+Course Outcome:
+At the end of this course, students should be able to:
+1. Understand basic programming constructs; realize the fundamentals of Object Orientated Programming in Java; apply inheritance and interface concepts for enhancing code reusability.
+2. Realize the exception handling mechanism; process data within files and use the data structures in the collection framework for solving real world problems.
+Module:1 Java Basics 2 hours
+OOP Paradigm - Features of Java Language - JVM - Bytecode - Java program structure - Basic programming constructs - data types - variables - Java naming conventions - operators.
+Module:2 Looping Constructs and Arrays 2 hours
+Control and looping constructs - Arrays - one dimensional and multi-dimensional - enhanced for loop - Strings - Wrapper classes.
+Module:3 Classes and Objects 2 hours
+Class Fundamentals - Access and non-access specifiers - Declaring objects and assigning object reference variables - array of objects - constructors and destructors - usage of "this" and "static" keywords.
+Module:4 Inheritance and Polymorphism 3 hours
+Inheritance - types - use of "super" - final keyword - Polymorphism - Overloading and Overriding - abstract class - Interfaces.
+Module:5 Packages and Exception Handling 2 hours
+Packages: Creating and Accessing - Sub packages. Exception Handling - Types of Exception - Control Flow in Exceptions - Use of try, catch, finally, throw, throws in Exception Handling - User defined exceptions.
+Module:6 IO Streams and Files 2 hours
+Java I/O streams - FileInputStream & FileOutputStream - FileReader & FileWriter - DataInputStream & DataOutputStream - BufferedInputStream & BufferedOutputStream - PrintOutputStream - Serialization and Deserialization.
+Module:7 Collection Framework 2 hours
+Generic classes and methods - Collection framework: List and Map.
+Total Lecture hours: 15 hours
+Text Book(s)
+1. Y. Daniel Liang, "Introduction to Java programming" - comprehensive version-11th Edition, Pearson publisher, 2017.
+Reference Books
+1. Herbert Schildt, The Complete Reference -Java, Tata McGraw-Hill publisher, 10th Edition, 2017.
+2. Cay Horstmann, "Big Java", 4th edition, John Wiley & Sons publisher, 5th edition, 2015
+3. E.Balagurusamy, "Programming with Java", Tata McGraw-Hill publishers, 6th edition, 2019
+Mode of Evaluation: No separate evaluation for theory component.
+Indicative Experiments
+1. Programs using sequential and branching structures.
+2. Experiment the use of looping, arrays and strings.
+3. Demonstrate basic Object-Oriented programming elements.
+4. Experiment the use of inheritance, polymorphism and abstract classes.
+5. Designing packages and demonstrate exception handling.
+6. Demonstrate the use of IO streams, file handling and serialization.
+7. Program to discover application of collections.
+Total Laboratory Hours 60 hours
+Text Book(s)
+1. Marc Loy, Patrick Niemeyer and Daniel Leuck, Learning Java, O'Reilly Media, Inc., 5th Edition, 2020.
+Reference Books
+1. Dhruti Shah, 100+ Solutions in Java: A Hands-On Introduction to Programming in Java, BPB Publications, 1st Edition, 2020.
+Mode of assessment: Continuous assessments and FAT
+Recommended by Board of Studies 03.07.2021
+Approved by Academic Council No. 63 Date 23.09.2021

@@ -5,11 +5,12 @@ course and no interview report has items in two splits.
 
 ## Groups
 
-Counts as of 2026-10-22: 223 rows, the 22 readable core courses plus 46 interview questions.
+Counts as of 2026-10-22: 247 rows, the 25 scored core courses (BCSE101E, BCSE102L and BCSE103E from manual
+transcriptions; BCSE203E not supplied) plus 46 interview questions.
 
 | source_type | group key | groups | rows | group sizes |
 |---|---|---|---|---|
-| syllabus | `course_group` = `course_or_report` minus its trailing L/P/E (BCSE202L + BCSE202P → BCSE202) | 14 | 177 | 7–19 units |
+| syllabus | `course_group` = `course_or_report` minus its trailing L/P/E (BCSE202L + BCSE202P → BCSE202) | 16 | 201 | 7–19 units |
 | interview | `report_id` (`course_or_report`) | 18 | 46 | 1–5 questions |
 
 The theory and lab files of one course are a single group, because their units overlap in content (e.g. DSA
@@ -27,7 +28,7 @@ Module 2 and lab experiments 1–3). Splitting them would leak.
 
 ## Expected sizes and caveats
 
-- Syllabus is about 124 / 27 / 27 units, but only 14 groups exist, so val and test are about 2 courses each. Their
+- Syllabus is about 141 / 30 / 30 units, but only 16 groups exist, so val and test are about 2 courses each. Their
   scores depend on which courses land there. Report the courses in each split next to every metric.
 - Interview is about 32 / 7 / 7 questions. Val and test are small, so report counts and exact matches, not only
   percentages (one question is about 14 %).
