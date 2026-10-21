@@ -1,0 +1,43 @@
+# Manual transcription of BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf
+# Source PDF has no text layer (Microsoft Print-to-PDF, text drawn as vector outlines). Transcribed by Claude from
+# page renders on 2026-10-22; spot-check against the PDF. Lines starting with # are ignored by the parser.
+# Page 1, Module 4: the last line of the module body is clipped at the page edge after "Pointers to Structure -".
+BCSE102L Structured and Object-Oriented Programming L T P C
+2 0 0 2
+Pre-requisite NIL Syllabus version
+1.0
+Course Objectives
+1. To impart the basic constructs in structured programming and object-oriented programming paradigms.
+2. To inculcate the insights and benefits in accessing memory locations by implementing real world problems.
+3. To help solving real world problems through appropriate programming paradigms.
+Course Outcome
+At the end of the course, students should be able to:
+1. Understand different programming language constructs and decision-making statements; manipulate data as a group.
+2. Recognize the application of modular programming approach; create user defined data types and idealize the role of pointers.
+3. Comprehend various elements of object-oriented programing paradigm; propose solutions through inheritance and polymorphism; identify the appropriate data structure for the given problem and devise solution using generic programming techniques.
+Module:1 C Programming Fundamentals 2 hours
+Variables - Reserved words - Data Types - Operators - Operator Precedence - Expressions - Type Conversions - I/O statements - Branching and Looping: if, if-else, nested if, if-else ladder, switch statement, goto statement - Loops: for, while and do...while - break and continue statements.
+Module:2 Arrays and Functions 4 hours
+Arrays: One Dimensional array - Two-Dimensional Array - Strings and its operations. User Defined Functions: Declaration - Definition - call by value and call by reference - Types of Functions - Recursive functions - Storage Classes - Scope, Visibility and Lifetime of Variables.
+Module:3 Pointers 4 hours
+Declaration and Access of Pointer Variables, Pointer arithmetic - Dynamic memory allocation - Pointers and arrays - Pointers and functions.
+Module:4 Structure and Union 2 hours
+Declaration, Initialization, Access of Structure Variables - Arrays of Structure - Arrays within Structure - Structure within Structures - Structures and Functions - Pointers to Structure -
+Module:5 Overview of Object-Oriented Programming 5 hours
+Features of OOP - Classes and Objects - "this" pointer - Constructors and Destructors - Static Data Members, Static Member Functions and Objects - Inline Functions - Call by reference - Functions with default Arguments - Functions with Objects as Arguments - Friend Functions and Friend Classes.
+Module:6 Inheritance 5 hours
+Inheritance - Types of Inheritance: Single inheritance, Multiple Inheritance, Multi-level Inheritance, Hierarchical Inheritance - Multipath Inheritance - Inheritance and constructors.
+Module:7 Polymorphism 4 hours
+Function Overloading - Operator Overloading - Dynamic Polymorphism - Virtual Functions - Pure virtual Functions - Abstract Classes.
+Module:8 Generic Programming 4 hours
+Function templates and class templates, Standard Template Library.
+Total Lecture hours: 30 hours
+Text Book(s)
+1. Herbert Schildt, C: The Complete Reference, 4th Edition, McGraw Hill Education, 2017
+2. Herbert Schildt, C++: The Complete Reference, 4th Edition, McGraw Hill Education, 2017.
+Reference Books
+1. Yashavant Kanetkar, Let Us C: 17th Edition, BPB Publicaitons, 2020.
+2. Stanley Lippman and Josee Lajoie, C++ Primer, 5th Edition, Addison-Wesley publishers, 2012.
+Mode of Evaluation: CAT / Written Assignment / Quiz / FAT / Project.
+Recommended by Board of Studies 03.07.2021
+Approved by Academic Council No. 63 Date 23.09.2021

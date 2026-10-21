@@ -34,6 +34,7 @@
     "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
     "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf"
   ],
+  "transcriptions_dir": "data/raw/syllabi/transcribed",
   "core_courses": [
     "BCSE101E",
     "BCSE102L",
@@ -78,7 +79,7 @@
       "assignments": 5.0
     }
   },
-  "generated_at": "2026-10-21T19:25:36.485687+00:00",
+  "generated_at": "2026-10-21T20:09:20.484248+00:00",
   "granular_without_high_level_ancestor": [],
   "interview_filter": {
     "questions_total": 98,
@@ -92,9 +93,41 @@
     "excluded_questions_file": "data/processed/excluded_questions.csv"
   },
   "status": "SUCCESS",
-  "S_comp": 89.8072,
+  "S_comp": 88.7653,
   "scoring_universe_size": 9,
   "courses_kept": [
+    {
+      "course_code": "BCSE101E",
+      "course_title": "Computer Programming: Python",
+      "lecture_hours": 1,
+      "tutorial_hours": 0,
+      "practical_hours": 4,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE101",
+      "component": "embedded",
+      "source_file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+      "text_source": "manual_transcription",
+      "experiment_count": null,
+      "lab_hours_total": 60.0
+    },
+    {
+      "course_code": "BCSE102L",
+      "course_title": "Structured and Object-Oriented Programming",
+      "lecture_hours": 2,
+      "tutorial_hours": 0,
+      "practical_hours": 0,
+      "project_hours": null,
+      "credits": 2,
+      "ltpc_status": "complete",
+      "course_group": "BCSE102",
+      "component": "theory",
+      "source_file": "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf",
+      "text_source": "manual_transcription",
+      "experiment_count": null,
+      "lab_hours_total": null
+    },
     {
       "course_code": "BCSE102P",
       "course_title": "Structured and Object-Oriented Programming Lab",
@@ -107,7 +140,24 @@
       "course_group": "BCSE102",
       "component": "lab",
       "source_file": "BCSE102P_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING-LAB_LO_1.0_67_BCSE102P_63 ACP.pdf",
+      "text_source": "pdf",
       "experiment_count": 8,
+      "lab_hours_total": 60.0
+    },
+    {
+      "course_code": "BCSE103E",
+      "course_title": "Computer Programming : Java",
+      "lecture_hours": 1,
+      "tutorial_hours": 0,
+      "practical_hours": 4,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE103",
+      "component": "embedded",
+      "source_file": "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
+      "text_source": "manual_transcription",
+      "experiment_count": null,
       "lab_hours_total": 60.0
     },
     {
@@ -122,6 +172,7 @@
       "course_group": "BCSE202",
       "component": "theory",
       "source_file": "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -137,6 +188,7 @@
       "course_group": "BCSE202",
       "component": "lab",
       "source_file": "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
+      "text_source": "pdf",
       "experiment_count": 10,
       "lab_hours_total": 30.0
     },
@@ -152,6 +204,7 @@
       "course_group": "BCSE204",
       "component": "theory",
       "source_file": "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -167,6 +220,7 @@
       "course_group": "BCSE204",
       "component": "lab",
       "source_file": "BCSE204P_DESIGN-AND-ANALYSIS-OF-ALGORITHMS-LAB_LO_1.0_70_BCSE204P.pdf",
+      "text_source": "pdf",
       "experiment_count": 11,
       "lab_hours_total": 30.0
     },
@@ -182,6 +236,7 @@
       "course_group": "BCSE205",
       "component": "theory",
       "source_file": "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -197,6 +252,7 @@
       "course_group": "BCSE301",
       "component": "theory",
       "source_file": "BCSE301L_SOFTWARE-ENGINEERING_TH_1.0_70_BCSE301L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -212,6 +268,7 @@
       "course_group": "BCSE301",
       "component": "lab",
       "source_file": "BCSE301P_SOFTWARE-ENGINEERING-LAB_LO_1.0_70_BCSE301P.pdf",
+      "text_source": "pdf",
       "experiment_count": 10,
       "lab_hours_total": 30.0
     },
@@ -227,6 +284,7 @@
       "course_group": "BCSE302",
       "component": "theory",
       "source_file": "BCSE302L_DATABASE-SYSTEMS_TH_1.0_70_BCSE302L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -242,6 +300,7 @@
       "course_group": "BCSE302",
       "component": "lab",
       "source_file": "BCSE302P_DATABASE-SYSTEMS-LAB_LO_1.0_70_BCSE302P.pdf",
+      "text_source": "pdf",
       "experiment_count": 6,
       "lab_hours_total": 30.0
     },
@@ -257,6 +316,7 @@
       "course_group": "BCSE303",
       "component": "theory",
       "source_file": "BCSE303L_OPERATING-SYSTEMS_TH_1.0_70_BCSE303L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -272,6 +332,7 @@
       "course_group": "BCSE303",
       "component": "lab",
       "source_file": "BCSE303P_OPERATING-SYSTEMS-LAB_LO_1.0_70_BCSE303P.pdf",
+      "text_source": "pdf",
       "experiment_count": 12,
       "lab_hours_total": 30.0
     },
@@ -287,6 +348,7 @@
       "course_group": "BCSE304",
       "component": "theory",
       "source_file": "BCSE304L_THEORY-OF-COMPUTATION_TH_1.0_70_BCSE304L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -302,6 +364,7 @@
       "course_group": "BCSE305",
       "component": "theory",
       "source_file": "BCSE305L_EMBEDDED-SYSTEMS_TH_1.0_70_BCSE305L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -317,6 +380,7 @@
       "course_group": "BCSE306",
       "component": "theory",
       "source_file": "BCSE306L_ARTIFICIAL-INTELLIGENCE_TH_1.0_70_BCSE306L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -332,6 +396,7 @@
       "course_group": "BCSE307",
       "component": "theory",
       "source_file": "BCSE307L_COMPILER-DESIGN_TH_1.0_70_BCSE307L (1).pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -347,6 +412,7 @@
       "course_group": "BCSE307",
       "component": "lab",
       "source_file": "BCSE307P_COMPILER-DESIGN-LAB_LO_1.0_70_BCSE307P.pdf",
+      "text_source": "pdf",
       "experiment_count": 10,
       "lab_hours_total": 30.0
     },
@@ -362,6 +428,7 @@
       "course_group": "BCSE308",
       "component": "theory",
       "source_file": "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -377,6 +444,7 @@
       "course_group": "BCSE308",
       "component": "lab",
       "source_file": "BCSE308P_COMPUTER-NETWORKS-LAB_LO_1.0_70_BCSE308P.pdf",
+      "text_source": "pdf",
       "experiment_count": 9,
       "lab_hours_total": 30.0
     },
@@ -392,6 +460,7 @@
       "course_group": "BCSE309",
       "component": "theory",
       "source_file": "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     },
@@ -407,6 +476,7 @@
       "course_group": "BCSE309",
       "component": "lab",
       "source_file": "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
+      "text_source": "pdf",
       "experiment_count": 10,
       "lab_hours_total": 30.0
     },
@@ -422,16 +492,29 @@
       "course_group": "BMAT205",
       "component": "theory",
       "source_file": "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf",
+      "text_source": "pdf",
       "experiment_count": null,
       "lab_hours_total": null
     }
   ],
   "course_groups": [
     {
+      "course_group": "BCSE101",
+      "course_title": "Computer Programming: Python",
+      "theory": "BCSE101E",
+      "lab": null
+    },
+    {
       "course_group": "BCSE102",
       "course_title": "Structured and Object-Oriented Programming",
-      "theory": null,
+      "theory": "BCSE102L",
       "lab": "BCSE102P"
+    },
+    {
+      "course_group": "BCSE103",
+      "course_title": "Computer Programming : Java",
+      "theory": "BCSE103E",
+      "lab": null
     },
     {
       "course_group": "BCSE202",
@@ -514,7 +597,10 @@
   ],
   "course_filter": {
     "kept": [
+      "BCSE101E",
+      "BCSE102L",
       "BCSE102P",
+      "BCSE103E",
       "BCSE202L",
       "BCSE202P",
       "BCSE204L",
@@ -537,153 +623,218 @@
       "BCSE309P",
       "BMAT205L"
     ],
-    "dropped": [],
+    "dropped": [
+      {
+        "course_code": "BCSE101E",
+        "course_title": "Computer Programming: Python",
+        "drop_reason": "duplicate"
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "drop_reason": "duplicate"
+      }
+    ],
     "allowlisted_missing": [
-      "BCSE101E",
-      "BCSE102L",
-      "BCSE103E",
       "BCSE203E"
     ]
   },
   "text_layer": {
-    "page_count": 35,
-    "pages_without_text": [],
+    "page_count": 45,
+    "pages_without_text": [
+      "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf p1",
+      "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf p2",
+      "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf p1",
+      "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf p2",
+      "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf p1",
+      "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf p2",
+      "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf p1",
+      "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf p2",
+      "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf p1",
+      "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf p2"
+    ],
     "scanned_courses": [],
     "files": [
       {
+        "file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+        "page_count": 2,
+        "pages_without_text": [
+          1,
+          2
+        ],
+        "text_source": "manual_transcription"
+      },
+      {
+        "file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
+        "page_count": 2,
+        "pages_without_text": [
+          1,
+          2
+        ],
+        "text_source": "manual_transcription"
+      },
+      {
+        "file": "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf",
+        "page_count": 2,
+        "pages_without_text": [
+          1,
+          2
+        ],
+        "text_source": "manual_transcription"
+      },
+      {
         "file": "BCSE102P_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING-LAB_LO_1.0_67_BCSE102P_63 ACP.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
+      },
+      {
+        "file": "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
+        "page_count": 2,
+        "pages_without_text": [
+          1,
+          2
+        ],
+        "text_source": "manual_transcription"
+      },
+      {
+        "file": "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
+        "page_count": 2,
+        "pages_without_text": [
+          1,
+          2
+        ],
+        "text_source": "manual_transcription"
       },
       {
         "file": "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE204P_DESIGN-AND-ANALYSIS-OF-ALGORITHMS-LAB_LO_1.0_70_BCSE204P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE301L_SOFTWARE-ENGINEERING_TH_1.0_70_BCSE301L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE301P_SOFTWARE-ENGINEERING-LAB_LO_1.0_70_BCSE301P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE302L_DATABASE-SYSTEMS_TH_1.0_70_BCSE302L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE302P_DATABASE-SYSTEMS-LAB_LO_1.0_70_BCSE302P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE303L_OPERATING-SYSTEMS_TH_1.0_70_BCSE303L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE303P_OPERATING-SYSTEMS-LAB_LO_1.0_70_BCSE303P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE304L_THEORY-OF-COMPUTATION_TH_1.0_70_BCSE304L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE305L_EMBEDDED-SYSTEMS_TH_1.0_70_BCSE305L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE306L_ARTIFICIAL-INTELLIGENCE_TH_1.0_70_BCSE306L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE307L_COMPILER-DESIGN_TH_1.0_70_BCSE307L (1).pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE307P_COMPILER-DESIGN-LAB_LO_1.0_70_BCSE307P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE308L_COMPUTER-NETWORKS_TH_1.0_70_BCSE308L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE308P_COMPUTER-NETWORKS-LAB_LO_1.0_70_BCSE308P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE309L_CRYPTOGRAPHY-AND-NETWORK-SECURITY_TH_1.0_70_BCSE309L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BCSE309P_CRYPTOGRAPHY-AND-NETWORK-SECURITY-LAB_LO_1.0_70_BCSE309P.pdf",
         "page_count": 1,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       },
       {
         "file": "BMAT205L_DISCRETE-MATHEMATICS-AND-GRAPH-THEORY_TH_1.0_70_BMAT205L.pdf",
         "page_count": 2,
-        "pages_without_text": []
+        "pages_without_text": [],
+        "text_source": "pdf"
       }
     ]
   },
-  "file_errors": [
-    {
-      "file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
-      "error": "Unsupported PDF 'BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
-    },
-    {
-      "file": "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf",
-      "error": "Unsupported PDF 'BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
-    },
-    {
-      "file": "BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf",
-      "error": "Unsupported PDF 'BCSE102L_STRUCTURED-AND-OBJECT-ORIENTED-PROGRAMMING_TH_1.0_67_BCSE102L_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
-    },
-    {
-      "file": "BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
-      "error": "Unsupported PDF 'BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
-    },
-    {
-      "file": "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
-      "error": "Unsupported PDF 'BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf': Document is a scanned image or contains no extractable text. OCR processing is excluded from MVP scope."
-    }
-  ],
+  "file_errors": [],
   "skipped_modules": [
     {
       "course_code": "BCSE202L",
@@ -777,22 +928,22 @@
       "reason": "no_body"
     }
   ],
-  "syllabus_units": 177,
+  "syllabus_units": 201,
   "units_by_component": {
-    "lab": 86,
-    "theory": 91
+    "theory": 113,
+    "lab": 88
   },
-  "modules_with_depth_signals": 177,
-  "units_with_matches": 72,
-  "topics_present": 78,
+  "modules_with_depth_signals": 201,
+  "units_with_matches": 83,
+  "topics_present": 80,
   "topics_in_taxonomy": 83,
   "depth_counts": {
     "all_topics": {
-      "measured": 78,
-      "fallback": 5
+      "measured": 80,
+      "fallback": 3
     },
     "present_topics": {
-      "measured": 78
+      "measured": 80
     }
   },
   "top_priority_gaps": [
@@ -801,8 +952,8 @@
       "topic_id": "dsa.linked_lists.traversal_reversal",
       "topic_name": "Linked List Manipulation & Cycle Detection",
       "importance": 0.2222,
-      "coverage": 0.9181,
-      "priority_gap": 0.0182
+      "coverage": 0.879,
+      "priority_gap": 0.0269
     },
     {
       "rank": 2,
@@ -817,8 +968,8 @@
       "topic_id": "dsa.trees.lowest_common_ancestor",
       "topic_name": "Lowest Common Ancestor",
       "importance": 0.1111,
-      "coverage": 0.8975,
-      "priority_gap": 0.0114
+      "coverage": 0.9006,
+      "priority_gap": 0.011
     },
     {
       "rank": 4,
@@ -857,32 +1008,44 @@
       "topic_id": "dsa.trees.bst",
       "topic_name": "Binary Search Trees",
       "importance": 0.0444,
-      "coverage": 0.8975,
-      "priority_gap": 0.0046
+      "coverage": 0.9006,
+      "priority_gap": 0.0044
     },
     {
       "rank": 9,
       "topic_id": "dsa.trees.traversal",
       "topic_name": "Tree Traversals",
       "importance": 0.0333,
-      "coverage": 0.8975,
-      "priority_gap": 0.0034
+      "coverage": 0.9006,
+      "priority_gap": 0.0033
     }
   ],
   "unmapped_terms_summary": {
-    "distinct_terms": 1119,
+    "distinct_terms": 1305,
     "distinct_terms_by_source_type": {
-      "syllabus": 1072,
+      "syllabus": 1258,
       "interview": 50
     },
-    "total_occurrences": 1317
+    "total_occurrences": 1631
   },
   "top_unmapped_terms": [
     {
       "term": "introduction",
       "source_type": "syllabus",
-      "occurrences": 16,
-      "frequency": 16
+      "occurrences": 18,
+      "frequency": 18
+    },
+    {
+      "term": "types",
+      "source_type": "syllabus",
+      "occurrences": 10,
+      "frequency": 10
+    },
+    {
+      "term": "functions",
+      "source_type": "syllabus",
+      "occurrences": 9,
+      "frequency": 9
     },
     {
       "term": "implementation",
@@ -897,53 +1060,41 @@
       "frequency": 8
     },
     {
+      "term": "algorithm",
+      "source_type": "syllabus",
+      "occurrences": 7,
+      "frequency": 7
+    },
+    {
       "term": "develop",
       "source_type": "syllabus",
       "occurrences": 7,
       "frequency": 7
     },
     {
-      "term": "algorithm",
+      "term": "multi",
       "source_type": "syllabus",
-      "occurrences": 6,
-      "frequency": 6
-    },
-    {
-      "term": "implement",
-      "source_type": "syllabus",
-      "occurrences": 6,
-      "frequency": 6
+      "occurrences": 7,
+      "frequency": 7
     },
     {
       "term": "non",
       "source_type": "syllabus",
-      "occurrences": 6,
-      "frequency": 6
+      "occurrences": 7,
+      "frequency": 7
     },
     {
-      "term": "types",
+      "term": "overview",
       "source_type": "syllabus",
-      "occurrences": 6,
-      "frequency": 6
-    },
-    {
-      "term": "design",
-      "source_type": "syllabus",
-      "occurrences": 5,
-      "frequency": 5
-    },
-    {
-      "term": "fundamentals",
-      "source_type": "syllabus",
-      "occurrences": 5,
-      "frequency": 5
+      "occurrences": 7,
+      "frequency": 7
     }
   ],
   "stage_timings_seconds": {
-    "parse": 90.7,
+    "parse": 91.1,
     "coverage": 0.0,
     "importance": 1.4,
     "scoring": 0.0
   },
-  "runtime_seconds": 92.2
+  "runtime_seconds": 92.5
 }
