@@ -1,5 +1,5 @@
 """
-Item 9: versioned results. run_full_pipeline writes results/amazon_sde1_v1.1.json by default and
+Item 9: versioned results. run_full_pipeline writes results/amazon_sde1_v1.2.json by default and
 never overwrites an existing results file; compare_results builds the v1.0 -> v1.1 change log.
 """
 import os
@@ -11,9 +11,29 @@ import evaluation.run_full_pipeline as rfp
 from evaluation.compare_results import build_changes
 
 
-def test_default_out_is_v1_1():
-    assert os.path.basename(rfp.DEFAULT_OUT) == "amazon_sde1_v1.1.json"
-    assert rfp.RESULTS_VERSION == "v1.1"
+def test_default_out_is_v1_2():
+    assert os.path.basename(rfp.DEFAULT_OUT) == "amazon_sde1_v1.2.json"
+    assert rfp.RESULTS_VERSION == "v1.2"
+
+
+def test_resolve_pdf_paths_from_folder_glob(tmp_path):
+    for name in ("BCSE202P_lab.pdf", "BCSE202L_th.pdf", "B.Tech_CSE_2024_2025.pdf"):
+        (tmp_path / name).write_bytes(b"%PDF-1.4")
+    found = rfp.resolve_pdf_paths([], str(tmp_path), "BCSE*.pdf")
+    assert found == [str(tmp_path / "BCSE202L_th.pdf"), str(tmp_path / "BCSE202P_lab.pdf")]
+    # explicit --pdf files come first; a file named twice is listed once
+    extra = str(tmp_path / "B.Tech_CSE_2024_2025.pdf")
+    both = rfp.resolve_pdf_paths([extra, found[0]], str(tmp_path), "BCSE*.pdf")
+    assert both == [extra] + found
+
+
+def test_refuses_to_run_without_pdfs(tmp_path, monkeypatch):
+    out = tmp_path / "out.json"
+    monkeypatch.setattr(sys, "argv", ["run_full_pipeline.py", "--pdf-dir", str(tmp_path), "--out", str(out)])
+    with pytest.raises(SystemExit) as exc:
+        rfp.main()
+    assert "No syllabus PDFs" in str(exc.value)
+    assert not out.exists()
 
 
 def test_refuses_to_overwrite_existing_results(tmp_path, monkeypatch):

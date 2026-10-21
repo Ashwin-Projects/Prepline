@@ -317,3 +317,27 @@ def test_collect_syllabus_pdfs_matches_glob_only(tmp_path):
         (tmp_path / name).write_bytes(b"%PDF-1.4")
     assert collect_syllabus_pdfs(str(tmp_path)) == [str(tmp_path / "BCSE202L_th.pdf"), str(tmp_path / "BCSE202P_lab.pdf")]
     assert collect_syllabus_pdfs(str(tmp_path), pattern="B.Tech*.pdf") == [str(tmp_path / "B.Tech_CSE_2024_2025.pdf")]
+
+
+# --- manifest -------------------------------------------------------------------
+
+def test_manifest_has_one_row_per_core_course_file():
+    import csv
+    import os
+
+    from pipeline.config import ROOT, load_scoring_config
+
+    with open(os.path.join(ROOT, "data", "raw", "syllabi", "vit_syllabus_manifest.csv"), encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    course_rows = [r for r in rows if r["component"] in ("theory", "lab")]
+    assert [r["course_code"] for r in course_rows] == load_scoring_config()["syllabus"]["core_courses"]
+    for row in course_rows:
+        assert row["expected_local_filename"].startswith(row["course_code"] + "_"), row
+        assert row["course_group"] == row["course_code"][:-1]
+        assert row["component"] == ("lab" if row["course_code"].endswith("P") else "theory")
+        assert row["used_in_course_run"] == "yes"
+        assert row["official_source_url"] == ""
+        assert row["source"] == "VIT official course syllabus PDF, downloaded by user 2026-10-21"
+    assert {r["course_code"]: r["ltpc_status"] for r in course_rows}["BCSE205L"] == "incomplete"
+    programme = [r for r in rows if r["component"] == "programme"]
+    assert len(programme) == 1 and programme[0]["used_in_course_run"] == "no"
