@@ -44,12 +44,14 @@ def _read(rel):
         return json.load(f)
 
 
-# The owner's complete core syllabus: exactly the course PDFs supplied on 2026-10-21.
+# The official 26-course core (owner, 2026-10-22): the 20 course PDFs of 2026-10-21 plus BCSE101E, BCSE102L,
+# BCSE102P, BCSE103E, BCSE203E and BMAT205L.
 V1_2_CORE_COURSES = [
-    "BCSE202L", "BCSE202P", "BCSE204L", "BCSE204P", "BCSE205L",
+    "BCSE101E", "BCSE102L", "BCSE102P", "BCSE103E",
+    "BCSE202L", "BCSE202P", "BCSE203E", "BCSE204L", "BCSE204P", "BCSE205L",
     "BCSE301L", "BCSE301P", "BCSE302L", "BCSE302P", "BCSE303L", "BCSE303P",
     "BCSE304L", "BCSE305L", "BCSE306L", "BCSE307L", "BCSE307P",
-    "BCSE308L", "BCSE308P", "BCSE309L", "BCSE309P",
+    "BCSE308L", "BCSE308P", "BCSE309L", "BCSE309P", "BMAT205L",
 ]
 
 
