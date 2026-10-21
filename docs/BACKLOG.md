@@ -29,6 +29,16 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 - **Upload-derived unmapped terms go into the shared log (L2).** Every upload appends its unmapped syllabus terms to `data/processed/unmapped_terms.log`, the input to the Phase 12 taxonomy review. *Impact: unbounded log growth, and repeated uploads can inflate term frequencies and skew taxonomy decisions; API uploads should log to a separate, bounded store.*
 - **NLTK data is downloaded at runtime and safetensors is not enforced (L4).** `_get_rake()` calls `nltk.download` on a server's first request, and the embedding model is loaded without `model_kwargs={"use_safetensors": True}` (its revision is pinned). *Impact: a network fetch without integrity pinning at serve time; pre-download NLTK data at install and enforce safetensors.*
 
+## Security review of `data/course-syllabi` (2026-10-22)
+
+Fixed (High): `split_experiments` rebuilt the experiment string per continuation line (quadratic; 1.4 MB of lab text took ~12 s, reachable from `POST /syllabi/upload`). Now joined once; regression case in `test_regex_safety.py`.
+
+- **Medium: a corrupt PDF or a directory in a combined run aborts the whole run.** `parse_syllabus_pdfs` records only `UnsupportedPDFError` in `file_errors`; pdfminer's `PdfminerException` and `PermissionError` (a directory matching `--glob`) propagate. CLI only. *Impact: one bad file in `--pdf-dir` stops the run with a traceback, contrary to the documented per-file contract.*
+- **Medium: unit count per syllabus is unbounded.** Every numbered experiment line (and every `Module:N` header, as before) becomes a unit mapped through RAKE and the embedding model; a crafted upload with tens of thousands of short numbered lines multiplies that work, and a timed-out parse thread keeps running. *Impact: CPU exhaustion of the 2-worker parse pool within the 10 MB / 300-page limits; cap units per syllabus.*
+- **Low: `--glob` is not confined to `--pdf-dir`.** A pattern such as `../*.pdf` matches files outside the folder, and glob follows symlinks. *Impact: none across a trust boundary (local CLI run by the owner); surprising input selection.*
+- **Low: `--out` is checked with `os.path.exists` then opened with mode `"w"`.** *Impact: a file created in between is overwritten (TOCTOU); open with mode `"x"`.*
+- **Low: PDF-derived course titles and experiment text are printed raw by the runner.** *Impact: control or ANSI escape sequences in a crafted PDF reach the terminal.*
+
 ## Performance
 
 - **The interview-importance cache grows without bound.** One entry per distinct questions.csv content and denominator. *Impact: negligible for the prototype; a long-running server with many dataset edits slowly leaks memory.*

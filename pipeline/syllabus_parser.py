@@ -433,21 +433,22 @@ def split_experiments(text: str) -> List[str]:
     1, 2, 3, ... followed by ".", ")" or whitespace; a line that does not carry the next number in the
     sequence (e.g. a wrapped "8 bit and 16 bit variants") continues the previous item.
     """
-    items: List[str] = []
+    # Each item collects its lines and is joined once at the end (appending to a growing string is quadratic).
+    items: List[List[str]] = []
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped:
             continue
         digits = len(stripped) - len(stripped.lstrip("0123456789"))
         rest = stripped[digits:]
-        if 0 < digits <= 2 and int(stripped[:digits]) == len(items) + 1 and rest[:1] in (".", ")", " ", "	"):
+        if 0 < digits <= 2 and int(stripped[:digits]) == len(items) + 1 and rest[:1] in (".", ")", " ", "\t"):
             title = rest[1:].strip() if rest[:1] in (".", ")") else rest.strip()
             if title:
-                items.append(title)
+                items.append([title])
                 continue
         if items:
-            items[-1] = f"{items[-1]} {stripped}"
-    return items
+            items[-1].append(stripped)
+    return [" ".join(parts) for parts in items]
 
 
 def course_group_of(course_code: str) -> str:

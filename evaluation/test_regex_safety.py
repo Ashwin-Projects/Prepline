@@ -27,6 +27,9 @@ CASES = {
     "boilerplate: Module + 10k spaces": ("strip", "Module" + W + ":" + W + "x"),
     "lab experiments + 10k spaces": ("modules", "ABC1234P Lab L T P C\n0 0 2 1\nIndicative Experiments\n1" + W
                                      + "x\n2." + W + "\nTotal Laboratory Hours" + W + "x\n"),
+    # 2026-10-22 security review (High): continuation lines were appended by rebuilding the experiment string (quadratic)
+    "lab experiment + 40k continuation lines": ("modules", "ABC1234P Lab L T P C\n0 0 2 1\nIndicative Experiments\n1. x\n"
+                                                + "continuation line of an experiment\n" * 40000),
 }
 
 _RUNNER = textwrap.dedent(
