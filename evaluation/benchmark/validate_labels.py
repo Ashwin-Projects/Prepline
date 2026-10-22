@@ -6,8 +6,13 @@ expected_primary is one id, "none", or empty (= not labelled yet); expected_seco
 ";"-separated list of other ids of the same type, only alongside a real primary. Reports labelled rows per
 source type and every invalid row; exits with code 1 if any row is invalid.
 
+Draft columns (optional): label_source (e.g. "llm_draft"), draft_confidence (high/medium/low) and reviewed
+(True/False). The report counts reviewed rows and drafted rows not yet reviewed. REVIEW_ORDER.csv holds the same
+rows sorted low -> medium -> high confidence, so the doubtful drafts are reviewed first.
+
 Usage:
     python evaluation/benchmark/validate_labels.py [path/to/labels.csv]
+    python evaluation/benchmark/validate_labels.py --write-review-order   # regenerate REVIEW_ORDER.csv
 """
 import csv
 import json
@@ -17,11 +22,14 @@ from typing import Any, Dict, List, Optional
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_LABELS = os.path.join(ROOT, "evaluation", "benchmark", "labels_v1.0.csv")
+DEFAULT_REVIEW_ORDER = os.path.join(ROOT, "evaluation", "benchmark", "REVIEW_ORDER.csv")
 # Labels are pinned to taxonomy v1.0, independent of the scoring config's current taxonomy.
 TAXONOMY_PATH = os.path.join(ROOT, "data", "taxonomy", "taxonomy_v1.0.json")
 
 COLUMNS = ["item_id", "source_type", "course_or_report", "raw_text", "expected_primary", "expected_secondary",
            "label_notes"]
+DRAFT_COLUMNS = ["label_source", "draft_confidence", "reviewed"]
+CONFIDENCE_ORDER = {"low": 0, "medium": 1, "high": 2}
 NONE_LABEL = "none"
 ALLOWED_TYPE = {"syllabus": "high_level_concept", "interview": "granular_skill"}
 
@@ -74,8 +82,12 @@ def _secondary_problems(primary: str, secondary: List[str], source_type: str, no
 
 
 def validate_rows(rows: List[Dict[str, str]], node_types: Dict[str, str]) -> Dict[str, Any]:
-    """{"total", "labelled", "by_source_type": {type: {"total", "labelled"}}, "errors": [{item_id, field, message}]}."""
+    """
+    {"total", "labelled", "by_source_type": {type: {"total", "labelled"}}, "errors": [{item_id, field, message}],
+     "review": {"reviewed", "drafted", "by_confidence": {level: count}}}; "drafted" = drafted, not yet reviewed.
+    """
     errors: List[Dict[str, str]] = []
+    review = {"reviewed": 0, "drafted": 0, "by_confidence": {level: 0 for level in CONFIDENCE_ORDER}}
     by_source_type = {source_type: {"total": 0, "labelled": 0} for source_type in ALLOWED_TYPE}
     seen_ids = set()
 
@@ -89,6 +101,16 @@ def validate_rows(rows: List[Dict[str, str]], node_types: Dict[str, str]) -> Dic
         if not item_id or item_id in seen_ids:
             error(item_id, "item_id", "missing item_id" if not item_id else "duplicate item_id")
         seen_ids.add(item_id)
+        if row.get("label_source"):
+            confidence, reviewed = row.get("draft_confidence", ""), row.get("reviewed", "")
+            if confidence not in CONFIDENCE_ORDER:
+                error(item_id, "draft_confidence", f"draft_confidence '{confidence}' is not one of high, medium, low")
+            else:
+                review["by_confidence"][confidence] += 1
+            if reviewed not in ("True", "False"):
+                error(item_id, "reviewed", f"reviewed '{reviewed}' is not True or False")
+            else:
+                review["reviewed" if reviewed == "True" else "drafted"] += 1
         if source_type not in ALLOWED_TYPE:
             error(item_id, "source_type", f"source_type '{source_type}' is not one of {', '.join(ALLOWED_TYPE)}")
             continue
@@ -108,15 +130,38 @@ def validate_rows(rows: List[Dict[str, str]], node_types: Dict[str, str]) -> Dic
         "labelled": sum(c["labelled"] for c in by_source_type.values()),
         "by_source_type": by_source_type,
         "errors": errors,
+        "review": review,
     }
+
+
+def review_order(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Rows sorted low -> medium -> high draft_confidence, keeping sheet order within a level."""
+    return sorted(rows, key=lambda row: CONFIDENCE_ORDER.get(row.get("draft_confidence", ""), len(CONFIDENCE_ORDER)))
+
+
+def write_review_order(labels_path: str = DEFAULT_LABELS, out_path: str = DEFAULT_REVIEW_ORDER) -> None:
+    rows = load_labels(labels_path)
+    with open(out_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(review_order(rows))
 
 
 def main(argv: Optional[List[str]] = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    if argv == ["--write-review-order"]:
+        write_review_order()
+        print(f"Wrote {DEFAULT_REVIEW_ORDER}")
+        return 0
     path = argv[0] if argv else DEFAULT_LABELS
     report = validate_rows(load_labels(path), load_node_types())
     per_type = ", ".join(f"{t} {c['labelled']}/{c['total']}" for t, c in report["by_source_type"].items())
     print(f"{os.path.basename(path)}: labelled {report['labelled']} / {report['total']} ({per_type})")
+    review = report["review"]
+    if review["reviewed"] or review["drafted"]:
+        by_confidence = ", ".join(f"{level} {n}" for level, n in review["by_confidence"].items())
+        print(f"  reviewed {review['reviewed']} / drafted (not yet reviewed) {review['drafted']}; "
+              f"draft confidence: {by_confidence}")
     for e in report["errors"]:
         print(f"  INVALID {e['item_id']} {e['field']}: {e['message']}")
     print(f"{len(report['errors'])} invalid row field(s)" if report["errors"] else "No invalid rows.")

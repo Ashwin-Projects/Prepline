@@ -42,3 +42,11 @@ know. Do not use it for model suggestions.
 Run `python evaluation/benchmark/validate_labels.py` after each session. It reports labelled rows per source type and
 every row that breaks the rules above (unknown id, wrong node type, secondary without primary, duplicates). It exits
 with code 1 if any row is invalid.
+
+## Draft labels and review
+
+`label_source = llm_draft` rows were drafted by Claude from `raw_text`, this guide and the cheat sheet only (no
+embedding matcher, no similarity scores). `draft_confidence` is `high`, `medium` or `low`; `reviewed` stays `False`
+until a person has checked the row. Review in `REVIEW_ORDER.csv` (low → medium → high confidence), then set
+`reviewed=True` in `labels_v1.0.csv`, correcting the labels if needed, and regenerate the order with
+`python evaluation/benchmark/validate_labels.py --write-review-order`. The validator reports reviewed vs drafted counts.
