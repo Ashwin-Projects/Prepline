@@ -5,6 +5,7 @@ GET /api/v1/targets                configured targets with their saved status an
 GET /api/v1/results/{target_id}    saved results file + per-topic table (results/topics) + raw report count
 GET /api/v1/comparison             one summary row per target (counts, density gate, S_comp, gaps, confidence)
 GET /api/v1/benchmark              benchmark results (without per-item predictions) + label agreement + limitations
+GET /api/v1/pilot                  Phase 16 pilot status, and its results once results/pilot/pilot_results.json exists
 
 Files are located only from config (config/api.json "dashboard", config/targets.json); a target_id that is not
 configured is a 404 and never becomes part of a path.
@@ -22,6 +23,8 @@ router = APIRouter(prefix="/api/v1", tags=["PREPLINE Dashboard"])
 
 DASHBOARD = load_api_config()["dashboard"]
 MIN_REPORTS = load_scoring_config()["min_reports"]
+# Written by evaluation/pilot/analyze_pilot.py once real pilot responses are analysed (Phase 16).
+PILOT_RESULTS = resolve_path(DASHBOARD["pilot_results"])
 # Draft vs independent second labeller, before human adjudication (evaluation/benchmark/ADJUDICATION.md).
 LABEL_AGREEMENT = {"kappa_draft_vs_second_labeller": 0.812, "agree": 211, "partial": 8, "disagree": 28,
                    "rule_adjudicated": 48, "human_adjudicated": 8, "llm_cross_checked_only": 191,
@@ -129,3 +132,9 @@ def get_benchmark() -> Dict[str, Any]:
     data["limitations"] = LIMITATIONS
     data["recommendation"] = recommendation(data)
     return data
+
+
+@router.get("/pilot")
+def get_pilot() -> Dict[str, Any]:
+    results = _read_json(PILOT_RESULTS)
+    return {"status": "results_available" if results else "in_progress", "results": results}

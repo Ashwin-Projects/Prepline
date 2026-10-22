@@ -18,6 +18,7 @@
     "results_version": "v1.2",
     "results_suffix": "course_syllabi",
     "topics_dir": "results/topics",
-    "benchmark_file": "results/benchmark/benchmark_v1.0.json"
+    "benchmark_file": "results/benchmark/benchmark_v1.0.json",
+    "pilot_results": "results/pilot/pilot_results.json"
   }
 }

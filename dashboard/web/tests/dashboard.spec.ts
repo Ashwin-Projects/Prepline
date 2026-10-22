@@ -166,3 +166,35 @@ test("reduced motion: pages render fully without movement", async ({ page }) => 
   const transition = await page.locator(".bar-grow").first().evaluate((el) => getComputedStyle(el).transitionDuration);
   expect(transition).toBe("0s");
 });
+
+test("methodology: pilot section shows in progress before any results", async ({ page }) => {
+  await page.route("**/api/v1/pilot", (r) => r.fulfill({ json: { status: "in_progress", results: null } }));
+  await page.goto("/methodology");
+  await expect(page.getByTestId("pilot-status")).toContainText("In progress");
+  await expect(page.getByTestId("pilot")).toContainText("M1 Topic hit rate");
+  await expect(page.getByTestId("pilot")).toContainText("no inferential statistics");
+});
+
+test("methodology: pilot section shows the analysed numbers", async ({ page }) => {
+  const summary = (n: number, m1: number | null, m2: number | null, m3: number) => ({
+    n, M1_topic_hit_rate: m1, M1_topic_hit_rate_n: m1 === null ? 0 : n, M2_gap_relevance: m2,
+    M2_gap_relevance_n: m2 === null ? 0 : n, M3_usefulness: m3, M3_usefulness_n: n,
+  });
+  await page.route("**/api/v1/pilot", (r) =>
+    r.fulfill({
+      json: {
+        status: "results_available",
+        results: {
+          generated_at: "2026-11-20T10:00:00+00:00", n_responses: 13, n_excluded_no_consent: 1, synthetic: false,
+          by_company: { "Amazon SDE-1": summary(5, 0.62, 3.4, 4.1), "Google SWE-L3": summary(2, null, null, 3.5) },
+          overall: summary(12, 0.58, 3.2, 3.9),
+        },
+      },
+    }),
+  );
+  await page.goto("/methodology");
+  await expect(page.getByTestId("pilot-status")).toContainText("Results from 12 participants (1 excluded");
+  await expect(page.getByTestId("pilot-table")).toContainText("62% (5)");
+  await expect(page.getByTestId("pilot-table")).toContainText("n/a");
+  await expect(page.getByRole("alert")).toHaveCount(0);
+});
