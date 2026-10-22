@@ -97,11 +97,58 @@ def test_main_exit_code(tmp_path, capsys):
     assert "dsa.heapz" in capsys.readouterr().out
 
 
-def test_shipped_sheet_is_valid_and_unlabelled():
+def _drafted(item_id, confidence="high", reviewed="False", **kw):
+    return dict(_row(item_id, **kw), label_source="llm_draft", draft_confidence=confidence, reviewed=reviewed)
+
+
+def test_review_counts():
+    rows = [_drafted("a", primary="dsa.trees"),
+            _drafted("b", "low", primary="none"),
+            _drafted("c", "medium", "True", primary="dsa.graphs"),
+            _row("d")]
+    report = vl.validate_rows(rows, NODE_TYPES)
+    assert report["errors"] == []
+    assert report["review"] == {"reviewed": 1, "drafted": 2, "by_confidence": {"high": 1, "medium": 1, "low": 1}}
+
+
+def test_draft_columns_validated():
+    rows = [_drafted("a", "unsure", primary="dsa.trees"), _drafted("b", reviewed="yes", primary="dsa.trees"),
+            _drafted("c", "", primary="dsa.trees")]
+    assert _errors(rows) == [("a", "draft_confidence"), ("b", "reviewed"), ("c", "draft_confidence")]
+
+
+def test_review_order_low_medium_high_stable():
+    rows = [_drafted("h1"), _drafted("l1", "low"), _drafted("m1", "medium"), _drafted("h2"), _drafted("l2", "low")]
+    assert [r["item_id"] for r in vl.review_order(rows)] == ["l1", "l2", "m1", "h1", "h2"]
+
+
+def test_main_reports_review_counts(tmp_path, capsys):
+    path = tmp_path / "labels.csv"
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=vl.COLUMNS + vl.DRAFT_COLUMNS)
+        w.writeheader()
+        w.writerow(_drafted("a", primary="dsa.trees"))
+        w.writerow(_drafted("b", "low", "True", primary="none"))
+    assert vl.main([str(path)]) == 0
+    assert "reviewed 1 / drafted (not yet reviewed) 1" in capsys.readouterr().out
+
+
+def test_shipped_sheet_is_fully_drafted_and_unreviewed():
     rows = vl.load_labels(vl.DEFAULT_LABELS)
     report = vl.validate_rows(rows, vl.load_node_types())
     assert report["errors"] == []
-    assert report["by_source_type"] == {"syllabus": {"total": 201, "labelled": 0},
-                                        "interview": {"total": 46, "labelled": 0}}
+    assert report["by_source_type"] == {"syllabus": {"total": 201, "labelled": 201},
+                                        "interview": {"total": 46, "labelled": 46}}
+    assert report["review"]["reviewed"] == 0 and report["review"]["drafted"] == 247
+    assert all(r["label_source"] == "llm_draft" for r in rows)
     assert len(vl.load_node_types()) == 83
     assert os.path.basename(vl.DEFAULT_LABELS) == "labels_v1.0.csv"
+
+
+def test_shipped_review_order_matches_sheet():
+    shipped = vl.load_labels(vl.DEFAULT_REVIEW_ORDER)
+    expected = vl.review_order(vl.load_labels(vl.DEFAULT_LABELS))
+    assert shipped == expected
+    order = {"low": 0, "medium": 1, "high": 2}
+    confidences = [order[r["draft_confidence"]] for r in shipped]
+    assert confidences == sorted(confidences)
