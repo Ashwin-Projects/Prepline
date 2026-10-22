@@ -8,7 +8,15 @@ source type and every invalid row; exits with code 1 if any row is invalid.
 
 Draft columns (optional): label_source (e.g. "llm_draft"), draft_confidence (high/medium/low) and reviewed
 (True/False). The report counts reviewed rows and drafted rows not yet reviewed. REVIEW_ORDER.csv holds the same
-rows sorted low -> medium -> high confidence, so the doubtful drafts are reviewed first.
+rows in review order, so the doubtful drafts are reviewed first.
+
+Second-labeller columns (optional): second_primary, second_secondary (an independent labeller's labels, same rules),
+agreement (agree = same primary; partial = one primary is the other's ancestor or in its secondaries; disagree) and
+review_notes. Only agreeing rows may be label_source=llm_cross_checked; partial and disagree rows, and agreeing rows
+with low confidence, need review_notes. REVIEW_ORDER.csv: disagree -> partial -> agree with review notes -> rest.
+reviewed=True is set only by the human reviewer. Rows settled by the reviewer's adjudication rules are
+label_source=human_rule_adjudicated with reviewed=True and the rule id (R1-R5, ADJUDICATION.md) in review_notes; their
+agreement column keeps the LLM comparison they were adjudicated from, and they leave the review queue.
 
 Usage:
     python evaluation/benchmark/validate_labels.py [path/to/labels.csv]
@@ -17,7 +25,9 @@ Usage:
 import csv
 import json
 import os
+import re
 import sys
+from collections import Counter
 from typing import Any, Dict, List, Optional
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -30,6 +40,12 @@ COLUMNS = ["item_id", "source_type", "course_or_report", "raw_text", "expected_p
            "label_notes"]
 DRAFT_COLUMNS = ["label_source", "draft_confidence", "reviewed"]
 CONFIDENCE_ORDER = {"low": 0, "medium": 1, "high": 2}
+SECOND_COLUMNS = ["second_primary", "second_secondary", "agreement", "review_notes"]
+AGREEMENT_LEVELS = ("agree", "partial", "disagree")
+CROSS_CHECKED = "llm_cross_checked"
+ADJUDICATED = "human_rule_adjudicated"
+HUMAN_ADJUDICATED = "human_adjudicated"  # decided row by row by the reviewer; review_notes say "human"
+RULE_ID = re.compile(r"\bR[1-5]\b")
 NONE_LABEL = "none"
 ALLOWED_TYPE = {"syllabus": "high_level_concept", "interview": "granular_skill"}
 
@@ -81,13 +97,85 @@ def _secondary_problems(primary: str, secondary: List[str], source_type: str, no
     return problems
 
 
+def _split(ids: str) -> List[str]:
+    return [s.strip() for s in (ids or "").split(";") if s.strip()]
+
+
+def _is_ancestor(a: str, b: str) -> bool:
+    return b.startswith(a + ".")
+
+
+def classify_agreement(primary: str, secondary: str, second_primary: str, second_secondary: str) -> str:
+    """agree: same primary; partial: one primary is the other's ancestor or listed in its secondaries; else disagree."""
+    if primary == second_primary:
+        return "agree"
+    if NONE_LABEL in (primary, second_primary):
+        return "disagree"
+    if (primary in _split(second_secondary) or second_primary in _split(secondary)
+            or _is_ancestor(primary, second_primary) or _is_ancestor(second_primary, primary)):
+        return "partial"
+    return "disagree"
+
+
+def cohens_kappa(a: List[str], b: List[str]) -> float:
+    """Cohen's kappa for two labellers' categorical labels over the same items."""
+    n = len(a)
+    observed = sum(x == y for x, y in zip(a, b)) / n
+    expected = sum((a.count(c) / n) * (b.count(c) / n) for c in set(a) | set(b))
+    return 1.0 if expected == 1 else (observed - expected) / (1 - expected)
+
+
+def needs_review(row: Dict[str, str]) -> bool:
+    if row.get("reviewed") == "True":
+        return False
+    return row.get("agreement") in ("partial", "disagree") or bool(row.get("review_notes"))
+
+
+def _second_labeller_errors(row: Dict[str, str], source_type: str, node_types: Dict[str, str], error) -> None:
+    item_id, second = row.get("item_id", ""), row.get("second_primary", "")
+    second_secondary = _split(row.get("second_secondary", ""))
+    problem = None if second == NONE_LABEL else _id_problem(second, source_type, node_types)
+    if problem:
+        error(item_id, "second_primary", problem)
+    if second_secondary:
+        problems = _secondary_problems(second, second_secondary, source_type, node_types)
+        if problems:
+            error(item_id, "second_secondary", "; ".join(problems))
+    agreement = row.get("agreement", "")
+    expected = classify_agreement(row.get("expected_primary", ""), row.get("expected_secondary", ""),
+                                  second, row.get("second_secondary", ""))
+    if agreement not in AGREEMENT_LEVELS:
+        error(item_id, "agreement", f"agreement '{agreement}' is not one of {', '.join(AGREEMENT_LEVELS)}")
+        return
+    if row.get("label_source") in (ADJUDICATED, HUMAN_ADJUDICATED):
+        if row.get("reviewed") != "True":
+            error(item_id, "reviewed", "adjudicated rows are reviewed=True")
+        if row["label_source"] == ADJUDICATED and not RULE_ID.search(row.get("review_notes", "")):
+            error(item_id, "review_notes", "rule-adjudicated rows name their rule (R1-R5) in review_notes")
+        if row["label_source"] == HUMAN_ADJUDICATED and "human" not in row.get("review_notes", "").lower():
+            error(item_id, "review_notes", "human-adjudicated rows say 'human' in review_notes")
+        return
+    if agreement != expected:
+        error(item_id, "agreement", f"agreement '{agreement}' does not match the labels ('{expected}')")
+        return
+    if (agreement == "agree") != (row.get("label_source") == CROSS_CHECKED):
+        error(item_id, "label_source", f"label_source must be '{CROSS_CHECKED}' exactly when the primaries agree")
+    if not row.get("review_notes") and (agreement != "agree" or row.get("draft_confidence") == "low"):
+        error(item_id, "review_notes", "partial/disagree and low-confidence rows need review_notes")
+
+
 def validate_rows(rows: List[Dict[str, str]], node_types: Dict[str, str]) -> Dict[str, Any]:
     """
     {"total", "labelled", "by_source_type": {type: {"total", "labelled"}}, "errors": [{item_id, field, message}],
      "review": {"reviewed", "drafted", "by_confidence": {level: count}}}; "drafted" = drafted, not yet reviewed.
     """
     errors: List[Dict[str, str]] = []
-    review = {"reviewed": 0, "drafted": 0, "by_confidence": {level: 0 for level in CONFIDENCE_ORDER}}
+    review = {"reviewed": 0, "drafted": 0, "by_confidence": {level: 0 for level in CONFIDENCE_ORDER},
+              "adjudicated_by_rule": {}, "human_adjudicated": 0}
+    rules: Counter = Counter()
+    agreement = {level: 0 for level in AGREEMENT_LEVELS}
+    agreement["needs_review"] = 0
+    primaries, second_primaries = [], []
     by_source_type = {source_type: {"total": 0, "labelled": 0} for source_type in ALLOWED_TYPE}
     seen_ids = set()
 
@@ -111,6 +199,10 @@ def validate_rows(rows: List[Dict[str, str]], node_types: Dict[str, str]) -> Dic
                 error(item_id, "reviewed", f"reviewed '{reviewed}' is not True or False")
             else:
                 review["reviewed" if reviewed == "True" else "drafted"] += 1
+            match = RULE_ID.search(row.get("review_notes", "")) if row["label_source"] == ADJUDICATED else None
+            if match:
+                rules[match.group(0)] += 1
+            review["human_adjudicated"] += row["label_source"] == HUMAN_ADJUDICATED
         if source_type not in ALLOWED_TYPE:
             error(item_id, "source_type", f"source_type '{source_type}' is not one of {', '.join(ALLOWED_TYPE)}")
             continue
@@ -124,18 +216,39 @@ def validate_rows(rows: List[Dict[str, str]], node_types: Dict[str, str]) -> Dic
             problems = _secondary_problems(primary, secondary, source_type, node_types)
             if problems:
                 error(item_id, "expected_secondary", "; ".join(problems))
+        if row.get("second_primary"):
+            _second_labeller_errors(row, source_type, node_types, error)
+            if row.get("agreement") in AGREEMENT_LEVELS:
+                agreement[row["agreement"]] += 1
+            agreement["needs_review"] += needs_review(row)
+            primaries.append(primary)
+            second_primaries.append(row["second_primary"])
 
     return {
         "total": sum(c["total"] for c in by_source_type.values()),
         "labelled": sum(c["labelled"] for c in by_source_type.values()),
         "by_source_type": by_source_type,
         "errors": errors,
-        "review": review,
+        "review": dict(review, adjudicated_by_rule=dict(sorted(rules.items()))),
+        "agreement": dict(agreement, kappa=cohens_kappa(primaries, second_primaries) if primaries else None),
     }
 
 
 def review_order(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
-    """Rows sorted low -> medium -> high draft_confidence, keeping sheet order within a level."""
+    """
+    Cross-checked sheets: disagree -> partial -> agree with review notes (low confidence) -> rest.
+    Draft-only sheets: low -> medium -> high draft_confidence. Sheet order is kept within a group.
+    """
+    if any(row.get("agreement") for row in rows):
+        def group(row):
+            if row.get("reviewed") == "True":
+                return 4
+            if row.get("agreement") == "disagree":
+                return 0
+            if row.get("agreement") == "partial":
+                return 1
+            return 2 if row.get("review_notes") else 3
+        return sorted(rows, key=group)
     return sorted(rows, key=lambda row: CONFIDENCE_ORDER.get(row.get("draft_confidence", ""), len(CONFIDENCE_ORDER)))
 
 
@@ -162,6 +275,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         by_confidence = ", ".join(f"{level} {n}" for level, n in review["by_confidence"].items())
         print(f"  reviewed {review['reviewed']} / drafted (not yet reviewed) {review['drafted']}; "
               f"draft confidence: {by_confidence}")
+    agreement = report["agreement"]
+    if agreement["kappa"] is not None:
+        print(f"  second labeller: agree {agreement['agree']}, partial {agreement['partial']}, "
+              f"disagree {agreement['disagree']}; Cohen's kappa (current primary vs second labeller) {agreement['kappa']:.3f}; "
+              f"rows needing review {agreement['needs_review']}")
+    if review["adjudicated_by_rule"]:
+        print(f"  adjudicated by reviewer rules: {review['adjudicated_by_rule']}; "
+              f"decided individually by the reviewer: {review['human_adjudicated']}")
     for e in report["errors"]:
         print(f"  INVALID {e['item_id']} {e['field']}: {e['message']}")
     print(f"{len(report['errors'])} invalid row field(s)" if report["errors"] else "No invalid rows.")

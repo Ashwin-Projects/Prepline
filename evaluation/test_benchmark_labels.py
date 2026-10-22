@@ -108,7 +108,8 @@ def test_review_counts():
             _row("d")]
     report = vl.validate_rows(rows, NODE_TYPES)
     assert report["errors"] == []
-    assert report["review"] == {"reviewed": 1, "drafted": 2, "by_confidence": {"high": 1, "medium": 1, "low": 1}}
+    assert report["review"] == {"reviewed": 1, "drafted": 2, "by_confidence": {"high": 1, "medium": 1, "low": 1},
+                                "adjudicated_by_rule": {}, "human_adjudicated": 0}
 
 
 def test_draft_columns_validated():
@@ -117,9 +118,65 @@ def test_draft_columns_validated():
     assert _errors(rows) == [("a", "draft_confidence"), ("b", "reviewed"), ("c", "draft_confidence")]
 
 
-def test_review_order_low_medium_high_stable():
-    rows = [_drafted("h1"), _drafted("l1", "low"), _drafted("m1", "medium"), _drafted("h2"), _drafted("l2", "low")]
-    assert [r["item_id"] for r in vl.review_order(rows)] == ["l1", "l2", "m1", "h1", "h2"]
+def _checked(item_id, primary, second, agreement, notes="", confidence="high", secondary="", second_secondary="",
+             source="llm_cross_checked", **kw):
+    return dict(_drafted(item_id, confidence, primary=primary, secondary=secondary, **kw), label_source=source,
+                second_primary=second, second_secondary=second_secondary, agreement=agreement, review_notes=notes)
+
+
+def test_classify_agreement():
+    assert vl.classify_agreement("dsa.trees", "", "dsa.trees", "dsa.graphs") == "agree"
+    assert vl.classify_agreement("dsa.trees", "dsa.graphs", "dsa.graphs", "") == "partial"  # primary in other's secondary
+    assert vl.classify_agreement("dsa", "", "dsa.graphs", "") == "partial"  # ancestor / descendant
+    assert vl.classify_agreement("dsa.trees", "", "dsa.graphs", "") == "disagree"
+    assert vl.classify_agreement("none", "", "dsa.graphs", "") == "disagree"
+    assert vl.classify_agreement("none", "", "none", "") == "agree"
+
+
+def test_cohens_kappa():
+    assert vl.cohens_kappa(["a", "b", "a", "b"], ["a", "b", "a", "b"]) == 1.0
+    # observed 0.5, expected 0.5 -> 0
+    assert vl.cohens_kappa(["a", "a", "b", "b"], ["a", "b", "a", "b"]) == 0.0
+    assert round(vl.cohens_kappa(["a", "a", "a", "b"], ["a", "a", "b", "b"]), 4) == 0.5
+
+
+def test_second_labeller_columns_validated():
+    rows = [_checked("a", "dsa.trees", "dsa.heapz", "disagree", "x", source="llm_draft"),
+            _checked("b", "dsa.trees", "dsa.trees.bst", "partial", "x", source="llm_draft"),
+            _checked("c", "dsa.trees", "dsa.trees", "maybe"),
+            _checked("d", "dsa.trees", "none", "disagree", "x", second_secondary="dsa.graphs", source="llm_draft"),
+            _checked("e", "dsa.trees", "dsa.graphs", "agree"),  # agreement must match the labels
+            _checked("f", "dsa.trees", "dsa.graphs", "disagree", "", source="llm_draft"),  # needs review -> notes
+            _checked("g", "dsa.trees", "dsa.graphs", "disagree", "x"),  # only agree rows are cross-checked
+            _checked("h", "dsa.trees", "dsa.trees", "agree", source="llm_draft")]
+    assert _errors(rows) == [("a", "second_primary"), ("b", "second_primary"), ("c", "agreement"),
+                             ("d", "second_secondary"), ("e", "agreement"), ("f", "review_notes"),
+                             ("g", "label_source"), ("h", "label_source")]
+
+
+def test_low_confidence_agree_needs_notes():
+    assert _errors([_checked("a", "dsa.trees", "dsa.trees", "agree", confidence="low")]) == [("a", "review_notes")]
+    assert _errors([_checked("b", "dsa.trees", "dsa.trees", "agree", "both low", confidence="low")]) == []
+
+
+def test_agreement_summary():
+    rows = [_checked("a", "dsa.trees", "dsa.trees", "agree"),
+            _checked("b", "dsa.trees", "dsa.trees", "agree", "second labeller low confidence"),
+            _checked("c", "dsa", "dsa.trees", "partial", "x", source="llm_draft"),
+            _checked("d", "none", "dsa.trees", "disagree", "x", source="llm_draft")]
+    report = vl.validate_rows(rows, NODE_TYPES)
+    assert report["errors"] == []
+    assert report["agreement"] == {"agree": 2, "partial": 1, "disagree": 1, "needs_review": 3, "kappa": report["agreement"]["kappa"]}
+
+
+def test_review_order_disagree_partial_low_agree_rest():
+    rows = [_checked("ok1", "dsa.trees", "dsa.trees", "agree"),
+            _checked("p1", "dsa", "dsa.trees", "partial", "x", source="llm_draft"),
+            _checked("lo1", "dsa.trees", "dsa.trees", "agree", "low", confidence="low"),
+            _checked("d1", "none", "dsa.trees", "disagree", "x", source="llm_draft"),
+            _checked("ok2", "dsa.graphs", "dsa.graphs", "agree"),
+            _checked("d2", "none", "dsa.graphs", "disagree", "x", source="llm_draft")]
+    assert [r["item_id"] for r in vl.review_order(rows)] == ["d1", "d2", "p1", "lo1", "ok1", "ok2"]
 
 
 def test_main_reports_review_counts(tmp_path, capsys):
@@ -133,22 +190,59 @@ def test_main_reports_review_counts(tmp_path, capsys):
     assert "reviewed 1 / drafted (not yet reviewed) 1" in capsys.readouterr().out
 
 
-def test_shipped_sheet_is_fully_drafted_and_unreviewed():
+def _adjudicated(item_id, primary, second, agreement, notes="R1: gap: hashing", reviewed="True", **kw):
+    return dict(_checked(item_id, primary, second, agreement, notes, source="human_rule_adjudicated", **kw),
+                reviewed=reviewed)
+
+
+def test_human_adjudicated_rows():
+    # final label may differ from both LLM labels; agreement keeps the LLM comparison it was adjudicated from
+    rows = [_adjudicated("a", "none", "dsa.trees", "disagree"),
+            _adjudicated("b", "dsa.trees", "dsa.trees", "agree", "R5"),
+            _adjudicated("c", "none", "dsa.trees", "disagree", reviewed="False"),
+            _adjudicated("d", "none", "dsa.trees", "disagree", "adjudicated by rule"),
+            _adjudicated("e", "none", "dsa.trees", "maybe")]
+    assert _errors(rows) == [("c", "reviewed"), ("d", "review_notes"), ("e", "agreement")]
+
+
+def test_adjudicated_rows_leave_the_review_queue():
+    rows = [_adjudicated("a1", "none", "dsa.trees", "disagree"),
+            _checked("d1", "none", "dsa.trees", "disagree", "x", source="llm_draft"),
+            _checked("ok1", "dsa.trees", "dsa.trees", "agree")]
+    report = vl.validate_rows(rows, NODE_TYPES)
+    assert report["errors"] == []
+    assert report["agreement"]["needs_review"] == 1
+    assert report["review"]["reviewed"] == 1 and report["review"]["adjudicated_by_rule"] == {"R1": 1}
+    assert [r["item_id"] for r in vl.review_order(rows)] == ["d1", "ok1", "a1"]
+
+
+def test_human_adjudicated_rows():
+    rows = [dict(_adjudicated("a", "dsa.trees", "dsa.graphs", "disagree", "human: keep"), label_source="human_adjudicated"),
+            dict(_adjudicated("b", "dsa.trees", "dsa.graphs", "disagree", "kept"), label_source="human_adjudicated"),
+            dict(_adjudicated("c", "dsa.trees", "dsa.graphs", "disagree", "human", reviewed="False"),
+                 label_source="human_adjudicated")]
+    assert _errors(rows) == [("b", "review_notes"), ("c", "reviewed")]
+    report = vl.validate_rows(rows[:1], NODE_TYPES)
+    assert report["agreement"]["needs_review"] == 0 and report["review"]["human_adjudicated"] == 1
+
+
+def test_shipped_sheet_is_gold_v1_0():
     rows = vl.load_labels(vl.DEFAULT_LABELS)
     report = vl.validate_rows(rows, vl.load_node_types())
     assert report["errors"] == []
     assert report["by_source_type"] == {"syllabus": {"total": 201, "labelled": 201},
                                         "interview": {"total": 46, "labelled": 46}}
-    assert report["review"]["reviewed"] == 0 and report["review"]["drafted"] == 247
-    assert all(r["label_source"] == "llm_draft" for r in rows)
+    adjudicated = [r for r in rows if r["label_source"] == "human_rule_adjudicated"]
+    assert len(adjudicated) == 48 and all(r["reviewed"] == "True" for r in adjudicated)
+    assert report["review"]["reviewed"] == 56  # the owner's rule-adjudicated (48) and individually decided (8) rows
+    assert report["review"]["human_adjudicated"] == 8
+    assert sum(report["review"]["adjudicated_by_rule"].values()) == 48
+    assert report["agreement"]["needs_review"] == 0
+    assert all(r["second_primary"] for r in rows)
+    assert [r["item_id"] for r in rows][:2] == ["BCSE202L_mod_1", "BCSE202L_mod_2"]  # sheet order kept
     assert len(vl.load_node_types()) == 83
-    assert os.path.basename(vl.DEFAULT_LABELS) == "labels_v1.0.csv"
 
 
 def test_shipped_review_order_matches_sheet():
     shipped = vl.load_labels(vl.DEFAULT_REVIEW_ORDER)
-    expected = vl.review_order(vl.load_labels(vl.DEFAULT_LABELS))
-    assert shipped == expected
-    order = {"low": 0, "medium": 1, "high": 2}
-    confidences = [order[r["draft_confidence"]] for r in shipped]
-    assert confidences == sorted(confidences)
+    assert shipped == vl.review_order(vl.load_labels(vl.DEFAULT_LABELS))
