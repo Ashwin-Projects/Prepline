@@ -1,18 +1,18 @@
-report_id,company,role,location,interview_date_or_year,outcome,source_name,source_url,date_basis
-MSFT001,Microsoft,Software Engineer (L60),India (candidate based in Mumbai; interview location not stated),12-12-2025,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-software-engineer-l60-interview-experience-december-2025-off-campus/,article_text
-MSFT002,Microsoft,SWE (Devops),India (candidate from Jamshedpur; interview location not stated),26-06-2025,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-swe-devops/,article_text
-MSFT003,Microsoft,Not stated (job at Microsoft India),Hyderabad (Microsoft IDC),2023,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/microsoft-interview-experience-2023,article_text
-MSFT004,Microsoft,SDE-1,Hyderabad,23-07-2025,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-1-hyderabad/,page_last_updated
-MSFT005,Microsoft,SDE-1,Hyderabad,11-07-2025,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-sde-1-off-campus-8-months-exp/,page_last_updated
-MSFT006,Microsoft,SDE-1,Not stated,23-07-2025,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-1-on-campus/,page_last_updated
-MSFT007,Microsoft,SDE-1,Not stated,20-10-2024,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-1-off-campus/,page_last_updated
-MSFT008,Microsoft,SDE-I (Azure Networking),Not stated,23-07-2025,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-i-1-year-experienced/,page_last_updated
-MSFT009,Microsoft,SDE-I,Not stated,23-07-2025,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-i-on-campus/,page_last_updated
-MSFT010,Microsoft,Software Engineer,Not stated,23-07-2025,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-software-engineer-1-year-experienced/,page_last_updated
-MSFT011,Microsoft,SDE,Not stated,27-05-2024,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-9/,page_last_updated
-MSFT012,Microsoft,SDE-I,Not stated,03-05-2024,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-sde-i/,page_last_updated
-MSFT013,Microsoft,SDE (on-campus full time),Not stated,11-07-2025,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-sde-on-campus-full-time/,page_last_updated
-MSFT014,Microsoft,Software Engineer,Not stated,23-07-2025,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-5/,page_last_updated
-MSFT015,Microsoft,SDE,Not stated,24-04-2023,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-4/,page_last_updated
-MSFT016,Microsoft,SDE,Not stated,23-07-2025,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/microsoft-interview-experience-for-sde-3,page_last_updated
-MSFT017,Microsoft,SDE-1,Not stated,12-07-2025,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/microsoft-interview-experience-for-sde-1,page_last_updated
+report_id,company,role,location,interview_date_or_year,outcome,source_name,source_url,date_basis,page_published
+MSFT001,Microsoft,Software Engineer (L60),India (candidate based in Mumbai; interview location not stated),12-12-2025,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-software-engineer-l60-interview-experience-december-2025-off-campus/,article_text,27-12-2025
+MSFT002,Microsoft,SWE (Devops),India (candidate from Jamshedpur; interview location not stated),26-06-2025,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-swe-devops/,article_text,25-07-2025
+MSFT003,Microsoft,Not stated (job at Microsoft India),Hyderabad (Microsoft IDC),2023,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/microsoft-interview-experience-2023,article_text,16-05-2024
+MSFT004,Microsoft,SDE-1,Hyderabad,28-03-2022,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-1-hyderabad/,published,28-03-2022
+MSFT005,Microsoft,SDE-1,Hyderabad,04-05-2019,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-sde-1-off-campus-8-months-exp/,published,04-05-2019
+MSFT006,Microsoft,SDE-1,Not stated,27-01-2023,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-1-on-campus/,published,27-01-2023
+MSFT007,Microsoft,SDE-1,Not stated,23-02-2022,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-1-off-campus/,published,23-02-2022
+MSFT008,Microsoft,SDE-I (Azure Networking),Not stated,31-03-2021,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-i-1-year-experienced/,published,31-03-2021
+MSFT009,Microsoft,SDE-I,Not stated,21-12-2021,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-i-on-campus/,published,21-12-2021
+MSFT010,Microsoft,Software Engineer,Not stated,20-12-2021,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-software-engineer-1-year-experienced/,published,20-12-2021
+MSFT011,Microsoft,SDE,Not stated,27-05-2024,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-9/,published,27-05-2024
+MSFT012,Microsoft,SDE-I,Not stated,03-05-2024,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-sde-i/,published,03-05-2024
+MSFT013,Microsoft,SDE (on-campus full time),Not stated,11-08-2018,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-sde-on-campus-full-time/,published,11-08-2018
+MSFT014,Microsoft,Software Engineer,Not stated,04-07-2023,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-5/,published,04-07-2023
+MSFT015,Microsoft,SDE,Not stated,24-04-2023,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/microsoft-interview-experience-for-sde-4/,published,24-04-2023
+MSFT016,Microsoft,SDE,Not stated,24-01-2023,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/microsoft-interview-experience-for-sde-3,published,24-01-2023
+MSFT017,Microsoft,SDE-1,Not stated,26-04-2020,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/microsoft-interview-experience-for-sde-1,published,26-04-2020
