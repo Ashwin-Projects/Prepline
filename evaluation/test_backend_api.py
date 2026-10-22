@@ -54,7 +54,7 @@ class TestBackendAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         # config/targets.json order
-        self.assertEqual(len(data["supported_targets"]), 2)
+        self.assertEqual(len(data["supported_targets"]), 4)
         self.assertEqual(data["supported_targets"][0]["company"], "Amazon")
         self.assertEqual(data["supported_targets"][0]["role"], "SDE-1")
         self.assertEqual(data["supported_targets"][1]["company"], "Microsoft")

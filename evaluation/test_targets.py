@@ -44,6 +44,8 @@ def test_configured_targets():
     assert [(t["id"], t["company"], t["role"]) for t in targets] == [
         ("amazon_sde1", "Amazon", "SDE-1"),
         ("microsoft_sde1", "Microsoft", "SDE-1"),
+        ("google_swe_l3", "Google", "SWE-L3"),
+        ("flipkart_sde1", "Flipkart", "SDE-1"),
     ]
 
 
@@ -85,7 +87,7 @@ def test_no_hardcoded_company(path):
 def test_api_lists_configured_targets():
     data = client.get("/api/v1/supported-targets").json()
     assert [(t["company"], t["role"]) for t in data["supported_targets"]] == [
-        ("Amazon", "SDE-1"), ("Microsoft", "SDE-1"),
+        ("Amazon", "SDE-1"), ("Microsoft", "SDE-1"), ("Google", "SWE-L3"), ("Flipkart", "SDE-1"),
     ]
 
 
@@ -109,4 +111,20 @@ def test_app_names_no_company():
     assert api.title == "PREPLINE — Curriculum-to-Interview Alignment"
     with open(os.path.join(ROOT, "backend", "app.py"), encoding="utf-8") as f:
         assert "amazon" not in f.read().lower()
-    assert client.get("/").json()["scope"] == "Prototype: Amazon SDE-1, Microsoft SDE-1"
+    assert client.get("/").json()["scope"] == "Prototype: Amazon SDE-1, Microsoft SDE-1, Google SWE-L3, Flipkart SDE-1"
+
+
+@pytest.mark.parametrize("target", load_targets(), ids=lambda t: t["id"])
+def test_target_data_folder_is_consistent(target):
+    """Unique report ids with a source URL; every question belongs to a listed report and carries a round_type."""
+    with open(target["reports_csv"], encoding="utf-8") as f:
+        reports = list(csv.DictReader(f))
+    ids = [r["report_id"] for r in reports]
+    assert len(ids) == len(set(ids)) and all(ids)
+    assert all(r["source_url"].startswith("https://") for r in reports)
+    assert all(r.get("date_basis", "article_text") in {"article_text", "published"} for r in reports)
+    with open(target["questions_csv"], encoding="utf-8") as f:
+        questions = list(csv.DictReader(f))
+    assert questions and {q["report_id"] for q in questions} <= set(ids)
+    assert all(q["round_type"] in {"OA", "technical", "behavioral", "system_design", "mixed", "unknown"}
+               for q in questions)
