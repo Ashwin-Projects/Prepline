@@ -1,0 +1,17 @@
+report_id,company,role,location,interview_date_or_year,outcome,source_name,source_url,date_basis,page_published
+GOOG001,Google,"Software Engineer, University Graduate 2025",Not stated,21-11-2024,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-software-engineer-university-graduate-2025/,article_text,30-12-2024
+GOOG002,Google,SWE (on-campus),Not stated,15-10-2024,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-for-swe-on-campus-2024/,published,15-10-2024
+GOOG003,Google,SWE FTE (on-campus),Not stated,13-09-2024,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-swe-fte-on-campus-2024/,published,13-09-2024
+GOOG004,Google,University Graduate,Not stated,08-05-2024,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-17/,published,08-05-2024
+GOOG005,Google,Not stated (on-campus),Not stated,14-05-2024,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-on-campus/,published,14-05-2024
+GOOG006,Google,SDE1,Not stated,07-05-2024,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-sde-1/,published,07-05-2024
+GOOG007,Google,SWE (on-campus),Not stated,29-04-2024,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-for-swe-on-campus/,published,29-04-2024
+GOOG008,Google,"Not stated (on-campus, full-time offer)",Not stated,2022,Selected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-on-campus-2022/,article_text,14-06-2023
+GOOG009,Google,SWE (on-campus and off-campus application),Not stated,24-04-2023,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-swe-interview-experience/,published,24-04-2023
+GOOG010,Google,Software Engineering Graduate,Taiwan,30-03-2021,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-taiwan-interview-experience-for-software-engineering-graduate/,published,30-03-2021
+GOOG011,Google,Software Engineer 2021 New Grad,Not stated,17-12-2020,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-for-software-engineer-2021-new-grad/,published,17-12-2020
+GOOG012,Google,University Grad 2020,Not stated,21-04-2020,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-onsite-university-grad-2020/,published,21-04-2020
+GOOG013,Google,"New grad (2020), off-campus",Bangalore/Hyderabad offices (hiring); interview location not stated,13-04-2020,Rejected,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-off-campus-interview-experience/,published,13-04-2020
+GOOG014,Google,Software Developer Level 3,"Munich, Germany",05-03-2020,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-munich-software-developer-interview-experience/,published,05-03-2020
+GOOG015,Google,SDE1,Not stated,13-07-2019,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-interview-experience-for-sde-1/,published,13-07-2019
+GOOG016,Google,SDE1 (off-campus),Not stated,16-06-2019,Unknown,GeeksforGeeks,https://www.geeksforgeeks.org/interview-experiences/google-off-campus-sde-1/,published,16-06-2019
