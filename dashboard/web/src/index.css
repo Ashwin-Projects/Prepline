@@ -38,7 +38,7 @@
   --surface-2: #eef1f5;
   --ink: #0f172a;
   --ink-2: #475569;
-  --ink-3: #64748b;
+  --ink-3: #5a6578;
   --line: #dde3ea;
   --primary: #1e40af;
   --primary-soft: #e3eafb;
@@ -100,5 +100,8 @@ body { font-family: var(--font-sans); font-size: 15px; line-height: 1.5; -webkit
   .page-enter { transition: opacity 120ms linear; transform: none; @starting-style { transform: none; } }
   .bar-grow { transition: none; }
 }
+
+:root { accent-color: var(--primary); caret-color: var(--primary); scrollbar-color: var(--line) transparent; }
+::selection { background: var(--primary-soft); color: var(--ink); }
 
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }

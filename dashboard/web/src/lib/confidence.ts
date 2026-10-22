@@ -20,7 +20,7 @@ export function confidenceOf(result: Result, minReports: number): Confidence {
   const margin = result.report_count - minReports;
   if (margin < 3) reasons.push(`only ${margin} report${margin === 1 ? "" : "s"} above the ${minReports}-report gate`);
   const universe = result.scoring_universe_size ?? 0;
-  if (universe < 10) reasons.push(`S_comp rests on ${universe} interview topics`);
+  if (universe < 10) reasons.push(`fewer than 10 topics carry the score (${universe})`);
   const presentFallback = result.depth_counts?.present_topics?.fallback ?? 0;
   if (presentFallback > 0) reasons.push(`${presentFallback} covered topics use fallback depth`);
   const level: ConfidenceLevel = reasons.length === 0 ? "High" : reasons.length === 1 ? "Medium" : "Low";

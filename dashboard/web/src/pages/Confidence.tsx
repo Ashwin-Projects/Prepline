@@ -24,7 +24,7 @@ export default function Confidence() {
       {(comparison.loading || results.loading) && !(comparison.data && results.data) && <Loading />}
       {comparison.data && results.data && (
         <div className="grid grid-cols-3 gap-4 max-[1150px]:grid-cols-1" data-testid="confidence">
-          <Card title="1 · Insufficient data" subtitle={`A target needs ${comparison.data.min_reports} reports with at least one usable question.`} testId="indicator-gate">
+          <Card title="Insufficient data" subtitle={`A target needs ${comparison.data.min_reports} reports with at least one usable question.`} testId="indicator-gate">
             <p className="mb-3 text-[14px] text-ink-2">
               Behavioural rounds, vague mentions and questions given only as a link are filtered out first. Below the
               gate no score is computed at all.
@@ -44,7 +44,7 @@ export default function Confidence() {
             </ul>
           </Card>
 
-          <Card title="2 · Fallback depth" subtitle="Topics whose syllabus units carry no depth signal (hours, labs, experiments)." testId="indicator-fallback">
+          <Card title="Fallback depth" subtitle="Topics whose syllabus units carry no depth signal (hours, labs, experiments)." testId="indicator-fallback">
             <p className="text-[14px] text-ink-2">
               Such a topic gets the minimum depth D = 1. With γ = {gamma}, a topic that is present but at depth 1 counts
               as only{" "}
@@ -77,7 +77,7 @@ export default function Confidence() {
           </Card>
 
           <Card
-            title="3 · Unmapped terms"
+            title="Unmapped terms"
             subtitle={`Terms that matched no taxonomy node (τ = ${results.data.result.scoring_config.similarity_threshold}) for ${results.data.target.company} ${results.data.target.role}.`}
             testId="indicator-unmapped"
           >

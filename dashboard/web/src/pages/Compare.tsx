@@ -36,7 +36,7 @@ export default function Compare() {
                   <NoResultsState company={t.company} role={t.role} />
                 ) : t.status === "SUCCESS" ? (
                   <>
-                    <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wide text-ink-3">Top gaps</h3>
+                    <h3 className="mb-2 text-[13px] font-medium text-ink-2">Top priority gaps</h3>
                     <GapBars gaps={t.top_priority_gaps} limit={5} compact />
                     <p className="tabular mt-3 text-[12px] text-ink-3">
                       {t.scoring_universe_size} scored topics · {t.fallback_topics} fallback-depth topics ·{" "}
