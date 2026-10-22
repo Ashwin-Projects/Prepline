@@ -133,3 +133,25 @@ export async function getJson<T>(path: string, signal?: AbortSignal): Promise<T>
   if (!response.ok) throw new Error(`${response.status} ${response.statusText} for ${path}`);
   return (await response.json()) as T;
 }
+
+export interface PilotSummary {
+  n: number;
+  M1_topic_hit_rate: number | null;
+  M1_topic_hit_rate_n: number;
+  M2_gap_relevance: number | null;
+  M2_gap_relevance_n: number;
+  M3_usefulness: number | null;
+  M3_usefulness_n: number;
+}
+
+export interface PilotResponse {
+  status: "in_progress" | "results_available";
+  results: null | {
+    generated_at: string;
+    n_responses: number;
+    n_excluded_no_consent: number;
+    synthetic: boolean;
+    by_company: Record<string, PilotSummary>;
+    overall: PilotSummary;
+  };
+}

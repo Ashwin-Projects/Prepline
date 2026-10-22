@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Card, PageHeader } from "../components/ui";
 import { Tex } from "../components/Tex";
+import { PilotCard } from "../components/PilotCard";
 
 const LANES = [
   {
@@ -121,6 +122,7 @@ export default function Methodology() {
             ))}
           </dl>
         </Card>
+        <PilotCard className="col-span-12" />
       </div>
     </>
   );
