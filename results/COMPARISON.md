@@ -9,11 +9,11 @@ Report counts: *raw* = reports in the target's `reports.csv`; *after filtering* 
 | Amazon SDE-1 | 21 | 18 | PASSED (18 ≥ 15) | SUCCESS | 88.7653 |
 | Microsoft SDE-1 | 17 | 15 | PASSED (15 ≥ 15) | SUCCESS | 89.0886 |
 | Google SWE-L3 | 16 | 8 | FAILED (8 < 15) | INSUFFICIENT_DATA | n/a |
-| Flipkart SDE-1 | 20 | 17 | PASSED (17 ≥ 15) | SUCCESS | 89.724 |
+| Flipkart SDE-1 | 20 | 17 | PASSED (17 ≥ 15) | SUCCESS | 89.7447 |
 
 ## Amazon SDE-1 (`amazon_sde1`)
 
-Results file: `results/amazon_sde1_v1.2_course_syllabi.json` (kept from an earlier run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
+Results file: `results/amazon_sde1_v1.2_course_syllabi.json` (written by this run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
 
 | Indicator | Value |
 |---|---|
@@ -25,7 +25,7 @@ Results file: `results/amazon_sde1_v1.2_course_syllabi.json` (kept from an earli
 | Topics present in the syllabus | 80 of 83 |
 | Topics on fallback depth | 3 of 83 |
 | Present topics on fallback depth | 0 of 80 |
-| Unmapped terms (distinct) | 1305 (interview 50, syllabus 1258) |
+| Unmapped terms (distinct) | 1424 (interview 50, syllabus 1377) |
 
 Top 9 priority gaps:
 
@@ -43,7 +43,7 @@ Top 9 priority gaps:
 
 ## Microsoft SDE-1 (`microsoft_sde1`)
 
-Results file: `results/microsoft_sde1_v1.2_course_syllabi.json` (kept from an earlier run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
+Results file: `results/microsoft_sde1_v1.2_course_syllabi.json` (written by this run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
 
 | Indicator | Value |
 |---|---|
@@ -55,7 +55,7 @@ Results file: `results/microsoft_sde1_v1.2_course_syllabi.json` (kept from an ea
 | Topics present in the syllabus | 80 of 83 |
 | Topics on fallback depth | 3 of 83 |
 | Present topics on fallback depth | 0 of 80 |
-| Unmapped terms (distinct) | 1510 (interview 271, syllabus 1258) |
+| Unmapped terms (distinct) | 271 (interview 271) |
 
 Top 10 priority gaps:
 
@@ -94,12 +94,12 @@ Results file: `results/flipkart_sde1_v1.2_course_syllabi.json` (written by this 
 | Reports (raw / after filtering) | 20 / 17 |
 | Questions (included / excluded) | 75 / 80 |
 | Density gate | PASSED (17 ≥ 15) |
-| S_comp | 89.724 |
+| S_comp | 89.7447 |
 | Scoring universe (topics with I(t) > 0) | 13 |
 | Topics present in the syllabus | 80 of 83 |
 | Topics on fallback depth | 3 of 83 |
 | Present topics on fallback depth | 0 of 80 |
-| Unmapped terms (distinct) | 1699 (interview 469, syllabus 1258) |
+| Unmapped terms (distinct) | 469 (interview 469) |
 
 Top 10 priority gaps:
 
@@ -113,5 +113,5 @@ Top 10 priority gaps:
 | 6 | B-Trees and B+ Tree Indexing (`dbms.indexing.b_trees`) | 0.0588 | 0.8722 | 0.0075 |
 | 7 | Linked List Manipulation & Cycle Detection (`dsa.linked_lists.traversal_reversal`) | 0.0588 | 0.879 | 0.0071 |
 | 8 | Sliding Window Technique (`dsa.arrays.sliding_window`) | 0.0588 | 0.8847 | 0.0068 |
-| 9 | Routing Algorithms and Protocols (`cn.network_layer.routing_protocols`) | 0.0471 | 0.8645 | 0.0064 |
+| 9 | Routing Algorithms and Protocols (`cn.network_layer.routing_protocols`) | 0.0471 | 0.8687 | 0.0062 |
 | 10 | Subsets and Permutations (`dsa.backtracking.subsets_permutations`) | 0.0588 | 0.8983 | 0.006 |

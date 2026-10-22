@@ -7,8 +7,8 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 - ~~**Core CS syllabi are scanned images.**~~ Resolved on `data/course-syllabi` (2026-10-21): the owner supplied 20 text-layer course PDFs (`data/raw/syllabi/BCSE*.pdf`), scored as one combined syllabus under config v1.2.
 - **BCSE205L L-T-P-C is incomplete in its PDF.** The text layer holds only "3" (L) and "0" (P); the parser records `ltpc_status: "incomplete"` and leaves the values blank. *Impact: none on depth (theory depth comes from module hours); credits are missing from course metadata until the owner verifies the official values.*
 
-- **BCSE101E, BCSE102L and BCSE103E are scored from manual transcriptions; BCSE203E is not supplied.** Their PDFs are Microsoft Print-to-PDF files whose text is drawn as vector outlines (no text layer). Claude transcribed the rendered pages into `data/raw/syllabi/transcribed/<CODE>.txt` (2026-10-22), used only when a PDF has no text; results mark them `text_source: manual_transcription`. BCSE102L Module 4's last line is clipped in the source. The BCSE101E and BCSE103E "ETH"/"ELA" files are byte-identical copies. *Impact: transcription errors would go unnoticed; spot-check the 3 files against the PDFs (or supply text-layer PDFs) and supply BCSE203E (v1.2 scores 25 of 26 core courses).*
-- **Embedded (E) courses spread their lab hours over the theory modules too.** BCSE101E/BCSE103E (P = 4, 60 lab hours) give each of their 8 units 7.5 lab hours, unlike L+P pairs where lab hours sit only on lab experiments. *Impact: theory modules of E courses carry a lab signal; their lab block is one unit, not split into experiments.*
+- **BCSE101E, BCSE102L and BCSE103E are scored from manual transcriptions.** (BCSE203E was supplied as a text-layer PDF on 2026-10-22; all 26 core courses are now scored.) Their PDFs are Microsoft Print-to-PDF files whose text is drawn as vector outlines (no text layer). Claude transcribed the rendered pages into `data/raw/syllabi/transcribed/<CODE>.txt` (2026-10-22), used only when a PDF has no text; results mark them `text_source: manual_transcription`. BCSE102L Module 4's last line is clipped in the source. The BCSE101E and BCSE103E "ETH"/"ELA" files are byte-identical copies. *Impact: transcription errors would go unnoticed; spot-check the 3 files against the PDFs (or supply text-layer PDFs) (v1.2 now scores all 26 core courses).*
+- **Embedded (E) courses spread their lab hours over the theory modules too.** BCSE101E/BCSE103E/BCSE203E (P = 4, 60 lab hours) give each of their 8 units 7.5 lab hours, unlike L+P pairs where lab hours sit only on lab experiments. *Impact: theory modules of E courses carry a lab signal; their lab block is one unit, not split into experiments.*
 
 ## Syllabus parsing (`pipeline/syllabus_parser.py`)
 
@@ -21,6 +21,26 @@ Deferred issues from the v1.1 scoring-correctness branch (`fix/scoring-correctne
 
 - **Taxonomy nodes are embedded by description only, never by name.** `embeddings.load_taxonomy` encodes `description`; in the v1.2 course run DAA's "Dynamic Programming" module scores 0.450 against `dsa.dp` (below tau = 0.50; 0.731 with the name prepended), while Computer Architecture and Compiler Design modules match `dsa.dp` at 0.50. *Impact: real coverage is missed and spurious coverage is credited (see results/CHANGES_v1.2.md, "Mapping quality"); fixing it changes matching and needs a new config/results version.*
 - **Depth is the mean of normalised signals, so an extra signal can lower it.** A topic matched by a 7-hour module (0.7) and a 3-hour lab experiment (0.3) gets less depth than from the module alone; in the v1.2 run lab signals lowered depth for 6 of 13 theory+lab topics (mean change -0.04). *Impact: small; labs do not add depth the way a reader might expect.*
+
+## Known mapping limitations
+
+Shown on the dashboard (Overview → "Known mapping limitations"). The matcher, tau and taxonomy are frozen in config v1.2;
+the benchmark (`results/benchmark/BENCHMARK.md`) measures their effect.
+
+- **Description-only matching.** Nodes are embedded by description, never by name (see "Matching and scoring" above).
+  *Impact: a module titled "Dynamic Programming" can miss `dsa.dp`.*
+- **DP false negatives.** DAA Module 2 (DP, backtracking, branch & bound) scores 0.450 against `dsa.dp`, below tau, and
+  DAA's lab matches almost nothing; `dsa.dp` is instead matched by Computer Architecture M4 and Compiler Design M7.
+  *Impact: DP coverage rests on spurious units.*
+- **Java I/O → messaging false positive.** BCSE103E Module 6 "IO Streams and Files" (and its lab block) matches
+  `system_design.messaging`, making messaging and pub/sub "present". *Impact: Microsoft's messaging gap is understated.*
+- **React routing → network layer false positive.** BCSE203E Module 7 "… Hooks and Routing" and its lab block match
+  `cn.network_layer` (0.566), while Module 1 (WWW, IP, URL, DNS) matches nothing. *Impact: network-layer depth is
+  inflated slightly (Flipkart S_comp 89.724 → 89.7447 when BCSE203E was added).*
+- **Missing taxonomy nodes.** No node for hashing / hash tables, greedy algorithms, interval problems, string matching,
+  object-oriented / low-level design. Such questions and units map to `none` (benchmark gold rule R1). *Impact: common
+  interview topics (Meeting Rooms, Gas Station, LRU-style design) never enter the scoring universe; a taxonomy v1.1 is
+  needed.*
 
 ## API / dashboard
 

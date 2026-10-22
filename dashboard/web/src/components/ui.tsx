@@ -54,6 +54,19 @@ export function ConfidenceBadge({ level }: { level: ConfidenceLevel }) {
   );
 }
 
+// S_comp is provisional: matcher errors (Known mapping limitations) and LLM-drafted benchmark labels.
+export function ProvisionalChip() {
+  return (
+    <span
+      className="inline-flex items-center whitespace-nowrap rounded-full border border-line px-2.5 py-0.5 text-[13px] font-medium text-ink-2"
+      title="Provisional: the topic matcher has known errors (see Known mapping limitations)"
+      data-testid="provisional"
+    >
+      Provisional
+    </span>
+  );
+}
+
 export function GateChip({ passed, count, min }: { passed: boolean; count: number | null; min: number }) {
   return (
     <span

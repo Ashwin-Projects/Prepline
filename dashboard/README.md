@@ -24,8 +24,8 @@ cd dashboard/web; npm install; npx vite --port 5173                  # second te
 
 | Page | Shows |
 |---|---|
-| Overview | Company/role selector, S_comp with a confidence badge, data card (reports collected → usable, density gate, taxonomy/config versions, date), ranked priority gaps, coverage by domain |
-| Compare | All targets side by side; Google SWE-L3 shows an insufficient-data state (8 of 15 reports) instead of a score |
+| Overview | Company/role selector, provisional S_comp with a confidence badge, known mapping limitations, data card (reports collected → usable, density gate, taxonomy/config versions, date), ranked priority gaps, coverage by domain |
+| Compare | All targets side by side with provisional scores and a note that scoring universes differ; Google SWE-L3 shows an insufficient-data state (8 of 15 reports) instead of a score |
 | Topic explorer | All 83 topics: domain, importance, coverage, depth, measured/fallback, coverage source (direct/inherited); search, domain filter, sorting |
 | Confidence | The three indicators with live counts: insufficient data, fallback depth (a present topic at D = 1 counts 42.9 % covered with γ = 0.5), unmapped terms |
 | Benchmark | Matcher table (thresholds from dev, test macro-F1), test-F1 chart, label agreement (κ = 0.812), limitations |

@@ -1,7 +1,7 @@
 # PREPLINE results v1.2 — core course syllabi (vs v1.1 and v1.0)
 
 `results/amazon_sde1_v1.2_course_syllabi.json`, syllabus `VIT_CSE_2024_25_courses`: the official 26-course VIT core,
-supplied as individual course syllabus PDFs (`data/raw/syllabi/B[CM]*.pdf`, 27 files), scored as one combined syllabus
+supplied as individual course syllabus PDFs (`data/raw/syllabi/B[CM]*.pdf`, 28 files), scored as one combined syllabus
 under `config/scoring_v1.2.json`. `results/amazon_sde1_v1.0.json`, `results/amazon_sde1_v1.1.json` and
 `CHANGES_v1.1.md` are unchanged.
 
@@ -9,11 +9,15 @@ under `config/scoring_v1.2.json`. `results/amazon_sde1_v1.0.json`, `results/amaz
 > 1. The allowlist was extended from 20 to the official 26 courses. The 20-course run (S_comp 88.7456, 162 units) is at
 >    commit `060996c`.
 > 2. Then 22 readable courses were scored (S_comp 89.8072, 177 units), at commit `b0e1238`.
-> 3. Now BCSE101E, BCSE102L and BCSE103E are read from manual transcriptions (this run).
+> 3. Then BCSE101E, BCSE102L and BCSE103E were read from manual transcriptions (25 of 26 courses, S_comp 88.7653,
+>    201 units), at commit `43ba0bd`.
+> 4. Now BCSE203E Web Programming is supplied (theory and lab in one text-layer PDF), so all 26 core courses are
+>    scored (this run, 2026-10-22). Amazon and Microsoft S_comp are unchanged; Flipkart moves 89.724 → 89.7447 (see
+>    "Mapping quality"). All four v1.2 results files, the topic tables and `COMPARISON.md` were regenerated.
 
 ## Read this first
 
-- **25 of the 26 core courses are scored. BCSE203E is not supplied.**
+- **All 26 core courses are scored** (BCSE203E added in revision 4).
 - **3 courses come from manual transcriptions, not PDF text.** BCSE101E, BCSE102L and BCSE103E are Microsoft
   Print-to-PDF files whose text is drawn as vector outlines, so they have no text layer. Claude transcribed the rendered
   pages into `data/raw/syllabi/transcribed/<CODE>.txt`. The parser uses a transcription only when a PDF has no text,
@@ -22,8 +26,8 @@ under `config/scoring_v1.2.json`. `results/amazon_sde1_v1.0.json`, `results/amaz
   The BCSE101E and BCSE103E "ETH"/"ELA" file pairs are byte-identical, so each course is read once and the copy is
   dropped as a duplicate.
 - **The runs barely overlap.** v1.0 scored 66 text-layer courses of the full programme PDF (mostly electives and ECE).
-  v1.1 scored 3 of them: BCSE102P, BMAT205L, BCSE203E. v1.2 shares only BCSE102P and BMAT205L with v1.0 and v1.1, and
-  reads them from separate course PDFs. So the S_comp differences come from different syllabus inputs, not from one
+  v1.1 scored 3 of them: BCSE102P, BMAT205L, BCSE203E. v1.2 shares only those 3 with v1.1, and reads them from
+  separate course PDFs. So the S_comp differences come from different syllabus inputs, not from one
   curriculum getting better.
 - **S_comp 88.77 is driven by a 9-skill scoring universe.** The interview side is unchanged from v1.1:
   18 reports, 46 included questions, 9 granular skills with I(t) > 0. Each skill inherits the coverage of its
@@ -43,9 +47,10 @@ under `config/scoring_v1.2.json`. `results/amazon_sde1_v1.0.json`, `results/amaz
 | S_comp | 51.538 | 60.3657 | **88.7653** |
 | Report count | 21 | 18 | 18 |
 | Scoring universe (topics with I(t) > 0) | 21 | 9 | 9 |
-| Runtime (s) | 1050.9 | 450.9 | 92.5 |
+| Runtime (s) | 1050.9 | 450.9 | 60.0 |
 
-Compared with the previous 22-course revision (89.8072), S_comp fell by 1.04. The linked-list skill has the highest
+Adding BCSE203E (revision 4) leaves Amazon's S_comp unchanged: its two matched units hit only `cn.network_layer`,
+which is not in Amazon's scoring universe. Compared with the earlier 22-course revision (89.8072), S_comp fell by 1.04. The linked-list skill has the highest
 importance (I = 0.222), and its parent `dsa.linked_lists` is now also matched by three BCSE102L modules: Pointers 4 h,
 Structure and Union 2 h, and Overview of OOP 5 h. Their short hours pull the parent's mean depth from 3.70 to 3.29, so
 coverage falls from 0.918 to 0.879. The OOP-overview match is doubtful (see "Mapping quality").
@@ -54,19 +59,20 @@ coverage falls from 0.918 to 0.879. The OOP-overview match is doubtful (see "Map
 
 | | v1.0 | v1.1 | v1.2 |
 |---|---|---|---|
-| Syllabus input | programme PDF (213 pages) | programme PDF (213 pages) | 27 course PDFs (45 pages; 10 pages without a text layer, read from 3 transcriptions) |
-| Courses scored | 66 | 3 | 25 of 26 core (16 course groups); 2 duplicate files dropped |
-| Units scored | 303 | 17 | 201 = 113 theory modules + 88 lab units (86 experiments + 2 embedded lab blocks) |
-| Units matching ≥ 1 topic | 116 | 6 | 83 (65 theory, 18 lab) |
+| Syllabus input | programme PDF (213 pages) | programme PDF (213 pages) | 28 course PDFs (47 pages; 10 pages without a text layer, read from 3 transcriptions) |
+| Courses scored | 66 | 3 | 26 of 26 core (17 course groups); 2 duplicate files dropped |
+| Units scored | 303 | 17 | 209 = 120 theory modules + 89 lab units (86 experiments + 3 embedded lab blocks) |
+| Units matching ≥ 1 topic | 116 | 6 | 85 (66 theory, 19 lab) |
 | Body-less modules skipped | – | – | 13 (Module 8 "Contemporary Issues" of every BCSE2xx/3xx theory course and BMAT205L) |
 | Topics present (of 83) | 58 | 22 | 80 (35 matched directly + 45 granular inheriting from them) |
 | Topics absent | 25 | 61 | 3: `system_design.load_balancing` (+ `.algorithms`), `system_design.distributed_consensus` |
 
-The 16 course groups scored:
+The 17 course groups scored:
 - **Theory + lab:** BCSE102 Structured and Object-Oriented Programming, BCSE202 DSA, BCSE204 DAA, BCSE301 Software
   Engineering, BCSE302 Database Systems, BCSE303 Operating Systems, BCSE307 Compiler Design, BCSE308 Computer
   Networks, BCSE309 Cryptography and Network Security.
-- **Embedded theory + lab in one syllabus (E):** BCSE101 Computer Programming: Python, BCSE103 Computer Programming: Java.
+- **Embedded theory + lab in one syllabus (E):** BCSE101 Computer Programming: Python, BCSE103 Computer Programming: Java,
+  BCSE203 Web Programming.
 - **Theory only:** BCSE205 Computer Architecture and Organization, BCSE304 Theory of Computation, BCSE305 Embedded
   Systems, BCSE306 Artificial Intelligence, BMAT205 Discrete Mathematics and Graph Theory.
 
@@ -76,7 +82,7 @@ The 16 course groups scored:
 |---|---|---|---|
 | All 83 topics | 58 measured / 25 fallback | 22 measured / 61 fallback | 80 measured / 3 fallback |
 | Present topics | 58 measured | 22 measured | 80 measured |
-| Units with ≥ 1 depth signal | – | 17 / 17 | 201 / 201 |
+| Units with ≥ 1 depth signal | – | 17 / 17 | 209 / 209 |
 
 The 3 fallback topics in v1.2 are the 3 absent system-design topics. Every present topic has measured depth.
 
@@ -86,10 +92,10 @@ Where depth comes from in v1.2:
 - **Lab experiments (P files):** `lab_hours` = the course's lab hours ÷ its experiment count. That is 30 h for the
   BCSE2xx/3xx labs (2.5–5 h per experiment) and 60 h for BCSE102P (7.5 h per experiment). `lab_count` is the experiment
   count (6–12), added once per (topic, lab course).
-- **Embedded E courses (BCSE101E, BCSE103E):** this is the existing embedded behaviour. Their 60 lab hours are spread
+- **Embedded E courses (BCSE101E, BCSE103E, BCSE203E):** this is the existing embedded behaviour. Their 60 lab hours are spread
   over all 8 units (7 theory modules + 1 "Indicative Experiments" block), 7.5 h each, so their theory modules carry a
   lab signal too. The lab block is one unit, not split into experiments. Noted in the backlog.
-- **Effect of the lab signals:** 15 of the 35 directly matched topics are matched by both theory and lab units. The lab
+- **Effect of the lab signals** (measured on the 25-course run, before BCSE203E): 15 of the 35 directly matched topics are matched by both theory and lab units. The lab
   signals lowered depth for 5 of them and raised it for 10, with a mean change of +0.09 on the 1–5 scale. No topic is
   present through a lab alone.
 
@@ -138,10 +144,14 @@ inherited parent and the units matching it):
   - BCSE103E Module 6 "IO Streams and Files" and its lab block match `system_design.messaging`, which makes messaging
     and pub/sub "present".
   - BCSE102L Module 5 "Overview of Object-Oriented Programming" matches `dsa.linked_lists`.
-- **118 of 201 units match no topic**, partly because the taxonomy has no node for them. By course:
+  - BCSE203E Module 7 "Advanced ReactJS … Hooks and Routing" and its lab block match `cn.network_layer` (0.566):
+    React routing read as network routing. Meanwhile Module 1 (World Wide Web, IP address, URL, DNS) matches nothing.
+    This deepens `cn.network_layer` and is why Flipkart's `cn.network_layer.routing_protocols` coverage rose
+    (0.8645 → 0.8687) and its S_comp moved 89.724 → 89.7447.
+- **124 of 209 units match no topic**, partly because the taxonomy has no node for them. By course:
   - Software Engineering 16 of 17 unmatched, DAA 13 of 18, Compiler Design 13 of 17, Cryptography 11 of 17,
     OS 10 of 19, Structured/OO Programming (L + P) 9 of 16, Networks 9 of 16.
-  - Theory of Computation 6 of 7, Python 6 of 8, Java 4 of 8, Discrete Mathematics 4 of 7.
+  - Theory of Computation 6 of 7, Python 6 of 8, Web Programming 6 of 8, Java 4 of 8, Discrete Mathematics 4 of 7.
 - Other matches to check: BCSE202L Module 1 "Algorithm Analysis" matches `dbms.nosql`, `dbms.sql` and
   `dbms.normalization`.
 - None of this is changed in v1.2: τ, the taxonomy and the matcher are frozen. The node-name issue is in
@@ -151,10 +161,10 @@ inherited parent and the units matching it):
 
 | | v1.0 | v1.1 | v1.2 |
 |---|---|---|---|
-| Distinct terms | 4868 | 282 | 1305 |
-| … syllabus / interview | 4784 / 89 | 232 / 50 | 1258 / 50 |
-| Total occurrences | 7859 | 335 | 1631 |
-| Top terms | module (303), 2022 (49), annexure (49), board (39), academic council (38), … | javascript (3), article (2), aside elements (2), … | introduction (18), types (10), functions (9), implementation (9), applications (8), algorithm (7), develop (7), multi (7), non (7), overview (7) |
+| Distinct terms | 4868 | 282 | 1424 |
+| … syllabus / interview | 4784 / 89 | 232 / 50 | 1377 / 50 |
+| Total occurrences | 7859 | 335 | 1810 |
+| Top terms | module (303), 2022 (49), annexure (49), board (39), academic council (38), … | javascript (3), article (2), aside elements (2), … | introduction (19), functions (10), types (10), applications (9), implementation (9), algorithm (7), develop (7), multi (7), non (7), overview (7) |
 
 The v1.0 page and approval boilerplate (module, annexure, academic council, proceedings) is gone. In v1.2 the
 running page lines are stripped before parsing and empty modules are skipped. The remaining top terms are generic
@@ -164,8 +174,8 @@ syllabus verbs and nouns. The 50 interview terms are the same as in v1.1 (unchan
 
 | Change | Where | Effect on this run |
 |---|---|---|
-| Config v1.2: core allowlist = the official 26 core courses | `config/scoring_v1.2.json` | 25 courses kept, 2 duplicate files dropped, 1 allowlisted missing (BCSE203E) |
-| Combined syllabus from many PDFs (`parse_syllabus_pdfs`), units tagged with `course_group` / `component` / `source_file`; unreadable files go to `file_errors` | `pipeline/syllabus_parser.py` | One syllabus from 27 files; 0 file errors |
+| Config v1.2: core allowlist = the official 26 core courses | `config/scoring_v1.2.json` | 26 courses kept, 2 duplicate files dropped, none allowlisted missing |
+| Combined syllabus from many PDFs (`parse_syllabus_pdfs`), units tagged with `course_group` / `component` / `source_file`; unreadable files go to `file_errors` | `pipeline/syllabus_parser.py` | One syllabus from 28 files; 0 file errors |
 | Manual transcription for a PDF without a text layer (`transcribed/<CODE>.txt`, `#` comment lines ignored, `text_source` recorded) | parser + runner (`--transcriptions-dir`, default `<pdf-dir>/transcribed`) | BCSE101E, BCSE102L, BCSE103E scored (24 units) |
 | Text extraction with `x_tolerance=1.5` | parser | Words no longer glued ("DataStructuresand" → "Data Structures and"); 114 tokens recovered in the first 16 files checked |
 | VIT running page lines stripped | parser | Page headers and footers no longer fall inside modules that cross a page break |
@@ -176,6 +186,6 @@ syllabus verbs and nouns. The 50 interview terms are the same as in v1.1 (unchan
 
 ## Runtime
 
-92.5 s (parse 91.1 s, importance 1.4 s), against 450.9 s for v1.1 and 1050.9 s for v1.0. The 22 text-layer course PDFs
-parse in about 17 s. Most of the rest is spent extracting the 5 vector-outline PDFs (about 2,700 curves per page)
-before their transcriptions are used.
+60.0 s for Amazon (parse 59.2 s, importance 0.7 s), against 450.9 s for v1.1 and 1050.9 s for v1.0. The syllabus is
+parsed once and shared by all four targets in `run_all_targets.py`. Most of the parse time is spent extracting the 5
+vector-outline PDFs (about 2,700 curves per page) before their transcriptions are used.

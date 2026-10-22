@@ -15,6 +15,7 @@
     "BCSE103E_COMPUTER-PROGRAMMING_-JAVA_ELA_1.0_68_BCSE103E_COMPUTER-PROGRAMMING-_-JAVA_ETH_1.0_67_BCSE103E_63 ACP.pdf",
     "BCSE202L_DATA-STRUCTURES-AND-ALGORITHMS_TH_1.0_70_BCSE202L.pdf",
     "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
+    "BCSE203E_WEB-PROGRAMMING_ELA_1.0_73_BCSE203E_WEB-PROGRAMMING_ETH_1.0_73_BCSE203E_67 ACP.pdf",
     "BCSE204L_DESIGN-AND-ANALYSIS-OF-ALGORITHMS_TH_1.0_70_BCSE204L.pdf",
     "BCSE204P_DESIGN-AND-ANALYSIS-OF-ALGORITHMS-LAB_LO_1.0_70_BCSE204P.pdf",
     "BCSE205L_COMPUTER-ARCHITECTURE-AND-ORGANIZATION_TH_1.0_70_BCSE205L.pdf",
@@ -80,7 +81,7 @@
       "assignments": 5.0
     }
   },
-  "generated_at": "2026-10-22T09:29:24.672999+00:00",
+  "generated_at": "2026-10-22T17:51:26.666258+00:00",
   "granular_without_high_level_ancestor": [],
   "interview_filter": {
     "questions_total": 155,
@@ -94,7 +95,7 @@
     "excluded_questions_file": "data/processed/flipkart_sde1/excluded_questions.csv"
   },
   "status": "SUCCESS",
-  "S_comp": 89.724,
+  "S_comp": 89.7447,
   "scoring_universe_size": 13,
   "courses_kept": [
     {
@@ -192,6 +193,22 @@
       "text_source": "pdf",
       "experiment_count": 10,
       "lab_hours_total": 30.0
+    },
+    {
+      "course_code": "BCSE203E",
+      "course_title": "Web Programming",
+      "lecture_hours": 1,
+      "tutorial_hours": 0,
+      "practical_hours": 4,
+      "project_hours": null,
+      "credits": 3,
+      "ltpc_status": "complete",
+      "course_group": "BCSE203",
+      "component": "embedded",
+      "source_file": "BCSE203E_WEB-PROGRAMMING_ELA_1.0_73_BCSE203E_WEB-PROGRAMMING_ETH_1.0_73_BCSE203E_67 ACP.pdf",
+      "text_source": "pdf",
+      "experiment_count": null,
+      "lab_hours_total": 60.0
     },
     {
       "course_code": "BCSE204L",
@@ -524,6 +541,12 @@
       "lab": "BCSE202P"
     },
     {
+      "course_group": "BCSE203",
+      "course_title": "Web Programming",
+      "theory": "BCSE203E",
+      "lab": null
+    },
+    {
       "course_group": "BCSE204",
       "course_title": "Design and Analysis of Algorithms",
       "theory": "BCSE204L",
@@ -604,6 +627,7 @@
       "BCSE103E",
       "BCSE202L",
       "BCSE202P",
+      "BCSE203E",
       "BCSE204L",
       "BCSE204P",
       "BCSE205L",
@@ -636,12 +660,10 @@
         "drop_reason": "duplicate"
       }
     ],
-    "allowlisted_missing": [
-      "BCSE203E"
-    ]
+    "allowlisted_missing": []
   },
   "text_layer": {
-    "page_count": 45,
+    "page_count": 47,
     "pages_without_text": [
       "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf p1",
       "BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ELA_1.0_68_BCSE101E_COMPUTER-PROGRAMMING_-PYTHON_ETH_1.0_67_BCSE101E_63 ACP.pdf p2",
@@ -716,6 +738,12 @@
       {
         "file": "BCSE202P_DATA-STRUCTURES-AND-ALGORITHMS-LAB_LO_1.0_70_BCSE202P.pdf",
         "page_count": 1,
+        "pages_without_text": [],
+        "text_source": "pdf"
+      },
+      {
+        "file": "BCSE203E_WEB-PROGRAMMING_ELA_1.0_73_BCSE203E_WEB-PROGRAMMING_ETH_1.0_73_BCSE203E_67 ACP.pdf",
+        "page_count": 2,
         "pages_without_text": [],
         "text_source": "pdf"
       },
@@ -929,13 +957,13 @@
       "reason": "no_body"
     }
   ],
-  "syllabus_units": 201,
+  "syllabus_units": 209,
   "units_by_component": {
-    "theory": 113,
-    "lab": 88
+    "theory": 120,
+    "lab": 89
   },
-  "modules_with_depth_signals": 201,
-  "units_with_matches": 83,
+  "modules_with_depth_signals": 209,
+  "units_with_matches": 85,
   "topics_present": 80,
   "topics_in_taxonomy": 83,
   "depth_counts": {
@@ -1017,8 +1045,8 @@
       "topic_id": "cn.network_layer.routing_protocols",
       "topic_name": "Routing Algorithms and Protocols",
       "importance": 0.0471,
-      "coverage": 0.8645,
-      "priority_gap": 0.0064
+      "coverage": 0.8687,
+      "priority_gap": 0.0062
     },
     {
       "rank": 10,
@@ -1030,12 +1058,11 @@
     }
   ],
   "unmapped_terms_summary": {
-    "distinct_terms": 1699,
+    "distinct_terms": 469,
     "distinct_terms_by_source_type": {
-      "interview": 469,
-      "syllabus": 1258
+      "interview": 469
     },
-    "total_occurrences": 2165
+    "total_occurrences": 589
   },
   "top_unmapped_terms": [
     {
@@ -1051,59 +1078,59 @@
       "frequency": 18
     },
     {
-      "term": "introduction",
-      "source_type": "syllabus",
-      "occurrences": 18,
-      "frequency": 18
-    },
-    {
       "term": "array",
       "source_type": "interview",
       "occurrences": 12,
       "frequency": 12
     },
     {
-      "term": "types",
-      "source_type": "syllabus",
-      "occurrences": 10,
-      "frequency": 10
+      "term": "length",
+      "source_type": "interview",
+      "occurrences": 6,
+      "frequency": 6
     },
     {
-      "term": "functions",
-      "source_type": "syllabus",
-      "occurrences": 9,
-      "frequency": 9
+      "term": "maximum number",
+      "source_type": "interview",
+      "occurrences": 5,
+      "frequency": 5
     },
     {
-      "term": "implementation",
-      "source_type": "syllabus",
-      "occurrences": 9,
-      "frequency": 9
+      "term": "set",
+      "source_type": "interview",
+      "occurrences": 5,
+      "frequency": 5
     },
     {
-      "term": "applications",
-      "source_type": "syllabus",
-      "occurrences": 8,
-      "frequency": 8
+      "term": "sum",
+      "source_type": "interview",
+      "occurrences": 5,
+      "frequency": 5
     },
     {
-      "term": "algorithm",
-      "source_type": "syllabus",
-      "occurrences": 7,
-      "frequency": 7
+      "term": "elements",
+      "source_type": "interview",
+      "occurrences": 4,
+      "frequency": 4
     },
     {
-      "term": "develop",
-      "source_type": "syllabus",
-      "occurrences": 7,
-      "frequency": 7
+      "term": "number",
+      "source_type": "interview",
+      "occurrences": 4,
+      "frequency": 4
+    },
+    {
+      "term": "bidirectional",
+      "source_type": "interview",
+      "occurrences": 3,
+      "frequency": 3
     }
   ],
   "stage_timings_seconds": {
-    "parse": 98.0,
+    "parse": 0.0,
     "coverage": 0.0,
-    "importance": 3.9,
+    "importance": 1.9,
     "scoring": 0.0
   },
-  "runtime_seconds": 102.0
+  "runtime_seconds": 2.0
 }

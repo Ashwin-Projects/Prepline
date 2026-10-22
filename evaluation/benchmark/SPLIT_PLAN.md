@@ -6,7 +6,7 @@ course and no interview report has items in two splits.
 ## Groups
 
 Counts as of 2026-10-22: 247 rows, the 25 scored core courses (BCSE101E, BCSE102L and BCSE103E from manual
-transcriptions; BCSE203E not supplied) plus 46 interview questions.
+transcriptions; BCSE203E was not supplied yet, and gold v1.0 stays frozen without it) plus 46 interview questions.
 
 | source_type | group key | groups | rows | group sizes |
 |---|---|---|---|---|

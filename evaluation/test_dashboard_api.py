@@ -43,8 +43,8 @@ def test_comparison():
     rows = {r["target_id"]: r for r in data["targets"]}
     assert set(rows) == {"amazon_sde1", "microsoft_sde1", "google_swe_l3", "flipkart_sde1"}
     assert rows["google_swe_l3"]["density_gate_passed"] is False and rows["google_swe_l3"]["top_priority_gaps"] == []
-    assert rows["flipkart_sde1"]["S_comp"] == 89.724 and rows["flipkart_sde1"]["raw_report_count"] == 20
-    assert rows["amazon_sde1"]["fallback_topics"] == 3 and rows["amazon_sde1"]["unmapped_distinct_terms"] == 1305
+    assert rows["flipkart_sde1"]["S_comp"] == 89.7447 and rows["flipkart_sde1"]["raw_report_count"] == 20
+    assert rows["amazon_sde1"]["fallback_topics"] == 3 and rows["amazon_sde1"]["unmapped_distinct_terms"] == 1424
 
 
 def test_benchmark():
@@ -53,6 +53,7 @@ def test_benchmark():
     assert data["methods"]["minilm_desc"]["test"]["overall"]["macro_f1"] == 0.2133
     assert "predictions" not in data["methods"]["minilm_desc"]["test"]
     assert data["label_agreement"]["kappa_draft_vs_second_labeller"] == 0.812
+    assert data["label_agreement"]["llm_cross_checked_only"] == 191
     assert data["limitations"]
     assert data["recommendation"].startswith("Keep the production matcher")
 

@@ -6,7 +6,7 @@ const LANES = [
   {
     label: "Syllabus",
     steps: [
-      { title: "Course PDFs", detail: "25 core courses: modules, hours, lab experiments" },
+      { title: "Course PDFs", detail: "26 core courses: modules, hours, lab experiments" },
       { title: "Two-pass abstraction", detail: "boilerplate stripped, RAKE concepts" },
       { title: "Match high-level nodes", detail: "MiniLM, τ = 0.50" },
       { title: "Coverage(t)", detail: "presence × depth decay; granular nodes inherit" },
@@ -111,8 +111,8 @@ export default function Methodology() {
               ["Taxonomy", "v1.0 · 83 topics (37 high-level, 46 granular)"],
               ["Scoring config", "v1.2 · τ = 0.50, γ = 0.5, MIN_REPORTS = 15 (frozen)"],
               ["Results", "v1.2 · one file per target, never overwritten"],
-              ["Benchmark", "v1.0 · 247 gold labels, grouped 70/15/15 split, seed 20261022"],
-              ["Syllabus", "VIT CSE 2024-25, 25 of 26 core courses"],
+              ["Benchmark", "v1.0 · 247 gold labels (25 courses; frozen), grouped 70/15/15 split, seed 20261022"],
+              ["Syllabus", "VIT CSE 2024-25, all 26 core courses"],
             ].map(([k, v]) => (
               <div key={k}>
                 <dt className="text-[12px] font-medium uppercase tracking-wide text-ink-3">{k}</dt>
