@@ -47,15 +47,17 @@ class TestBackendAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertEqual(data["engine"], "PREPLINE")
-        self.assertEqual(data["scope"], "Amazon SDE-1 Prototype")
+        self.assertTrue(data["scope"].startswith("Prototype: "))
 
     def test_supported_targets(self):
         response = client.get("/api/v1/supported-targets")
         self.assertEqual(response.status_code, 200)
         data = response.json()
-        self.assertEqual(len(data["supported_targets"]), 1)
+        # config/targets.json order
+        self.assertEqual(len(data["supported_targets"]), 2)
         self.assertEqual(data["supported_targets"][0]["company"], "Amazon")
         self.assertEqual(data["supported_targets"][0]["role"], "SDE-1")
+        self.assertEqual(data["supported_targets"][1]["company"], "Microsoft")
 
     def test_validate_target_amazon_sde1(self):
         payload = {"company": "Amazon", "role": "SDE-1"}

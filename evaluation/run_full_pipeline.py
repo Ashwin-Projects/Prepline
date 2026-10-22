@@ -1,5 +1,6 @@
 """
-Full Phase 7-12 pipeline run for one company/role + one syllabus, saved as a versioned result file.
+Full Phase 7-12 pipeline run for one company/role target (config/targets.json) + one syllabus, saved as a
+versioned result file.
 
 The syllabus is one PDF, or several course PDFs combined into one syllabus (--pdf repeated, or --pdf-dir with
 --glob; e.g. theory BCSE202L + lab BCSE202P). Mirrors the backend /api/v1 flow (density gate -> coverage ->
@@ -8,8 +9,9 @@ logged to a run-specific log so the summary reflects this run only, not the shar
 
 Usage:
     python evaluation/run_full_pipeline.py --pdf "path/to/VIT_CSE_2024_2025.pdf"
-    python evaluation/run_full_pipeline.py --pdf-dir data/raw/syllabi --glob "BCSE*.pdf" \\
-        --syllabus-id VIT_CSE_2024_25_courses --out results/amazon_sde1_<version>_course_syllabi.json
+    python evaluation/run_full_pipeline.py --target <target_id> --pdf-dir data/raw/syllabi --glob "B[CM]*.pdf" \\
+        --syllabus-id VIT_CSE_2024_25_courses --out results/<target_id>_<version>_course_syllabi.json
+All configured targets at once (one results file each, plus results/COMPARISON.md): evaluation/run_all_targets.py
 """
 import argparse
 import json
@@ -24,7 +26,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
 import pipeline.unmapped_terms_logger as unmapped_terms_logger
-from pipeline.config import CONFIG_PATH, load_scoring_config
+from pipeline.config import CONFIG_PATH, load_scoring_config, load_targets
 from pipeline.embeddings import SIMILARITY_THRESHOLD
 from pipeline.interview_parser import (
     count_reports,
@@ -46,19 +48,23 @@ from pipeline.scoring import (
 )
 from evaluation.review_unmapped_terms import load_log, aggregate
 
-COMPANY = "Amazon"
-ROLE = "SDE-1"
 CONFIG = load_scoring_config()
 MIN_REPORTS = CONFIG["min_reports"]
 SCORING_CONFIG_VERSION = CONFIG["config_version"]
 TOP_N = 10
 
-DEFAULT_QUESTIONS = os.path.join(ROOT, "data", "processed", "questions.csv")
-DEFAULT_EXCLUDED = os.path.join(ROOT, "data", "processed", "excluded_questions.csv")
+TARGETS = load_targets()
+DEFAULT_TARGET = TARGETS[0]["id"]
 # Results files are versioned and never overwritten (Deprecation & Migration): v1.1 = scoring-correctness fixes,
 # v1.2 = core allowlist from the owner's course syllabi + course-PDF parsing.
 RESULTS_VERSION = "v1.2"
-DEFAULT_OUT = os.path.join(ROOT, "results", f"amazon_sde1_{RESULTS_VERSION}.json")
+
+
+def default_out(target_id: str) -> str:
+    return os.path.join(ROOT, "results", f"{target_id}_{RESULTS_VERSION}.json")
+
+
+DEFAULT_OUT = default_out(DEFAULT_TARGET)
 DEFAULT_GLOB = "BCSE*.pdf"
 
 
@@ -74,9 +80,14 @@ def default_transcriptions_dir(pdf_dir: str = None) -> str:
     return folder if folder and os.path.isdir(folder) else None
 
 
-def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = None,
-        transcriptions_dir: str = None) -> dict:
-    """pdf_paths: one path, or a list. Several paths (or a syllabus_id) build one combined syllabus."""
+def run(pdf_paths, target: dict, syllabus_id: str = None, transcriptions_dir: str = None, parse=None) -> dict:
+    """
+    pdf_paths: one path, or a list. Several paths (or a syllabus_id) build one combined syllabus.
+    target: a config/targets.json entry (pipeline.config.load_targets): company, role, questions_csv, excluded_csv.
+    parse: optional zero-argument function returning the parsed syllabus, so several targets can share one parse;
+    it is only called once the target has passed the density gate.
+    """
+    questions_csv, excluded_out = target["questions_csv"], target["excluded_csv"]
     if isinstance(pdf_paths, str):
         pdf_paths = [pdf_paths]
     combined = len(pdf_paths) > 1 or syllabus_id is not None
@@ -96,8 +107,9 @@ def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = Non
     print(f"Granular nodes without a high-level ancestor: {len(orphans)} {orphans}", flush=True)
     result = {
         "results_version": RESULTS_VERSION,
-        "company": COMPANY,
-        "role": ROLE,
+        "target_id": target["id"],
+        "company": target["company"],
+        "role": target["role"],
         "report_count": report_count,
         "syllabus_file": None if combined else os.path.basename(pdf_paths[0]),
         "syllabus_id": syllabus_id if combined else os.path.basename(pdf_paths[0]),
@@ -131,7 +143,9 @@ def run(pdf_paths, questions_csv: str, excluded_out: str, syllabus_id: str = Non
 
     t0 = time.time()
     print(f"Parsing {len(pdf_paths)} syllabus PDF(s) (slow on scanned pages)...", flush=True)
-    if combined:
+    if parse:
+        syllabus = parse()
+    elif combined:
         syllabus = parse_syllabus_pdfs(pdf_paths, syllabus_id=syllabus_id or "combined_syllabus",
                                        transcriptions_dir=transcriptions_dir)
     else:
@@ -272,10 +286,16 @@ def main():
     parser.add_argument("--syllabus-id", help="id of the combined syllabus, e.g. VIT_CSE_2024_25_courses")
     parser.add_argument("--transcriptions-dir", help="manual transcriptions (<CODE>.txt) of PDFs without a text layer "
                                                      "(default: <pdf-dir>/transcribed if it exists)")
-    parser.add_argument("--questions", default=DEFAULT_QUESTIONS)
-    parser.add_argument("--excluded-out", default=DEFAULT_EXCLUDED)
-    parser.add_argument("--out", default=DEFAULT_OUT)
+    parser.add_argument("--target", default=DEFAULT_TARGET, choices=[t["id"] for t in TARGETS],
+                        help=f"company/role target from config/targets.json (default {DEFAULT_TARGET})")
+    parser.add_argument("--questions", help="questions CSV (default: the target's data folder)")
+    parser.add_argument("--excluded-out", help="excluded-questions CSV (default: the target's data folder)")
+    parser.add_argument("--out", help="results file (default results/<target>_<version>.json)")
     args = parser.parse_args()
+    target = next(t for t in TARGETS if t["id"] == args.target)
+    target = dict(target, questions_csv=args.questions or target["questions_csv"],
+                  excluded_csv=args.excluded_out or target["excluded_csv"])
+    args.out = args.out or default_out(target["id"])
 
     if os.path.exists(args.out):
         sys.exit(f"Refusing to overwrite existing results file: {args.out} (results are versioned; choose a new --out)")
@@ -287,8 +307,7 @@ def main():
         sys.exit(f"Syllabus PDF not found: {', '.join(missing)}")
 
     transcriptions_dir = args.transcriptions_dir or default_transcriptions_dir(args.pdf_dir)
-    result = run(pdf_paths, args.questions, args.excluded_out, syllabus_id=args.syllabus_id,
-                 transcriptions_dir=transcriptions_dir)
+    result = run(pdf_paths, target, syllabus_id=args.syllabus_id, transcriptions_dir=transcriptions_dir)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)

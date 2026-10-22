@@ -392,6 +392,7 @@ class TestPhase9Scoring(unittest.TestCase):
             os.path.dirname(os.path.dirname(__file__)),
             "data",
             "processed",
+            "amazon_sde1",
             "questions.csv"
         )
         self.assertTrue(os.path.exists(questions_csv))

@@ -2,6 +2,7 @@
 Item 9: versioned results. run_full_pipeline writes results/amazon_sde1_v1.2.json by default and
 never overwrites an existing results file; compare_results builds the v1.0 -> v1.1 change log.
 """
+import json
 import os
 import sys
 
@@ -9,6 +10,7 @@ import pytest
 
 import evaluation.run_full_pipeline as rfp
 from evaluation.compare_results import build_changes
+from pipeline.config import find_target
 
 
 def test_default_out_is_v1_2():
@@ -75,6 +77,32 @@ def test_build_changes_tables():
     assert "| Item 3 - interview filtering | 46.43 | -5.108 |" in md
     assert "| Item 5 - boilerplate | 30.0 | -16.43 |" in md
     assert "`os.deadlocks.prevention_avoidance`" in md.split("Item 5 - boilerplate", 1)[1]
+
+
+AMAZON_V1_2 = os.path.join(rfp.ROOT, "results", "amazon_sde1_v1.2_course_syllabi.json")
+SYLLABI_DIR = os.path.join(rfp.ROOT, "data", "raw", "syllabi")
+COURSE_GLOB = "B[CM]*.pdf"
+
+
+@pytest.mark.skipif(not rfp.resolve_pdf_paths([], SYLLABI_DIR, COURSE_GLOB),
+                    reason="course syllabus PDFs are gitignored and not present")
+def test_amazon_results_identical_after_target_refactor(tmp_path):
+    """Re-runs Amazon SDE-1 from data/processed/amazon_sde1/ (config-driven target) against the 27 course PDFs."""
+    with open(AMAZON_V1_2, encoding="utf-8") as f:
+        stored = json.load(f)
+    target = dict(find_target("Amazon", "SDE-1"), excluded_csv=str(tmp_path / "excluded.csv"))
+    pdfs = rfp.resolve_pdf_paths([], SYLLABI_DIR, COURSE_GLOB)
+
+    rerun = rfp.run(pdfs, target, syllabus_id=stored["syllabus_id"],
+                    transcriptions_dir=rfp.default_transcriptions_dir(SYLLABI_DIR))
+
+    for key in ("company", "role", "report_count", "status", "S_comp", "scoring_universe_size", "taxonomy_version",
+                "scoring_config_version", "syllabus_files", "core_courses", "courses_kept", "syllabus_units",
+                "units_by_component", "units_with_matches", "topics_present", "depth_counts", "top_priority_gaps",
+                "unmapped_terms_summary", "top_unmapped_terms"):
+        assert rerun[key] == stored[key], key
+    filtered = {k: v for k, v in rerun["interview_filter"].items() if k != "excluded_questions_file"}
+    assert filtered == {k: v for k, v in stored["interview_filter"].items() if k != "excluded_questions_file"}
 
 
 def test_default_transcriptions_dir(tmp_path):

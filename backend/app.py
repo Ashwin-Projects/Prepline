@@ -18,8 +18,8 @@ from backend.routes import router as api_router
 _MULTIPART_OVERHEAD_BYTES = 64 * 1024
 
 app = FastAPI(
-    title="PREPLINE API Engine",
-    description="Curriculum-to-Interview Alignment Engine (Amazon SDE-1 Prototype)",
+    title="PREPLINE — Curriculum-to-Interview Alignment",
+    description="Curriculum-to-Interview Alignment Engine (prototype; supported company/role targets in config/targets.json)",
     version="1.1.0"
 )
 
@@ -59,7 +59,7 @@ async def root():
     return {
         "engine": "PREPLINE",
         "version": "1.1.0",
-        "scope": "Amazon SDE-1 Prototype",
+        "scope": f"Prototype: {routes._target_names()}",
         "status": "RUNNING"
     }
 

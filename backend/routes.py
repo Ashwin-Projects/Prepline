@@ -30,7 +30,7 @@ from backend.schemas import (
     TopicImportanceItem,
     PriorityGapItem
 )
-from pipeline.config import load_api_config, load_scoring_config
+from pipeline.config import find_target, load_api_config, load_scoring_config, load_targets
 from pipeline.interview_parser import count_reports, filter_questions, load_questions_csv
 from pipeline.syllabus_parser import parse_syllabus_pdf, NoCoreCoursesError, UnsupportedPDFError
 from pipeline.scoring import (
@@ -42,9 +42,8 @@ from pipeline.scoring import (
 
 router = APIRouter(prefix="/api/v1", tags=["PREPLINE Alignment Engine"])
 
-# Prototype Scope Constants
-SUPPORTED_COMPANY = "Amazon"
-SUPPORTED_ROLE = "SDE-1"
+# Supported company/role targets and their data folders (config/targets.json)
+TARGETS = load_targets()
 
 CONFIG = load_scoring_config()
 MIN_REPORTS_REQUIRED = CONFIG["min_reports"]
@@ -83,20 +82,21 @@ _PARSE_EXECUTOR = ThreadPoolExecutor(
     max_workers=API_CONFIG["max_concurrent_parses"], thread_name_prefix="syllabus-parse"
 )
 
-# Dataset Paths
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed")
-QUESTIONS_CSV_PATH = os.path.join(DATA_DIR, "questions.csv")
 
 
-def _get_report_count() -> int:
+def _get_report_count(questions_csv: str) -> int:
     """
     Reports with at least one included question (interview_parser.filter_questions).
     The same count is used for the density gate and as the I(t) denominator.
     """
-    if not os.path.exists(QUESTIONS_CSV_PATH):
+    if not os.path.exists(questions_csv):
         return 0
-    included, _ = filter_questions(load_questions_csv(QUESTIONS_CSV_PATH))
+    included, _ = filter_questions(load_questions_csv(questions_csv))
     return count_reports(included)
+
+
+def _target_names() -> str:
+    return ", ".join(f"{t['company']} {t['role']}" for t in TARGETS)
 
 def get_core_courses() -> List[str]:
     """Core CS course allowlist for syllabus uploads (config syllabus.core_courses); tests override this dependency."""
@@ -150,12 +150,10 @@ def _parse_uploaded_file(temp_dir: str, temp_path: str, core_courses: List[str])
 
 @router.get("/supported-targets", response_model=Dict[str, Any])
 async def get_supported_targets():
-    """Returns currently supported company and role combinations (Amazon SDE-1 only in prototype)."""
+    """Returns the supported company and role combinations (config/targets.json)."""
     return {
-        "supported_targets": [
-            {"company": SUPPORTED_COMPANY, "role": SUPPORTED_ROLE}
-        ],
-        "message": "Currently supporting Amazon SDE-1 prototype only."
+        "supported_targets": [{"company": t["company"], "role": t["role"]} for t in TARGETS],
+        "message": f"Currently supporting: {_target_names()}."
     }
 
 
@@ -244,10 +242,11 @@ async def upload_syllabus(file: UploadFile = File(...), core_courses: List[str] 
 def validate_target(request: TargetSelectionRequest):
     """
     Endpoint 2 & 3: Company/Role Selection & Report-Count Density Gate Validation
-    Checks if target is Amazon SDE-1 and evaluates report count against MIN_REPORTS_REQUIRED = 15.
+    Checks the target is configured and evaluates its report count against MIN_REPORTS_REQUIRED = 15.
     """
     # Verify company and role scope
-    if request.company.lower() != SUPPORTED_COMPANY.lower() or request.role.lower() != SUPPORTED_ROLE.lower():
+    target = find_target(request.company, request.role, TARGETS)
+    if target is None:
         return ReportCountValidationResponse(
             company=request.company,
             role=request.role,
@@ -255,15 +254,15 @@ def validate_target(request: TargetSelectionRequest):
             min_reports_required=MIN_REPORTS_REQUIRED,
             eligible=False,
             status="UNSUPPORTED_ROLE",
-            message=f"Role '{request.company} {request.role}' is not supported yet. PREPLINE currently supports Amazon SDE-1 only."
+            message=f"Role '{request.company} {request.role}' is not supported yet. PREPLINE currently supports: {_target_names()}."
         )
 
-    report_count = _get_report_count()
+    report_count = _get_report_count(target["questions_csv"])
 
     if report_count < MIN_REPORTS_REQUIRED:
         return ReportCountValidationResponse(
-            company=SUPPORTED_COMPANY,
-            role=SUPPORTED_ROLE,
+            company=target["company"],
+            role=target["role"],
             report_count=report_count,
             min_reports_required=MIN_REPORTS_REQUIRED,
             eligible=False,
@@ -272,13 +271,13 @@ def validate_target(request: TargetSelectionRequest):
         )
 
     return ReportCountValidationResponse(
-        company=SUPPORTED_COMPANY,
-        role=SUPPORTED_ROLE,
+        company=target["company"],
+        role=target["role"],
         report_count=report_count,
         min_reports_required=MIN_REPORTS_REQUIRED,
         eligible=True,
         status="ELIGIBLE",
-        message="Target Amazon SDE-1 meets the 15-report density gate requirement."
+        message=f"Target {target['company']} {target['role']} meets the 15-report density gate requirement."
     )
 
 
@@ -289,10 +288,11 @@ def run_pipeline(request: PipelineRunRequest):
     Orchestrates the PREPLINE pipeline flow and returns real calculated scoring results.
     """
     # 1. Validate Target Role
-    if request.company.lower() != SUPPORTED_COMPANY.lower() or request.role.lower() != SUPPORTED_ROLE.lower():
+    target = find_target(request.company, request.role, TARGETS)
+    if target is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Only Amazon SDE-1 is supported in the prototype."
+            detail=f"Unsupported target. PREPLINE currently supports: {_target_names()}."
         )
 
     # 2. Check if syllabus exists in cache
@@ -304,11 +304,11 @@ def run_pipeline(request: PipelineRunRequest):
         )
 
     # 3. Validate Density Gate (Report Count >= 15)
-    report_count = _get_report_count()
+    report_count = _get_report_count(target["questions_csv"])
     if report_count < MIN_REPORTS_REQUIRED:
         return PreplineResultResponse(
-            company=SUPPORTED_COMPANY,
-            role=SUPPORTED_ROLE,
+            company=target["company"],
+            role=target["role"],
             report_count=report_count,
             density_gate_passed=False,
             S_comp=None,
@@ -328,9 +328,9 @@ def run_pipeline(request: PipelineRunRequest):
 
     # 5. Phase 9: Calculate Topic Importance
     importance_res = get_interview_importance(
-        SUPPORTED_COMPANY,
-        SUPPORTED_ROLE,
-        QUESTIONS_CSV_PATH,
+        target["company"],
+        target["role"],
+        target["questions_csv"],
         total_reports_count=report_count
     )
     importance_list = importance_res.get("interview_importance", [])
@@ -362,8 +362,8 @@ def run_pipeline(request: PipelineRunRequest):
     taxonomy_ver = syllabus_data.get("taxonomy_version", TAXONOMY_VERSION)
 
     return PreplineResultResponse(
-        company=SUPPORTED_COMPANY,
-        role=SUPPORTED_ROLE,
+        company=target["company"],
+        role=target["role"],
         report_count=report_count,
         density_gate_passed=True,
         S_comp=s_comp,
