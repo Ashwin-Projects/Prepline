@@ -24,7 +24,9 @@ DASHBOARD = load_api_config()["dashboard"]
 MIN_REPORTS = load_scoring_config()["min_reports"]
 # Draft vs independent second labeller, before human adjudication (evaluation/benchmark/ADJUDICATION.md).
 LABEL_AGREEMENT = {"kappa_draft_vs_second_labeller": 0.812, "agree": 211, "partial": 8, "disagree": 28,
-                   "rule_adjudicated": 48, "human_adjudicated": 8, "source": "evaluation/benchmark/ADJUDICATION.md"}
+                   "rule_adjudicated": 48, "human_adjudicated": 8, "llm_cross_checked_only": 191,
+                   "labellers": "Claude draft vs a fresh Claude subagent (two independent LLM labellers)",
+                   "source": "evaluation/benchmark/ADJUDICATION.md"}
 
 
 def _target(target_id: str) -> Dict[str, Any]:

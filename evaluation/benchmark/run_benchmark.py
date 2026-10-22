@@ -10,7 +10,7 @@ high_level_concept, interview -> granular_skill) and predicts the top-1 node if 
     minilm_name_desc as minilm_desc, but nodes embedded as "name: description"
 
 Each method's threshold is swept on DEV only (0.30-0.70, step 0.05; best macro-F1, then accuracy, then closest to the
-production 0.50, then lower), confirmed on VAL, and TEST is scored once with that threshold. Results are written to
+production 0.50, then lower), confirmed on VAL, and TEST is evaluated with that threshold and never used for a choice. Results are written to
 results/benchmark/benchmark_v1.0.json (never overwritten), BENCHMARK.md and a test-F1 bar chart. Production
 config and tau are not changed.
 
@@ -53,16 +53,20 @@ LIMITATIONS = [
     "**Small val and test.** Val is 35 items (4 courses, 2 reports) and test 45 items (2 courses, 3 reports); one "
     "item is 2-3 percentage points, and the scores depend on which courses landed in each split. Macro-F1 over ~20 "
     "labels with a handful of items each is noisy; read counts, not only percentages.",
-    "**Gold labels are LLM-drafted.** An LLM draft and an independent LLM labeller agreed on 211/247 primaries "
-    "(kappa 0.812); the owner settled the other 56 (rules R1-R5 plus 8 individual decisions). The 191 agreeing rows "
-    "were not individually checked by a person (see evaluation/benchmark/ADJUDICATION.md).",
+    "**Gold labels are LLM-drafted, then partly human-adjudicated.** Kappa 0.812 is agreement between two independent "
+    "LLM labellers (a Claude draft vs a fresh Claude subagent that saw only the item text, the guide and the cheat "
+    "sheet). The 56 rows where they disagreed or either was unsure were adjudicated by the human owner (rules R1-R5 "
+    "plus 8 individual decisions); the other 191 rows are LLM cross-checked only, not individually human-reviewed "
+    "(see evaluation/benchmark/ADJUDICATION.md).",
+    "**Gold v1.0 is frozen at 25 courses.** BCSE203E Web Programming was supplied after the gold labels were built; its "
+    "units are scored in the v1.2 results but are not in labels_v1.0.csv or the split.",
     "**Many gold labels are `none`** (courses outside the taxonomy, R1-R3), so a matcher that predicts `none` often "
     "scores well on accuracy; macro-F1 is the main metric for that reason.",
     "**Top-1 only.** The production pipeline gives credit to every node above τ (60/40 split); this benchmark scores "
     "only the top-1 node against the gold primary. Secondaries are not scored.",
     "**Methods (a) and (b) see the raw text; (c) and (d) see the two-pass RAKE concepts**, as production does.",
-    "**The test split was computed twice.** A mistyped command after the first run re-ran the script; it reproduced "
-    "the same test numbers and its write was refused. No choice was made from either computation.",
+    "**The test split was computed twice, not once.** A mistyped command after the first run re-ran the script; it reproduced "
+    "the same test numbers and its write was refused. No choice was made from either computation. The results commit message (a1b6c3c) says \"test scored once\"; that is inaccurate for this reason.",
 ]
 _STOP = {"and", "the", "of", "a", "an", "in", "to", "for", "on", "with", "vs", "&"}
 
@@ -251,7 +255,8 @@ def build_markdown(result: Dict[str, Any]) -> str:
         "",
         "Each method predicts the top-1 node of the allowed type (syllabus → high_level_concept, interview → "
         "granular_skill) if its score clears the threshold, else `none`. Thresholds were swept on **dev** only "
-        "(0.30–0.70, step 0.05), checked on **val**, and **test** was scored once.",
+        "(0.30–0.70, step 0.05), checked on **val**, and **test** was evaluated with those thresholds and never used for a "
+        "choice (it was computed twice by accident, with identical numbers; see Limitations).",
         "",
         "| Split | Syllabus rows (courses) | Interview rows (reports) |",
         "|---|---|---|",
@@ -259,7 +264,7 @@ def build_markdown(result: Dict[str, Any]) -> str:
     for s in SPLITS:
         lines.append(f"| {s} | {sizes[s]['syllabus']} ({', '.join(sizes[s]['syllabus_groups'])}) | "
                      f"{sizes[s]['interview']} ({', '.join(sizes[s]['interview_groups'])}) |")
-    lines += ["", "## Test set (scored once)", "",
+    lines += ["", "## Test set (held out; thresholds from dev)", "",
               "| Method | Threshold (from dev) | Accuracy | Macro-P | Macro-R | Macro-F1 | Syllabus acc. | Interview acc. |",
               "|---|---|---|---|---|---|---|---|"]
     for name, label in METHODS.items():
@@ -298,7 +303,7 @@ def main() -> None:
         print(f"Re-rendered {OUT_MD} and {OUT_PNG} from {OUT_JSON}")
         return
     if os.path.exists(OUT_JSON):
-        sys.exit(f"{OUT_JSON} exists; test is scored once per version. Use --render to rebuild the reports.")
+        sys.exit(f"{OUT_JSON} exists; test is evaluated once per version. Use --render to rebuild the reports.")
     t_start = time.time()
     labels = load_labels(DEFAULT_LABELS)
     with open(DEFAULT_SPLITS, encoding="utf-8") as f:

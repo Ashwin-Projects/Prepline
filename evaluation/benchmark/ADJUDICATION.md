@@ -1,5 +1,9 @@
 # Label adjudication — benchmark v1.0 (`labels_v1.0.csv`)
 
+**In one sentence:** κ = 0.812 is agreement between two independent LLM labellers (a Claude draft vs a fresh Claude
+subagent); their disagreements were adjudicated by the human owner; 191 rows are LLM cross-checked only, not
+individually human-reviewed.
+
 ## Process
 
 1. **LLM draft.** Claude labelled all 247 rows from `raw_text`, `LABELLING_GUIDE.md` and `TAXONOMY_CHEATSHEET.md`
@@ -42,4 +46,7 @@ was not kept as a secondary (R1). The owner confirmed this reading.
 
 All 56 review rows are settled (48 by rule, 8 individually) and `reviewed = True`. The other 191 rows are
 `llm_cross_checked` (both LLM labellers chose the same primary) with `reviewed = False`; they are gold v1.0 on the
-strength of that agreement, not a human check. `python evaluation/benchmark/validate_labels.py` reports these counts.
+strength of that agreement between two LLM labellers, not a human check. `python evaluation/benchmark/validate_labels.py` reports these counts.
+
+Gold v1.0 is frozen: BCSE203E Web Programming, supplied after these labels were built, has no rows here or in
+`splits_v1.0.csv`, although it is scored in the v1.2 results.

@@ -25,6 +25,14 @@ test("overview: S_comp, confidence badge, data card, gaps and domain coverage", 
   await page.goto("/");
   await expect(page.getByTestId("s-comp")).toContainText("88.8");
   await expect(page.getByTestId("confidence-badge")).toContainText("Medium confidence");
+  await expect(page.getByTestId("provisional")).toHaveText("Provisional");
+  await expect(page.getByTestId("score-card")).toContainText("similar scores are not a ranking");
+  const limitations = page.getByTestId("mapping-limitations");
+  await expect(limitations.locator("li")).toHaveCount(5);
+  for (const item of ["Description-only matching", "DP false negatives", "Java I/O → messaging", "Missing taxonomy nodes"]) {
+    await expect(limitations).toContainText(item);
+  }
+  await expect(limitations.getByRole("link", { name: /on GitHub/ })).toHaveAttribute("href", /BACKLOG\.md#known-mapping-limitations/);
   await expect(page.getByTestId("data-card")).toContainText("21 → 18");
   await expect(page.getByTestId("data-card")).toContainText("Gate passed · 18/15");
   await expect(page.getByTestId("gap-list").locator("li")).toHaveCount(9);
@@ -50,6 +58,8 @@ test("compare: four targets side by side, Google insufficient", async ({ page })
     await expect(page.getByTestId(`compare-${id}`)).toBeVisible();
   }
   await expect(page.getByTestId("compare-flipkart_sde1")).toContainText("89.7");
+  await expect(page.getByTestId("compare-flipkart_sde1")).toContainText("provisional");
+  await expect(page.getByText("similar scores are not a ranking")).toBeVisible();
   await expect(page.getByTestId("compare-google_swe_l3").getByTestId("insufficient-state")).toBeVisible();
   await expect(page.getByTestId("compare-google_swe_l3")).toContainText("Gate not met · 8/15");
   await expect(page.getByTestId("compare-amazon_sde1").getByTestId("gap-list").locator("li")).toHaveCount(5);
@@ -89,7 +99,7 @@ test("confidence: three indicators with live counts", async ({ page }) => {
   await expect(page.getByTestId("fallback-coverage")).toHaveText("42.9%");
   await expect(page.getByTestId("indicator-fallback")).toContainText("3 of 83 topics");
   await expect(page.getByTestId("unmapped-list").locator("li")).toHaveCount(10);
-  await expect(page.getByTestId("indicator-unmapped")).toContainText("1305 distinct terms");
+  await expect(page.getByTestId("indicator-unmapped")).toContainText("1424 distinct terms");
   await noHorizontalOverflow(page);
   await page.screenshot({ path: `${SHOTS}/4-confidence.png` });
 });
@@ -101,7 +111,10 @@ test("benchmark: method table, kappa, F1 chart, limitations", async ({ page }) =
   await expect(page.getByTestId("kappa")).toHaveText("0.812");
   await expect(page.getByTestId("f1-chart").locator(".recharts-bar-rectangle")).toHaveCount(4);
   await expect(page.getByTestId("recommendation")).toContainText("Keep the production matcher");
-  await expect(page.getByTestId("limitations").locator("li")).toHaveCount(6);
+  await expect(page.getByTestId("limitations").locator("li")).toHaveCount(7);
+  await expect(page.getByTestId("kappa-card")).toContainText("two independent LLM labellers");
+  await expect(page.getByTestId("cross-checked-only")).toHaveText("191");
+  await expect(page.getByTestId("kappa-card")).toContainText("not individually human-reviewed");
   await noHorizontalOverflow(page);
   await page.screenshot({ path: `${SHOTS}/5-benchmark.png` });
 });

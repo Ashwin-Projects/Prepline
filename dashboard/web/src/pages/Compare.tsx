@@ -9,7 +9,7 @@ export default function Compare() {
     <>
       <PageHeader
         title="Compare"
-        lede="All configured company/role targets against the same syllabus. A target below the density gate shows no score."
+        lede="All configured company/role targets against the same syllabus. Scores are provisional, and each company is scored on its own set of interview topics, so similar scores are not a ranking. A target below the density gate shows no score."
       />
       {error && <ErrorState message={error} />}
       {loading && !data && <Loading />}
@@ -25,6 +25,11 @@ export default function Compare() {
               <p className="tabular mt-2 text-[44px] font-semibold leading-none tracking-tight text-ink">
                 {t.status === "SUCCESS" && t.S_comp !== null ? t.S_comp.toFixed(1) : <span className="text-ink-3">n/a</span>}
               </p>
+              {t.status === "SUCCESS" && (
+                <p className="mt-1 text-[12px] text-ink-3">
+                  provisional · {t.scoring_universe_size} interview topics
+                </p>
+              )}
               {t.results_available && (
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-[13px] text-ink-2">
                   <GateChip passed={t.density_gate_passed} count={t.report_count} min={data.min_reports} />

@@ -2,239 +2,180 @@
 
 **Curriculum-to-Interview Alignment Engine**
 
-Prepline measures how closely a university's computer science curriculum aligns with the technical interview requirements of a specific company and role. It parses syllabus PDFs and anonymized interview experience reports, maps both onto a shared taxonomy using local NLP embeddings, and produces a quantitative coverage score alongside a ranked list of preparation gaps.
+Prepline measures how closely a university's computer science curriculum covers the topics that specific companies ask
+about in technical interviews. It parses syllabus PDFs and public interview-experience write-ups, maps both onto a
+shared taxonomy with local NLP embeddings, and produces a composite coverage score plus a ranked list of preparation
+gaps for each company/role.
 
-> Prepline measures topic alignment and surfaces curriculum gaps. It is a diagnostic tool, not a guarantee of interview or hiring outcomes.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Prototype Scope](#prototype-scope)
-- [Execution Flow](#execution-flow)
-- [Methodology](#methodology)
-- [Data Schemas](#data-schemas)
-- [Project Structure](#project-structure)
-- [Evaluation Strategy](#evaluation-strategy)
-- [MVP Exclusions](#mvp-exclusions)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Status](#project-status)
+> Prepline measures topic alignment and surfaces curriculum gaps. It is a diagnostic tool, not a guarantee of
+> interview or hiring outcomes.
 
 ---
 
-## Overview
+## Contents
 
-University computer science coursework emphasizes foundational theory, while technical interviews assess a narrower, applied slice of that theory in company-specific combinations. Because no formal bridge connects degree coursework to industry hiring expectations, students have no reliable way to check whether their classes actually cover what a given company asks.
+- [Current scope and results](#current-scope-and-results)
+- [Run the dashboard](#run-the-dashboard)
+- [Pipeline and methodology](#pipeline-and-methodology)
+- [Data](#data)
+- [Benchmark](#benchmark)
+- [Testing](#testing)
+- [Project structure](#project-structure)
+- [Project status](#project-status)
+- [Limitations](#limitations)
+- [Future work](#future-work)
 
-Prepline closes that gap by building an auditable, data-driven mapping between course syllabi and real interview experiences, so students can see — topic by topic — where their preparation is solid and where it falls short.
+## Current scope and results
 
-## Prototype Scope
+- **Syllabus:** the VIT B.Tech CSE 2024-25 core, **all 26 core courses** (28 course PDFs; 3 read from manual
+  transcriptions because their PDFs have no text layer), scored as one combined syllabus: 209 units (120 theory modules,
+  89 lab units).
+- **Targets:** 4 company/role pairs, each a data folder plus one entry in `config/targets.json`.
+- **Frozen scoring config v1.2:** taxonomy v1.0 (83 topics), τ = 0.50, γ = 0.5, `MIN_REPORTS = 15`.
 
-The initial prototype is scoped to a single target: **Amazon Software Development Engineer I (SDE-1)**.
+| Target | Reports collected → usable | Density gate | S_comp (provisional) | Scored topics |
+|---|---|---|---|---|
+| Amazon SDE-1 | 21 → 18 | passed | 88.77 | 9 |
+| Microsoft SDE-1 | 17 → 15 | passed | 89.09 | 14 |
+| Google SWE new-grad / L3 | 16 → 8 | **not met** | — (INSUFFICIENT_DATA) | — |
+| Flipkart SDE-1 | 20 → 17 | passed | 89.74 | 13 |
 
-Constraining the prototype to one company/role pair keeps the taxonomy design, embedding thresholds, and scoring pipeline easy to validate end to end before expanding coverage. Scoring for a given company/role pair requires a minimum density gate of **15 unique, deduplicated interview reports** (`MIN_REPORTS = 15`); pairs below this threshold return an insufficient-data result rather than a score.
+Each company is scored on its own set of interview topics, so similar scores are **not a ranking**. Scores are
+provisional because of known mapping errors (see [Limitations](#limitations)). Full details:
+`results/COMPARISON.md`, `results/CHANGES_v1.2.md`.
 
-Additional company/role pairs (e.g., Google L3, Microsoft SDE-1) will be added only after the Amazon SDE-1 pipeline is fully built, benchmarked, and validated.
+## Run the dashboard
 
-## Execution Flow
-
-```
-  Syllabus PDF                              Interview Reports
-       |                                            |
-   (pdfplumber)                               (JSON schema)
-       |                                            |
-       +--------------------+-----------------------+
-                             |
-                             v
-                Two-Pass NLP Abstraction
-          (raw text -> intermediate concepts)
-                             |
-                             v
-                Local Sentence Embeddings
-            (all-MiniLM-L6-v2, tau = 0.50)
-                             |
-                             v
-                Versioned Taxonomy Mapping
-                (60/40 credit allocation)
-                             |
-             +---------------+---------------+
-             |                               |
-             v                               v
-      Syllabus Side                   Interview Side
-      Presence: C(t)                  Report credit: W(r,t)
-      Depth: D(t)                     Importance: I(t)
-             |                               |
-             +---------------+---------------+
-                             |
-                             v
-               Coverage Score: Coverage(t)
-               Overall Score: S_comp
-               Priority Gap: PriorityGap(t)
+```powershell
+pip install -r requirements.txt                                   # once (Python 3.10+)
+powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1   # API :8000 + dashboard :5173, opens the browser
 ```
 
-1. **Input parsing** — Text-selectable syllabus PDFs are parsed with `pdfplumber`. Interview reports are validated against the report JSON schema.
-2. **Two-pass abstraction** — Raw text is abstracted into intermediate concept vectors (Pass 1), then mapped to canonical taxonomy nodes (Pass 2).
-3. **Local embedding and matching** — `all-MiniLM-L6-v2` embeds concept descriptions locally (no external API calls). Matches scoring above τ = 0.50 are assigned credit via a deterministic 60/40 split.
-4. **Scoring** — Syllabus depth `D(t)` and topic coverage `Coverage(t)` are combined with interview topic importance `I(t)` to produce the composite score `S_comp` and the ranked `PriorityGap(t)` list.
+Needs Node.js 20+ for the dashboard (packages install on first run). Six pages: **Overview** (S_comp, confidence,
+data card, priority gaps, coverage by domain, known mapping limitations), **Compare** (all targets side by side),
+**Topic explorer** (all 83 topics), **Confidence** (insufficient data, fallback depth, unmapped terms), **Benchmark**,
+**Methodology**. Light and dark themes; laid out for a 1366×768 projector. See `dashboard/README.md`.
 
-## Methodology
+Re-running the pipeline:
 
-### 1. Taxonomy and Embedding Matching
-
-- **Taxonomy** (`taxonomy_v1.0.json`): a manually curated hierarchy covering DSA, DBMS, OS, Computer Networks, and System Design. Each node is tagged as `high_level_concept` (matched against syllabus units) or `granular_skill` (matched against interview questions), and carries a stable `topic_id` so renamed nodes remain trackable across versions.
-- **Embeddings**: local `all-MiniLM-L6-v2` cosine similarity. Matches below τ = 0.50 are logged to `unmapped_terms.log` for periodic manual review.
-- **60/40 topic credit split**:
-  - A single topic above threshold receives 100% credit.
-  - Multiple topics above threshold: the highest-similarity topic receives 60% (primary credit); the remaining 40% is split equally among the secondary topics.
-  - Exact similarity ties are broken alphabetically by `topic_id`.
-
-### 2. Presence and Depth Modeling
-
-**Presence:**
-
-$$C(t) = \begin{cases} 1 & \text{topic present in syllabus} \\ 0 & \text{topic absent} \end{cases}$$
-
-**Depth:** workload signals are normalized against fixed reference values ($R_{\text{unit\_hours}} = 10$, $R_{\text{slides}} = 20$, $R_{\text{lab\_hours}} = 10$, $R_{\text{lab\_count}} = 5$, $R_{\text{assignments}} = 5$). Signals that are unavailable for a given topic are excluded from the average rather than treated as zero.
-
-$$N(x) = \min\left(\frac{x}{R_x}, 1\right) \qquad D_{\text{norm}}(t) = \frac{\sum N(x)}{\text{available\_signals\_count}} \qquad D(t) = 1 + 4 \cdot D_{\text{norm}}(t)$$
-
-This bounds $D(t)$ to $1 \le D(t) \le 5$. If no depth signals are available, $D(t) = 1$ and the result is flagged `depth_status = "fallback"`, which is kept distinct from a genuinely measured depth of 1.
-
-**Normalized coverage:**
-
-$$\text{Coverage}(t) = C(t) \cdot \left[\frac{1 - e^{-\gamma D(t)}}{1 - e^{-5\gamma}}\right], \qquad \gamma = 0.5 \text{ (MVP baseline, calibrated later against pilot data)}$$
-
-Normalizing by $1 - e^{-5\gamma}$ ensures maximum measured depth ($D = 5$) maps to exactly 100% coverage while preserving diminishing returns.
-
-### 3. Interview Importance and Overall Score
-
-- **Report topic credit**: $W(r,t) = \max(\text{question-level credit for topic } t \text{ within report } r)$ — capped rather than summed, so repeated questions on the same topic within one report don't inflate its importance.
-- **Topic importance**: $I(t) = \dfrac{\sum_r W(r,t)}{\text{total\_reports}}$
-- **Composite score**:
-
-$$S_{\text{comp}} = \left(\frac{\sum_{t \in U} I(t) \cdot \text{Coverage}(t)}{\sum_{t \in U} I(t)}\right) \times 100, \qquad U = \{t \mid I(t) > 0\}$$
-
-### 4. Priority Gap Ranking
-
-$$\text{PriorityGap}(t) = I(t) \cdot (1 - \text{Coverage}(t))$$
-
-Topics are sorted in descending order of `PriorityGap(t)` to surface the highest-value preparation priorities first.
-
-## Data Schemas
-
-### Interview Report
-
-Stored under `data/raw/interviews/`:
-
-```json
-{
-  "report_id": "amz_sde1_001",
-  "company": "Amazon",
-  "role": "SDE-1",
-  "round": "Coding Round 1",
-  "question": "Given a binary tree, return its level-order traversal.",
-  "source": "Glassdoor (permissive license)",
-  "date": "2024-05-15"
-}
+```powershell
+python evaluation/run_all_targets.py        # results/<target>_v1.2_course_syllabi.json + results/COMPARISON.md
+python evaluation/export_topic_tables.py    # results/topics/ (per-topic tables for the dashboard)
 ```
 
-### Syllabus Processing
+Results files are versioned and not overwritten; delete a file deliberately to regenerate it. Adding a company needs
+only a data folder and one config entry (`docs/ADDING_A_COMPANY.md`).
 
-- Text-selectable PDFs only; scanned/image-based PDFs are unsupported in the MVP.
-- Extracts unit-level topics and numeric workload metrics: `unit_hours`, `slides`, `lab_hours`, `lab_count`, `assignments`.
-
-## Project Structure
+## Pipeline and methodology
 
 ```
-prepline/
-├── backend/          # API endpoints and pipeline orchestration
-├── dashboard/        # UI components and visualizations
-├── data/
-│   ├── raw/
-│   │   ├── interviews/  # Raw Amazon SDE-1 interview reports (JSON)
-│   │   └── syllabi/     # Input syllabus PDFs
-│   ├── processed/       # Extracted terms, embeddings, score caches
-│   └── taxonomy/        # taxonomy_v1.0.json
-├── pipeline/
-│   ├── __init__.py
-│   ├── interview_parser.py
-│   ├── syllabus_parser.py
-│   ├── keyword_abstraction.py
-│   ├── embeddings.py
-│   ├── taxonomy_mapper.py
-│   └── scoring.py
-├── evaluation/       # Benchmark scripts and pilot evaluation
-├── .gitignore
-├── README.md
-└── requirements.txt
+ Course PDFs (26)  -> boilerplate stripped -> RAKE concepts -> MiniLM vs high-level nodes -> Coverage(t)
+ Interview reports -> filtered questions   -> RAKE concepts -> MiniLM vs granular skills  -> Importance I(t)
+                                                                                  -> S_comp, PriorityGap(t)
 ```
 
-## Evaluation Strategy
+- **Taxonomy** (`data/taxonomy/taxonomy_v1.0.json`): 83 nodes in DSA, DBMS, OS, Computer Networks and System Design.
+  Syllabus units match `high_level_concept` nodes; interview questions match `granular_skill` nodes, which inherit
+  coverage from their nearest high-level ancestor.
+- **Matching:** local `all-MiniLM-L6-v2` cosine similarity against each node's description, τ = 0.50. With several
+  matches the best topic gets 60 % credit and the rest share 40 %. Unmatched terms go to `unmapped_terms.log`.
+- **Depth:** workload signals (unit hours, lab hours, experiment count) normalised by reference values;
+  $D(t) = 1 + 4 \cdot \text{mean}\,\min(x/R_x, 1) \in [1, 5]$, or $D = 1$ flagged *fallback* when no signal exists.
+- **Coverage:** $\text{Coverage}(t) = C(t)\cdot\frac{1-e^{-\gamma D(t)}}{1-e^{-5\gamma}}$, γ = 0.5 (a present topic at
+  fallback depth counts ≈ 43 % covered).
+- **Importance:** $I(t) = \frac{1}{N}\sum_r \max_{q\in r}\text{credit}(q,t)$ over the N reports with at least one usable
+  question (behavioural rounds, vague mentions and link-only questions are filtered out).
+- **Composite score:** $S_{\text{comp}} = 100\cdot\frac{\sum_{t\in U} I(t)\,\text{Coverage}(t)}{\sum_{t\in U} I(t)}$,
+  $U = \{t \mid I(t) > 0\}$, computed only when N ≥ 15.
+- **Priority gap:** $\text{PriorityGap}(t) = I(t)\,(1 - \text{Coverage}(t))$, ranked descending.
 
-1. **Ground-truth benchmark**
-   - 200+ manually verified `(raw_text, expected_taxonomy_node)` mappings, each pinned to a taxonomy version.
-   - Split 70% development / 15% validation / 15% test.
-   - Dev/validation data is used to compare sentence embeddings against TF-IDF and keyword-matching baselines and to tune the similarity threshold; final Precision/Recall/F1 is reported once on the untouched test split.
-2. **Pilot outcome validation**
-   - Topic-level coverage is compared against round-specific outcomes (e.g., System Design coverage vs. System Design round result) in an anonymized, consenting cohort, used to calibrate the depth parameter `γ`.
-   - Confounders (communication ability, question draw, interviewer variation, referrals, luck) are documented explicitly rather than absorbed into the score.
+## Data
 
-## MVP Exclusions
+| Target | Folder | Source |
+|---|---|---|
+| Amazon SDE-1 | `data/processed/amazon_sde1/` | GeeksforGeeks, 21 reports |
+| Microsoft SDE-1 | `data/processed/microsoft_sde1/` | GeeksforGeeks, 17 reports (interview dates mostly unknown) |
+| Google SWE new-grad / L3 | `data/processed/google_swe_l3/` | GeeksforGeeks, 16 reports |
+| Flipkart SDE-1 | `data/processed/flipkart_sde1/` | GeeksforGeeks, 20 reports |
 
-The following are explicitly out of scope for the MVP:
+Each folder has `reports.csv`, `questions.csv` (questions quoted verbatim; vague ones `needs_review=True`) and a README
+with inclusion rules and excluded pages. Every report's URL and date basis is in `data/SOURCES.md`. Syllabus inputs and
+their status are in `data/raw/syllabi/vit_syllabus_manifest.csv`.
 
-- OCR or image-based PDF parsing
-- Automated taxonomy clustering (HDBSCAN or LLM-based auto-generation)
-- Automated taxonomy migration or score-recalculation triggers
-- Supervised fine-tuning of embedding weights
-- Recency weighting and interview-round-criticality weighting
-- Institutional/cohort dashboards and multi-university support
+## Benchmark
 
-## Installation
+Phase 13, `results/benchmark/BENCHMARK.md`. 247 gold items (201 syllabus units from 25 courses + 46 Amazon interview
+questions), grouped 70/15/15 dev/val/test split (seed 20261022). Thresholds were chosen on dev, checked on val; test was
+never used for a choice (it was computed twice by accident, with identical numbers).
 
-```bash
-git clone <repository_url>
-cd prepline
+| Method | τ (dev) | Test accuracy | Test macro-F1 |
+|---|---|---|---|
+| (a) Keyword match on node names | 0.40 | 0.644 | 0.388 |
+| (b) TF-IDF, name + description | 0.30 | 0.533 | 0.200 |
+| (c) MiniLM, description only (production) | 0.55 | 0.533 | 0.213 |
+| (d) MiniLM, name + description | 0.40 | 0.489 | 0.338 |
 
-# Create and activate a virtual environment
-python -m venv .venv
+Production (c) has the best val macro-F1, so it is kept; dev and test favour (a)/(d), and val/test are small (35 and 45
+items), so a larger val set is needed before changing the matcher.
 
-# Windows
-.\.venv\Scripts\Activate.ps1
+**Gold labels:** κ = 0.812 is agreement between two independent LLM labellers (a Claude draft vs a fresh Claude
+subagent); their disagreements (56 rows) were adjudicated by the human owner; the other 191 rows are LLM cross-checked
+only, not individually human-reviewed (`evaluation/benchmark/ADJUDICATION.md`). Gold v1.0 is frozen and does not
+include BCSE203E, which was added to the syllabus afterwards.
 
-# Linux / macOS
-source .venv/bin/activate
+## Testing
 
-# Install dependencies
-pip install -r requirements.txt
+```powershell
+python -m pytest evaluation -q                   # Python suite (pipeline, API, data, benchmark)
+cd dashboard/web; npx playwright test            # dashboard end-to-end; refreshes dashboard/screenshots/
 ```
 
-**Requirements:** Python 3.10+, PyTorch, sentence-transformers, pdfplumber, pandas, numpy, scikit-learn.
+## Project structure
 
-## Usage
-
-```bash
-# Ingest and validate Amazon SDE-1 interview reports
-python -m pipeline.interview_parser --company Amazon --role SDE-1
-
-# Process a syllabus and calculate coverage
-python -m pipeline.scoring --syllabus data/raw/syllabi/sample_syllabus.pdf
+```
+backend/            FastAPI app: upload/validate/run (routes.py), read-only dashboard endpoints (dashboard.py)
+config/             scoring_v1.0–v1.2.json (frozen), targets.json, api.json
+dashboard/web/      Vite + React + TypeScript + Tailwind + Recharts dashboard, Playwright tests
+data/               raw syllabi and interviews, processed per-target folders, taxonomy, SOURCES.md
+docs/               ADDING_A_COMPANY.md, BACKLOG.md, plans and specs
+evaluation/         runners (run_full_pipeline, run_all_targets, export_topic_tables), tests, benchmark/
+pipeline/           parsing, abstraction, embeddings, taxonomy mapping, scoring
+results/            versioned results, COMPARISON.md, CHANGES_v1.x.md, topics/, benchmark/
+scripts/            start_demo.ps1
 ```
 
-## Project Status
+## Project status
 
 | Sprint | Phase(s) | Description | Status |
 |---|---|---|---|
-| 1 | Phase 1 | Environment & folder scaffolding | Completed |
-| 1 | Phase 2 | Amazon SDE-1 interview dataset ingestion | Completed |
-| 2 | Phase 3 | Versioned taxonomy definition (`taxonomy_v1.0.json`) | Completed |
-| 3 | Phases 4–6 | Two-pass NLP abstraction, local embeddings, credit mapper | Completed |
-| 4 | Phases 7–8 | Syllabus parsing & depth modeling | Completed |
-| 5 | Phases 9–12 | Scoring engine & priority gap ranking | Completed |
-| 6 | Phase 13 | Ground-truth benchmark & NLP evaluation | Pending |
-| 7 | Phases 14–15 | Backend API & dashboard | In progress (API completed; dashboard pending) |
-| 8 | Phase 16 | Pilot outcome validation & gamma calibration | Pending |
+| 1 | 1–2 | Scaffolding; interview dataset ingestion | Done |
+| 2 | 3 | Versioned taxonomy (`taxonomy_v1.0.json`) | Done |
+| 3 | 4–6 | Two-pass abstraction, local embeddings, credit mapper | Done |
+| 4 | 7–8 | Syllabus parsing (26 course PDFs), depth modelling | Done |
+| 5 | 9–12 | Importance, S_comp, priority gaps, unmapped-term logging | Done |
+| 6 | 13 | Ground-truth benchmark (gold v1.0, 4 matchers) | Done |
+| 7 | 14–15 | Backend API and dashboard | Done |
+| 8 | 16 | Pilot outcome validation and γ calibration | Pending |
+| 9 | — | Optional: DSA prerequisite graph and study roadmap | Optional, not started |
 
-An optional, time-permitting extension (Sprint 9: DSA prerequisite graph and study roadmap generation) is scoped separately and is only attempted once Sprints 1–8 above are complete, benchmarked, and stable.
+## Limitations
+
+- **Mapping errors are in every score.** Nodes are matched by description only, so DAA's "Dynamic Programming" module
+  misses `dsa.dp`; Java "IO Streams" matches message queues and React "Routing" matches the network layer (false
+  positives); there are no nodes for hashing, greedy algorithms, interval problems, string matching or object-oriented
+  design. All listed in `docs/BACKLOG.md` → *Known mapping limitations*.
+- **Small, public, convenience-sampled interview data** (16–21 reports per company, mostly undated, from one site);
+  Google is below the density gate.
+- **Scores are close to the ceiling (88–90) and depend on small scoring universes (9–14 topics).**
+- **Benchmark val/test are small**, and most gold labels were LLM-produced (see [Benchmark](#benchmark)).
+- **No outcome validation yet:** γ and the depth reference values are uncalibrated (Phase 16).
+- Out of scope: OCR, automated taxonomy generation, per-student electives, authentication on the API.
+
+## Future work
+
+1. Phase 16 pilot: compare topic coverage with round-level interview outcomes in a consenting cohort; calibrate γ.
+2. Taxonomy v1.1 with the missing nodes, and a matcher that uses node names (candidate from the benchmark, needs a
+   larger validation set and a new config version).
+3. More interview reports (Google first) and more sources than GeeksforGeeks.
+4. Human review of the 191 LLM-cross-checked gold rows; extend the benchmark to BCSE203E.
+5. Optional Sprint 9: prerequisite graph and study roadmap per priority gap.

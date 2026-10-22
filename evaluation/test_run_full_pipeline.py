@@ -87,7 +87,7 @@ COURSE_GLOB = "B[CM]*.pdf"
 @pytest.mark.skipif(not rfp.resolve_pdf_paths([], SYLLABI_DIR, COURSE_GLOB),
                     reason="course syllabus PDFs are gitignored and not present")
 def test_amazon_results_identical_after_target_refactor(tmp_path):
-    """Re-runs Amazon SDE-1 from data/processed/amazon_sde1/ (config-driven target) against the 27 course PDFs."""
+    """Re-runs Amazon SDE-1 from data/processed/amazon_sde1/ (config-driven target) against the 28 course PDFs (26 core courses)."""
     with open(AMAZON_V1_2, encoding="utf-8") as f:
         stored = json.load(f)
     target = dict(find_target("Amazon", "SDE-1"), excluded_csv=str(tmp_path / "excluded.csv"))

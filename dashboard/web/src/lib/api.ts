@@ -122,6 +122,7 @@ export interface BenchmarkResponse {
     disagree: number;
     rule_adjudicated: number;
     human_adjudicated: number;
+    llm_cross_checked_only: number;
   };
   limitations: string[];
   recommendation: string;

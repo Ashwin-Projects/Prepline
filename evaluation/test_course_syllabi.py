@@ -329,7 +329,7 @@ def test_manifest_has_one_row_per_core_course_file():
 
     with open(os.path.join(ROOT, "data", "raw", "syllabi", "vit_syllabus_manifest.csv"), encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
-    course_rows = [r for r in rows if r["component"] in ("theory", "lab")]
+    course_rows = [r for r in rows if r["component"] in ("theory", "lab", "embedded")]
     # every core course has at least one row, in allowlist order (embedded E courses have a theory and a lab file)
     assert list(dict.fromkeys(r["course_code"] for r in course_rows)) == load_scoring_config()["syllabus"]["core_courses"]
     for row in course_rows:
@@ -352,7 +352,10 @@ def test_manifest_has_one_row_per_core_course_file():
     assert [(r["text_layer"], r["text_source"]) for r in by_code["BCSE102L"]] == [("no", "manual_transcription")]
     for code in ("BCSE101E", "BCSE103E"):  # identical theory/lab copies: the run reads one, the other is a duplicate
         assert sorted(r["text_source"] for r in by_code[code]) == ["duplicate_file", "manual_transcription"]
-    assert by_code["BCSE203E"][0]["text_layer"] == "missing"
+    # BCSE203E (2026-10-22, second batch): theory and lab in one text-layer PDF -> one embedded row; core is 26/26
+    assert [(r["component"], r["ltpc_status"], r["text_layer"], r["text_source"], r["used_in_course_run"])
+            for r in by_code["BCSE203E"]] == [("embedded", "complete", "yes", "pdf", "yes")]
+    assert not [r for r in course_rows if r["text_layer"] == "missing"]
     programme = [r for r in rows if r["component"] == "programme"]
     assert len(programme) == 1 and programme[0]["used_in_course_run"] == "no"
 

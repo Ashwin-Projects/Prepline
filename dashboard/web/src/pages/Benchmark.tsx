@@ -22,7 +22,7 @@ export default function Benchmark() {
     <>
       <PageHeader
         title="Benchmark"
-        lede="Four topic matchers scored against the v1.0 gold labels (LLM-drafted, independently cross-checked, disagreements settled by the owner). Thresholds were chosen on dev and checked on val; test was held out from every choice."
+        lede="Four topic matchers scored against the v1.0 gold labels. Thresholds were chosen on dev and checked on val; test was never used for a choice (it was computed twice by accident, with identical numbers)."
       />
       {error && <ErrorState message={error} />}
       {loading && !data && <Loading />}
@@ -65,19 +65,21 @@ export default function Benchmark() {
             </p>
           </Card>
 
-          <Card className="col-span-4 max-[1150px]:col-span-12" title="Label agreement" subtitle="Gold labels: LLM draft, independent second labeller, human adjudication." testId="kappa-card">
+          <Card className="col-span-4 max-[1150px]:col-span-12" title="Label agreement" subtitle="Between two independent LLM labellers: a Claude draft and a fresh Claude subagent." testId="kappa-card">
             <p className="tabular text-[48px] font-semibold leading-none text-ink" data-testid="kappa">
               {data.label_agreement.kappa_draft_vs_second_labeller.toFixed(3)}
             </p>
-            <p className="mt-1 text-[13px] text-ink-3">Cohen's κ, draft vs second labeller (primary label)</p>
+            <p className="mt-1 text-[13px] text-ink-3">Cohen's κ on the primary label. This is LLM–LLM agreement, not agreement with a human.</p>
             <dl className="tabular mt-4 grid grid-cols-3 gap-2 text-[14px]">
               <div><dt className="text-[12px] text-ink-3">Agree</dt><dd className="font-medium">{data.label_agreement.agree}</dd></div>
               <div><dt className="text-[12px] text-ink-3">Partial</dt><dd className="font-medium">{data.label_agreement.partial}</dd></div>
               <div><dt className="text-[12px] text-ink-3">Disagree</dt><dd className="font-medium">{data.label_agreement.disagree}</dd></div>
             </dl>
             <p className="mt-3 text-[13px] text-ink-2">
-              {data.label_agreement.rule_adjudicated + data.label_agreement.human_adjudicated} rows settled by the owner
-              ({data.label_agreement.rule_adjudicated} by rule, {data.label_agreement.human_adjudicated} individually).
+              Disagreements were adjudicated by the human owner: {data.label_agreement.rule_adjudicated + data.label_agreement.human_adjudicated}{" "}
+              rows ({data.label_agreement.rule_adjudicated} by rule, {data.label_agreement.human_adjudicated} individually). The other{" "}
+              <strong className="font-semibold text-ink" data-testid="cross-checked-only">{data.label_agreement.llm_cross_checked_only}</strong> rows are
+              LLM cross-checked only, not individually human-reviewed.
             </p>
           </Card>
 

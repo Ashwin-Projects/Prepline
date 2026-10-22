@@ -7,7 +7,8 @@ import { useTarget } from "../lib/target";
 import { useApi } from "../lib/useApi";
 import { GapBars } from "../components/GapBars";
 import { TargetSelect } from "../components/TargetSelect";
-import { Card, ConfidenceBadge, ErrorState, GateChip, InsufficientState, Loading, PageHeader, Stat } from "../components/ui";
+import { Card, ConfidenceBadge, ErrorState, GateChip, InsufficientState, Loading, PageHeader, ProvisionalChip, Stat } from "../components/ui";
+import { MappingLimitations } from "../components/MappingLimitations";
 
 export interface DomainCoverage {
   domain: string;
@@ -76,10 +77,11 @@ export default function Overview() {
                     <span className="ml-1 text-[22px] font-medium text-ink-3">/ 100</span>
                   </p>
                   <ConfidenceBadge level={confidence.level} />
+                  <ProvisionalChip />
                 </div>
                 <p className="mt-3 max-w-[38ch] text-[14px] text-ink-2">
                   Importance-weighted syllabus coverage of the {data.result.scoring_universe_size} topics this company's
-                  interviewers ask about.
+                  interviewers ask about. Each company has its own topic set, so similar scores are not a ranking.
                 </p>
                 {confidence.reasons.length > 0 && (
                   <ul className="mt-2 list-disc space-y-0.5 pl-4 text-[13px] text-ink-3">
@@ -218,6 +220,8 @@ export default function Overview() {
             </table>
             </div>
           </Card>
+
+          <MappingLimitations className="col-span-12" />
         </div>
       )}
     </>
