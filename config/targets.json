@@ -1,0 +1,7 @@
+{
+  "description": "Supported company/role targets. Adding one needs only a data folder (reports.csv + questions.csv, see docs/ADDING_A_COMPANY.md) and one entry here. Not a scoring parameter: adding a target does not change any other target's results.",
+  "targets": [
+    {"id": "amazon_sde1", "company": "Amazon", "role": "SDE-1", "data_dir": "data/processed/amazon_sde1"},
+    {"id": "microsoft_sde1", "company": "Microsoft", "role": "SDE-1", "data_dir": "data/processed/microsoft_sde1"}
+  ]
+}

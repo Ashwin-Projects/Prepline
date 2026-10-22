@@ -119,7 +119,7 @@ prepline/
 
 ## Key Decisions, Rules & Schemas Established
 
-- **Canonical Dataset Location**: Processed CSVs live under `data/processed/reports.csv` and `data/processed/questions.csv`.
+- **Canonical Dataset Location**: One folder per company/role target, `data/processed/<target_id>/` (`reports.csv`, `questions.csv`, generated `excluded_questions.csv`); targets are listed in `config/targets.json` (Amazon SDE-1 data moved to `data/processed/amazon_sde1/` on 2026-10-22). See `docs/ADDING_A_COMPANY.md` and `data/SOURCES.md`.
 - **Density Gate Constraint**: Scoring requires a minimum density of `MIN_REPORTS = 15` unique deduplicated reports per company/role pair. Current Amazon SDE-1 count is **21 unique reports**; density gate is **PASSED**.
 - **Report ID Continuation**: Report IDs must be assigned sequentially (`AMZ001`..`AMZ011`, `AMZ013`..`AMZ022`). Never reuse removed duplicate IDs (`AMZ012`).
 - **Parsing Rules for Questions**:
@@ -175,7 +175,7 @@ prepline/
 
 1. **Read `CLAUDE.md` First**: Always inspect this file before starting work on PREPLINE to get up-to-date context.
 2. **Do Not Modify Raw Data**: `amazon_sde1_interviews.csv` must remain unmodified as the raw baseline.
-3. **Data Sources for Pipeline**: When building or running `pipeline/interview_parser.py` or scoring modules, consume `reports.csv` and `questions.csv` from `data/processed/`.
+3. **Data Sources for Pipeline**: When building or running `pipeline/interview_parser.py` or scoring modules, consume `reports.csv` and `questions.csv` from the target folder `data/processed/<target_id>/` (config/targets.json).
 4. **Preserve Taxonomy Versioning**: All concept mappings and evaluations must pin to `taxonomy_version` (e.g., `v1.0`).
 
 ---

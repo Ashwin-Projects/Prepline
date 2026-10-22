@@ -14,10 +14,11 @@ from fastapi.testclient import TestClient
 import backend.routes as routes
 from backend.app import app
 from pipeline import scoring
+from pipeline.config import find_target
 from pipeline.interview_parser import count_reports, filter_questions, write_excluded_questions
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-REAL_QUESTIONS = os.path.join(ROOT, "data", "processed", "questions.csv")
+REAL_QUESTIONS = os.path.join(ROOT, "data", "processed", "amazon_sde1", "questions.csv")
 
 
 def _row(report_id="R1", round_type="technical", question_text="Two Sum", needs_review="False", **extra):
@@ -153,7 +154,8 @@ def fourteen_report_csv(tmp_path):
 
 
 def test_density_gate_below_15_after_filtering(fourteen_report_csv, monkeypatch):
-    monkeypatch.setattr(routes, "QUESTIONS_CSV_PATH", fourteen_report_csv)
+    target = dict(find_target("Amazon", "SDE-1"), questions_csv=fourteen_report_csv)
+    monkeypatch.setattr(routes, "TARGETS", [target])
     client = TestClient(app)
     data = client.post("/api/v1/validate-target", json={"company": "Amazon", "role": "SDE-1"}).json()
     assert data["report_count"] == 14
