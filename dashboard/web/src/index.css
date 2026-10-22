@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "@fontsource/fira-sans/400.css";
+@import "@fontsource/fira-sans/500.css";
+@import "@fontsource/fira-sans/600.css";
+@import "@fontsource/fira-sans/700.css";
+@import "@fontsource/fira-code/400.css";
+@import "@fontsource/fira-code/500.css";
+@import "katex/dist/katex.min.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens (Swiss / minimal, data-dense). Components use these, never raw hex. */
+@theme {
+  --font-sans: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", ui-monospace, monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-series: var(--series);
+  --color-track: var(--track);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-bad: var(--bad);
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --ink: #0f172a;
+  --ink-2: #475569;
+  --ink-3: #64748b;
+  --line: #dde3ea;
+  --primary: #1e40af;
+  --primary-soft: #e3eafb;
+  --series: #2a78d6;
+  --track: #e6ebf1;
+  --warn: #92400e;
+  --warn-soft: #fdf3e1;
+  --good: #166534;
+  --good-soft: #e3f4e8;
+  --bad: #b91c1c;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0f1115;
+  --surface: #171a20;
+  --surface-2: #1f232b;
+  --ink: #eef0f3;
+  --ink-2: #b4bac4;
+  --ink-3: #8c93a0;
+  --line: #2c313a;
+  --primary: #8fb0ff;
+  --primary-soft: #1d2a48;
+  --series: #3987e5;
+  --track: #262b34;
+  --warn: #f2c27b;
+  --warn-soft: #3a2d17;
+  --good: #8fd6a4;
+  --good-soft: #17301f;
+  --bad: #f19a9a;
+  color-scheme: dark;
+}
+
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font-sans); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Motion: subtle, transform/opacity only, reduced-motion safe. */
+.press { transition: transform 160ms var(--ease-out-strong); }
+.press:active { transform: scale(0.97); }
+
+.page-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms var(--ease-out-strong), transform 200ms var(--ease-out-strong);
+  @starting-style { opacity: 0; transform: translateY(6px); }
+}
+
+.bar-grow {
+  transform-origin: left center;
+  transform: scaleX(1);
+  transition: transform 320ms var(--ease-out-strong);
+  transition-delay: calc(var(--i, 0) * 30ms);
+  @starting-style { transform: scaleX(0.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press:active { transform: none; }
+  .page-enter { transition: opacity 120ms linear; transform: none; @starting-style { transform: none; } }
+  .bar-grow { transition: none; }
+}
+
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }

@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 
 import backend.routes as routes
 from backend.routes import router as api_router
+from backend.dashboard import router as dashboard_router
 
 # Multipart framing around the file is small; anything this far over the file limit is rejected
 # from its Content-Length before the body is read or spooled to disk.
@@ -51,6 +52,7 @@ async def unhandled_error(request: Request, exc: Exception):
 
 # Register API routes
 app.include_router(api_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")
