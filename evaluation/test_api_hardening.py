@@ -101,7 +101,7 @@ def _preflight(origin):
 
 
 def test_cors_allowlist_in_config():
-    assert load_api_config()["cors_allowed_origins"] == ["http://localhost:8501"]
+    assert load_api_config()["cors_allowed_origins"] == ["http://localhost:8501", "http://localhost:5173"]
 
 
 def test_cors_rejects_unknown_origin():
