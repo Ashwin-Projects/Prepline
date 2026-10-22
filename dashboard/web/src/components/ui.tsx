@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AlertTriangle, CheckCircle2, CircleHelp, Loader2, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, CircleHelp, XCircle } from "lucide-react";
 import type { ConfidenceLevel } from "../lib/confidence";
 
 export function Card({ title, subtitle, children, className = "", testId }: {
@@ -67,11 +67,17 @@ export function GateChip({ passed, count, min }: { passed: boolean; count: numbe
   );
 }
 
+// Skeleton in the shape of a card grid, so content does not jump when data arrives.
 export function Loading({ label = "Loading" }: { label?: string }) {
   return (
-    <div className="flex items-center gap-2 py-10 text-ink-3" role="status">
-      <Loader2 size={16} className="animate-spin motion-reduce:animate-none" aria-hidden="true" />
-      {label}…
+    <div role="status" aria-label={`${label}…`} className="grid grid-cols-12 gap-4">
+      {["col-span-5", "col-span-7", "col-span-6", "col-span-6"].map((span, i) => (
+        <div
+          key={i}
+          className={`${span} h-40 animate-pulse rounded-lg border border-line bg-surface motion-reduce:animate-none max-[1100px]:col-span-12`}
+        />
+      ))}
+      <span className="sr-only">{label}…</span>
     </div>
   );
 }

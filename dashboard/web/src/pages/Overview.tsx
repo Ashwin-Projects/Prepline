@@ -65,9 +65,9 @@ export default function Overview() {
       {data && (
         <div className="grid grid-cols-12 gap-4" data-testid="overview">
           <Card className="col-span-5 max-[1100px]:col-span-12" testId="score-card">
-            <p className="text-[13px] font-medium uppercase tracking-wide text-ink-3">
-              Composite alignment · {data.target.company} {data.target.role}
-            </p>
+            <h2 className="text-[15px] font-semibold text-ink">
+              Composite alignment <span className="font-normal text-ink-2">· {data.target.company} {data.target.role}</span>
+            </h2>
             {confidence ? (
               <>
                 <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-2">
@@ -77,11 +77,17 @@ export default function Overview() {
                   </p>
                   <ConfidenceBadge level={confidence.level} />
                 </div>
-                <ul className="mt-3 space-y-0.5 text-[13px] text-ink-2">
-                  {confidence.reasons.map((r) => (
-                    <li key={r}>· {r}</li>
-                  ))}
-                </ul>
+                <p className="mt-3 max-w-[38ch] text-[14px] text-ink-2">
+                  Importance-weighted syllabus coverage of the {data.result.scoring_universe_size} topics this company's
+                  interviewers ask about.
+                </p>
+                {confidence.reasons.length > 0 && (
+                  <ul className="mt-2 list-disc space-y-0.5 pl-4 text-[13px] text-ink-3">
+                    {confidence.reasons.map((r) => (
+                      <li key={r}>{r}</li>
+                    ))}
+                  </ul>
+                )}
               </>
             ) : (
               <div className="mt-3 space-y-3">
@@ -183,7 +189,7 @@ export default function Overview() {
                     fill="var(--series)"
                     radius={[0, 4, 4, 0]}
                     barSize={16}
-                    animationDuration={350}
+                    isAnimationActive={false}
                     label={{
                       position: "right",
                       formatter: (v: unknown) => pct(Number(v)),

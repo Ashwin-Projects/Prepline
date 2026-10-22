@@ -95,7 +95,7 @@ export default function Benchmark() {
                     itemStyle={{ color: "var(--ink-2)" }}
                     formatter={(v: unknown) => [num(Number(v)), "Test macro-F1"]}
                   />
-                  <Bar dataKey="f1" fill="var(--series)" radius={[4, 4, 0, 0]} barSize={44} animationDuration={350}>
+                  <Bar dataKey="f1" fill="var(--series)" radius={[4, 4, 0, 0]} barSize={44} isAnimationActive={false}>
                     <LabelList dataKey="f1" position="top" formatter={(v: unknown) => num(Number(v))} fill="var(--ink)" fontSize={12} />
                   </Bar>
                 </BarChart>
