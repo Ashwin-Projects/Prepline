@@ -171,30 +171,49 @@ test("methodology: pilot section shows in progress before any results", async ({
   await page.route("**/api/v1/pilot", (r) => r.fulfill({ json: { status: "in_progress", results: null } }));
   await page.goto("/methodology");
   await expect(page.getByTestId("pilot-status")).toContainText("In progress");
-  await expect(page.getByTestId("pilot")).toContainText("M1 Topic hit rate");
-  await expect(page.getByTestId("pilot")).toContainText("no inferential statistics");
+  await expect(page.getByTestId("pilot")).toContainText("Track A");
+  await expect(page.getByTestId("pilot")).toContainText("Track B");
+  await expect(page.getByTestId("pilot")).toContainText("No inferential statistics");
+  await expect(page.getByTestId("pilot")).not.toContainText("faculty");
 });
 
-test("methodology: pilot section shows the analysed numbers", async ({ page }) => {
-  const summary = (n: number, m1: number | null, m2: number | null, m3: number) => ({
+test("methodology: pilot section shows per-track numbers", async ({ page }) => {
+  const a = (n: number, m1: number | null, m2: number | null, m3: number) => ({
     n, M1_topic_hit_rate: m1, M1_topic_hit_rate_n: m1 === null ? 0 : n, M2_gap_relevance: m2,
     M2_gap_relevance_n: m2 === null ? 0 : n, M3_usefulness: m3, M3_usefulness_n: n,
   });
+  const b = (n: number, m2b: number, m3: number) => ({ n, M2b_perceived_match: m2b, M2b_perceived_match_n: n, M3_usefulness: m3, M3_usefulness_n: n });
   await page.route("**/api/v1/pilot", (r) =>
     r.fulfill({
       json: {
         status: "results_available",
         results: {
-          generated_at: "2026-11-20T10:00:00+00:00", n_responses: 13, n_excluded_no_consent: 1, synthetic: false,
-          by_company: { "Amazon SDE-1": summary(5, 0.62, 3.4, 4.1), "Google SWE-L3": summary(2, null, null, 3.5) },
-          overall: summary(12, 0.58, 3.2, 3.9),
+          generated_at: "2026-11-20T10:00:00+00:00", n_responses: 21, n_excluded_no_consent: 1, synthetic: false,
+          tracks: {
+            A: { by_company: { "Amazon SDE-1": a(5, 0.62, 3.4, 4.1), "Google SWE-L3": a(2, null, null, 3.5) }, overall: a(12, 0.58, 3.2, 3.9) },
+            B: { by_company: { "Amazon SDE-1": b(4, 3.25, 3.8) }, overall: b(8, 3.1, 3.6) },
+          },
+          M3_all_participants: { n: 20, M3_usefulness: 3.78, M3_usefulness_n: 20 },
         },
       },
     }),
   );
   await page.goto("/methodology");
-  await expect(page.getByTestId("pilot-status")).toContainText("Results from 12 participants (1 excluded");
-  await expect(page.getByTestId("pilot-table")).toContainText("62% (5)");
-  await expect(page.getByTestId("pilot-table")).toContainText("n/a");
+  await expect(page.getByTestId("pilot-status")).toContainText("Track A 12, Track B 8 participants");
+  await expect(page.getByTestId("pilot-table-a")).toContainText("62% (5)");
+  await expect(page.getByTestId("pilot-table-a")).toContainText("n/a");
+  await expect(page.getByTestId("pilot-table-b")).toContainText("3.25 (4)");
   await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
+test("methodology: retrospective validation is shown and labelled", async ({ page }) => {
+  await page.goto("/methodology");
+  const card = page.getByTestId("retro-validation");
+  await expect(card).toContainText("Retrospective validation — not the participant pilot");
+  await expect(page.getByTestId("retro-table").locator("tbody tr")).toHaveCount(3);
+  for (const company of ["Amazon SDE-1", "Microsoft SDE-1", "Flipkart SDE-1"]) {
+    await expect(page.getByTestId("retro-table")).toContainText(company);
+  }
+  await expect(page.getByTestId("retro-table")).not.toContainText("Google");
+  await page.getByTestId("retro-validation").screenshot({ path: `${SHOTS}/6b-methodology-retro-validation.png` });
 });

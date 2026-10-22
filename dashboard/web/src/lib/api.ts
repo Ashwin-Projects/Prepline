@@ -136,12 +136,19 @@ export async function getJson<T>(path: string, signal?: AbortSignal): Promise<T>
 
 export interface PilotSummary {
   n: number;
-  M1_topic_hit_rate: number | null;
-  M1_topic_hit_rate_n: number;
-  M2_gap_relevance: number | null;
-  M2_gap_relevance_n: number;
+  M1_topic_hit_rate?: number | null;
+  M1_topic_hit_rate_n?: number;
+  M2_gap_relevance?: number | null;
+  M2_gap_relevance_n?: number;
+  M2b_perceived_match?: number | null;
+  M2b_perceived_match_n?: number;
   M3_usefulness: number | null;
   M3_usefulness_n: number;
+}
+
+export interface PilotTrack {
+  by_company: Record<string, PilotSummary>;
+  overall: PilotSummary;
 }
 
 export interface PilotResponse {
@@ -151,7 +158,21 @@ export interface PilotResponse {
     n_responses: number;
     n_excluded_no_consent: number;
     synthetic: boolean;
-    by_company: Record<string, PilotSummary>;
-    overall: PilotSummary;
+    tracks: { A: PilotTrack; B: PilotTrack };
+    M3_all_participants: PilotSummary;
   };
+}
+
+export interface ValidationCompany {
+  target_id: string;
+  label: string;
+  n_reports: number;
+  n_folds_scored: number;
+  hit_rate: number | null;
+  baseline: { mean: number; p2_5: number; p97_5: number; draws: number; seed: number };
+}
+
+export interface ValidationResponse {
+  available: boolean;
+  results: null | { label: string; generated_at: string; top_k: number; draws: number; seed: number; companies: ValidationCompany[] };
 }

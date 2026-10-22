@@ -1,5 +1,7 @@
 """
-Phase 16 pilot: the single source of truth for the Google Form, its CSV export template and the analysis.
+Phase 16 pilot: the single source of truth for the Google Form, its Apps Script, its CSV export template and the
+analysis. Two student tracks: A = took an OA/interview (topics asked, gap ratings, usefulness); B = any CSE student who
+looks at the dashboard for 5 minutes (one perceived-match rating, usefulness).
 
 Question titles and the company profiles (top-10 important topics for M1, top-10 priority gaps for M2) come from the
 saved v1.2 results and topic tables, so the form, `data/pilot/pilot_template.csv` and `analyze_pilot.py` always agree.
@@ -16,13 +18,19 @@ TOPICS_DIR = os.path.join(ROOT, "results", "topics")
 TAXONOMY_PATH = os.path.join(ROOT, "data", "taxonomy", "taxonomy_v1.0.json")
 FORM_PATH = os.path.join(ROOT, "docs", "pilot", "FORM.md")
 TEMPLATE_PATH = os.path.join(ROOT, "data", "pilot", "pilot_template.csv")
+SCRIPT_PATH = os.path.join(ROOT, "docs", "pilot", "create_form.gs")
 RESULTS_VERSION = "v1.2"
 TOP_N = 10
 
 CONSENT = "Consent"
 CONSENT_YES = "I have read the information sheet and agree that my anonymised answers are used in the PREPLINE pilot"
 PARTICIPANT = "Participant ID (given to you by the researcher, e.g. P01)"
+TRACK = "Which describes you?"
+TRACK_A = "I took an online assessment or interview with one of these companies (any outcome, including internships)"
+TRACK_B = "I have not; I will look at the PREPLINE dashboard for about 5 minutes"
 COMPANY = "Company and role you interviewed for"
+COMPANY_B = "Company profile you looked at on the dashboard"
+PERCEIVED = "These gaps match my perceived weak areas"
 ROLE = "Exact role title (as in the offer or invitation)"
 ROUNDS = "Rounds you took part in"
 TOPICS = "Topics you were actually asked about"
@@ -70,15 +78,25 @@ def topic_options() -> List[str]:
     return [n["name"] for n in nodes if n["type"] == "granular_skill"]
 
 
+def gap_row(rank: int, topic: str) -> str:
+    return f"{rank}. {topic}"
+
+
 def gap_column(label: str, rank: int, topic: str) -> str:
     """Google Forms exports a multiple-choice grid as '<question title> [<row>]'."""
-    return f"{GAP_PREFIX} {label} [{rank}. {topic}]"
+    return f"{GAP_PREFIX} {label} [{gap_row(rank, topic)}]"
+
+
+def scored_profiles() -> List[Dict[str, Any]]:
+    """Targets with a PREPLINE profile (top priority gaps); Track B can only look at these."""
+    return [p for p in profiles() if p["gaps"]]
 
 
 def columns() -> List[str]:
-    cols = ["Timestamp", CONSENT, PARTICIPANT, COMPANY, ROLE, ROUNDS, TOPICS]
+    cols = ["Timestamp", CONSENT, PARTICIPANT, TRACK, COMPANY, ROLE, ROUNDS, TOPICS]
     for p in profiles():
         cols += [gap_column(p["label"], i, topic) for i, topic in enumerate(p["gaps"], 1)]
+    cols += [COMPANY_B, PERCEIVED]
     cols += [f"{USEFULNESS} [{item}]" for item in USEFULNESS_ITEMS]
     return cols + [COMMENTS]
 
