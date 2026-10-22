@@ -19,6 +19,7 @@
     "results_suffix": "course_syllabi",
     "topics_dir": "results/topics",
     "benchmark_file": "results/benchmark/benchmark_v1.0.json",
-    "pilot_results": "results/pilot/pilot_results.json"
+    "pilot_results": "results/pilot/pilot_results.json",
+    "retro_validation": "results/validation/retro_validation.json"
   }
 }

@@ -3,37 +3,74 @@ import { date, num, pct } from "../lib/format";
 import { useApi } from "../lib/useApi";
 import { Card } from "./ui";
 
-const METRICS = [
-  ["M1 Topic hit rate", "Share of the topics a student was actually asked that are in PREPLINE's top-10 important topics for that company."],
-  ["M2 Gap relevance", "Mean 1–5 rating of “this gap matched my real weak areas” over the top-10 gaps shown."],
-  ["M3 Usefulness", "Mean of 5 usability items (1–5)."],
+const TRACKS = [
+  ["Track A", "Students who took an online assessment or interview (any outcome, internships included): topics asked, top-10 gap ratings, usefulness."],
+  ["Track B", "Any CSE student after about 5 minutes on this dashboard: “these gaps match my perceived weak areas” (1–5), usefulness."],
 ];
 
-function cell(value: number | null, n: number, asPct = false) {
-  return value === null ? "n/a" : `${asPct ? pct(value) : num(value, 2)} (${n})`;
+function cell(value: number | null | undefined, n: number | undefined, asPct = false) {
+  return value === null || value === undefined ? "n/a" : `${asPct ? pct(value) : num(value, 2)} (${n ?? 0})`;
 }
 
-function Row({ label, s }: { label: string; s: PilotSummary }) {
+const th = "px-2 py-1.5 text-right font-medium";
+const td = "tabular px-2 py-1.5 text-right";
+
+function TrackTable({ title, rows, kind, testId }: {
+  title: string;
+  rows: [string, PilotSummary][];
+  kind: "A" | "B";
+  testId: string;
+}) {
   return (
-    <tr className="border-b border-line last:border-b-0">
-      <td className="py-1.5 pr-3 text-ink">{label}</td>
-      <td className="tabular px-2 py-1.5 text-right">{s.n}</td>
-      <td className="tabular px-2 py-1.5 text-right">{cell(s.M1_topic_hit_rate, s.M1_topic_hit_rate_n, true)}</td>
-      <td className="tabular px-2 py-1.5 text-right">{cell(s.M2_gap_relevance, s.M2_gap_relevance_n)}</td>
-      <td className="tabular py-1.5 pl-2 text-right">{cell(s.M3_usefulness, s.M3_usefulness_n)}</td>
-    </tr>
+    <div>
+      <h3 className="mb-1 text-[13px] font-semibold text-ink">{title}</h3>
+      <table className="w-full text-[14px]" data-testid={testId}>
+        <thead>
+          <tr className="border-b border-line text-ink-2">
+            <th scope="col" className="py-1.5 pr-3 text-left font-medium">Company</th>
+            <th scope="col" className={th}>n</th>
+            {kind === "A" ? (
+              <>
+                <th scope="col" className={th}>M1 hit rate (n)</th>
+                <th scope="col" className={th}>M2 relevance (n)</th>
+              </>
+            ) : (
+              <th scope="col" className={th}>M2b perceived match (n)</th>
+            )}
+            <th scope="col" className={th}>M3 usefulness (n)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([label, s]) => (
+            <tr key={label} className="border-b border-line last:border-b-0">
+              <td className="py-1.5 pr-3 text-ink">{label}</td>
+              <td className={td}>{s.n}</td>
+              {kind === "A" ? (
+                <>
+                  <td className={td}>{cell(s.M1_topic_hit_rate, s.M1_topic_hit_rate_n, true)}</td>
+                  <td className={td}>{cell(s.M2_gap_relevance, s.M2_gap_relevance_n)}</td>
+                </>
+              ) : (
+                <td className={td}>{cell(s.M2b_perceived_match, s.M2b_perceived_match_n)}</td>
+              )}
+              <td className={td}>{cell(s.M3_usefulness, s.M3_usefulness_n)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
-// Phase 16 pilot: pre-registered metrics while in progress, and the descriptive results once analysed.
+// Phase 16 pilot (students only, two tracks): pre-registered design while in progress, descriptive results once analysed.
 export function PilotCard({ className = "" }: { className?: string }) {
   const { data } = useApi<PilotResponse>("/api/v1/pilot");
   const results = data?.results ?? null;
   return (
     <Card
       className={className}
-      title="Pilot (Phase 16)"
-      subtitle="Small descriptive pilot with VIT CSE students who interviewed at these companies; pre-registered in docs/pilot/PILOT_PROTOCOL.md."
+      title="Participant pilot (Phase 16)"
+      subtitle="Students only, two tracks; pre-registered in docs/pilot/PILOT_PROTOCOL.md. Descriptive only, reported per track with its n."
       testId="pilot"
     >
       {!results ? (
@@ -41,8 +78,8 @@ export function PilotCard({ className = "" }: { className?: string }) {
           <p className="inline-flex items-center rounded-full bg-warn-soft px-2.5 py-0.5 text-[13px] font-medium text-warn" data-testid="pilot-status">
             In progress — no responses analysed yet
           </p>
-          <dl className="grid grid-cols-3 gap-4 text-[13px] max-[900px]:grid-cols-1">
-            {METRICS.map(([name, detail]) => (
+          <dl className="grid grid-cols-2 gap-4 text-[13px] max-[900px]:grid-cols-1">
+            {TRACKS.map(([name, detail]) => (
               <div key={name}>
                 <dt className="font-medium text-ink">{name}</dt>
                 <dd className="text-ink-2">{detail}</dd>
@@ -50,36 +87,30 @@ export function PilotCard({ className = "" }: { className?: string }) {
             ))}
           </dl>
           <p className="text-[13px] text-ink-3">
-            Descriptive only: no inferential statistics at n = 10–20. γ calibration is deferred (it needs round-level
-            outcomes and a larger sample).
+            No inferential statistics at n = 10–20 per track. γ calibration is deferred (it needs round-level outcomes
+            and a larger sample).
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <p className="text-[13px] text-ink-2" data-testid="pilot-status">
-            Results from {results.overall.n} participants ({results.n_excluded_no_consent} excluded without consent),
-            analysed {date(results.generated_at)}. Descriptive only.
+            Track A {results.tracks.A.overall.n}, Track B {results.tracks.B.overall.n} participants (
+            {results.n_excluded_no_consent} excluded without consent), analysed {date(results.generated_at)}.
+            Usefulness over both tracks: {cell(results.M3_all_participants.M3_usefulness, results.M3_all_participants.M3_usefulness_n)}.
           </p>
-          {results.synthetic && (
-            <p role="alert" className="font-medium text-bad">SYNTHETIC DATA — not pilot results.</p>
-          )}
-          <table className="w-full text-[14px]" data-testid="pilot-table">
-            <thead>
-              <tr className="border-b border-line text-ink-2">
-                <th scope="col" className="py-1.5 pr-3 text-left font-medium">Company</th>
-                <th scope="col" className="px-2 py-1.5 text-right font-medium">n</th>
-                <th scope="col" className="px-2 py-1.5 text-right font-medium">M1 hit rate (n)</th>
-                <th scope="col" className="px-2 py-1.5 text-right font-medium">M2 relevance (n)</th>
-                <th scope="col" className="py-1.5 pl-2 text-right font-medium">M3 usefulness (n)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(results.by_company).map(([label, s]) => (
-                <Row key={label} label={label} s={s} />
-              ))}
-              <Row label="All participants" s={results.overall} />
-            </tbody>
-          </table>
+          {results.synthetic && <p role="alert" className="font-medium text-bad">SYNTHETIC DATA — not pilot results.</p>}
+          <TrackTable
+            title="Track A — took an assessment or interview"
+            kind="A"
+            testId="pilot-table-a"
+            rows={[...Object.entries(results.tracks.A.by_company), ["All Track A", results.tracks.A.overall]]}
+          />
+          <TrackTable
+            title="Track B — after 5 minutes on the dashboard (perceived, not tested)"
+            kind="B"
+            testId="pilot-table-b"
+            rows={[...Object.entries(results.tracks.B.by_company), ["All Track B", results.tracks.B.overall]]}
+          />
         </div>
       )}
     </Card>

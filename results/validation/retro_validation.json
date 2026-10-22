@@ -1,0 +1,1114 @@
+{
+  "label": "Retrospective validation \u2014 not the participant pilot",
+  "generated_at": "2026-10-22T18:50:40.950025+00:00",
+  "top_k": 10,
+  "seed": 20261023,
+  "draws": 1000,
+  "scoring_config": "config/scoring_v1.2.json",
+  "companies": [
+    {
+      "target_id": "amazon_sde1",
+      "label": "Amazon SDE-1",
+      "n_reports": 18,
+      "n_folds_scored": 10,
+      "n_folds_skipped": 8,
+      "hit_rate": 0.88,
+      "baseline": {
+        "mean": 0.18948666666666666,
+        "p2_5": 0.04,
+        "p97_5": 0.375,
+        "draws": 1000,
+        "seed": 20261023
+      },
+      "folds": [
+        {
+          "report_id": "AMZ001",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ002",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ003",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ004",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.heaps.top_k"
+          ],
+          "hits": [],
+          "hit_rate": 0.0
+        },
+        {
+          "report_id": "AMZ005",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.heaps.top_k",
+            "dsa.dp.grid",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path"
+          ],
+          "hits": [
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ006",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ007",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ008",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ009",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hits": [
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ013",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ014",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ016",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path"
+          ],
+          "hits": [
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ017",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.sorting_searching.binary_search",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor"
+          ],
+          "hit_rate": 0.8
+        },
+        {
+          "report_id": "AMZ018",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.heaps.top_k",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.bst",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ019",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.heaps.top_k",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.bst",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ020",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "AMZ021",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.heaps.top_k",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.bst",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "AMZ022",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.dp.grid",
+            "dsa.heaps.top_k",
+            "dsa.trees.bst",
+            "dsa.sorting_searching.binary_search",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        }
+      ]
+    },
+    {
+      "target_id": "microsoft_sde1",
+      "label": "Microsoft SDE-1",
+      "n_reports": 15,
+      "n_folds_scored": 10,
+      "n_folds_skipped": 5,
+      "hit_rate": 0.55,
+      "baseline": {
+        "mean": 0.21544166666666667,
+        "p2_5": 0.058333333333333334,
+        "p97_5": 0.4,
+        "draws": 1000,
+        "seed": 20261023
+      },
+      "folds": [
+        {
+          "report_id": "MSFT001",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "system_design.caching.strategies",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "dsa.arrays.sliding_window",
+            "dsa.trees.lowest_common_ancestor"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor",
+            "system_design.messaging.pub_sub"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.lowest_common_ancestor"
+          ],
+          "hit_rate": 0.75
+        },
+        {
+          "report_id": "MSFT002",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "MSFT004",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "dsa.arrays.sliding_window",
+            "dsa.arrays.two_pointers"
+          ],
+          "held_topics": [
+            "dsa.backtracking.subsets_permutations",
+            "dsa.trees.bst"
+          ],
+          "hits": [],
+          "hit_rate": 0.0
+        },
+        {
+          "report_id": "MSFT005",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.bst",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "dsa.arrays.sliding_window"
+          ],
+          "held_topics": [
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.trees.bst"
+          ],
+          "hit_rate": 0.3333333333333333
+        },
+        {
+          "report_id": "MSFT006",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "system_design.caching.strategies"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal",
+            "system_design.caching.strategies"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal",
+            "system_design.caching.strategies"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "MSFT007",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "dsa.arrays.sliding_window"
+          ],
+          "held_topics": [
+            "dsa.dp.lcs"
+          ],
+          "hits": [],
+          "hit_rate": 0.0
+        },
+        {
+          "report_id": "MSFT008",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "system_design.caching.strategies",
+            "dsa.arrays.sliding_window",
+            "dsa.arrays.two_pointers"
+          ],
+          "held_topics": [
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "system_design.caching.strategies"
+          ],
+          "hits": [
+            "system_design.caching.strategies"
+          ],
+          "hit_rate": 0.3333333333333333
+        },
+        {
+          "report_id": "MSFT009",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "MSFT010",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex",
+            "system_design.messaging.pub_sub"
+          ],
+          "held_topics": [
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.messaging.pub_sub"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.messaging.pub_sub"
+          ],
+          "hit_rate": 0.75
+        },
+        {
+          "report_id": "MSFT011",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "MSFT012",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "MSFT013",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.stacks_queues.monotonic_stack",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "MSFT014",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [
+            "dsa.arrays.sliding_window",
+            "dsa.arrays.two_pointers",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hits": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hit_rate": 0.3333333333333333
+        },
+        {
+          "report_id": "MSFT016",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "MSFT017",
+          "top": [
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.stacks_queues.monotonic_stack",
+            "system_design.caching.strategies",
+            "system_design.messaging.pub_sub",
+            "dsa.trees.bst",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "os.memory_management.page_replacement",
+            "os.process_synchronization.semaphores_mutex"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        }
+      ]
+    },
+    {
+      "target_id": "flipkart_sde1",
+      "label": "Flipkart SDE-1",
+      "n_reports": 17,
+      "n_folds_scored": 8,
+      "n_folds_skipped": 9,
+      "hit_rate": 0.47916666666666663,
+      "baseline": {
+        "mean": 0.2191875,
+        "p2_5": 0.041666666666666664,
+        "p97_5": 0.4791666666666667,
+        "draws": 1000,
+        "seed": 20261023
+      },
+      "folds": [
+        {
+          "report_id": "FLPK001",
+          "top": [
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.dp.lcs",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [
+            "dsa.dp.lcs"
+          ],
+          "hits": [
+            "dsa.dp.lcs"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "FLPK002",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "cn.network_layer.routing_protocols"
+          ],
+          "held_topics": [
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "hits": [],
+          "hit_rate": 0.0
+        },
+        {
+          "report_id": "FLPK004",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal",
+            "cn.network_layer.routing_protocols"
+          ],
+          "held_topics": [
+            "dsa.backtracking.subsets_permutations"
+          ],
+          "hits": [],
+          "hit_rate": 0.0
+        },
+        {
+          "report_id": "FLPK005",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK008",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK009",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK010",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK011",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [
+            "cn.network_layer.routing_protocols",
+            "dsa.dp.lcs",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.dp.lcs",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hit_rate": 0.6666666666666666
+        },
+        {
+          "report_id": "FLPK012",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK013",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK014",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK015",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK016",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal",
+            "dsa.trees.bst"
+          ],
+          "held_topics": [
+            "cn.network_layer.routing_protocols",
+            "dsa.dp.knapsack",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.graphs.shortest_path",
+            "dsa.trees.bst",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hit_rate": 0.6666666666666666
+        },
+        {
+          "report_id": "FLPK017",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.linked_lists.traversal_reversal",
+            "cn.network_layer.routing_protocols"
+          ],
+          "held_topics": [
+            "dsa.heaps.top_k"
+          ],
+          "hits": [],
+          "hit_rate": 0.0
+        },
+        {
+          "report_id": "FLPK018",
+          "top": [
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.dp.lcs",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [
+            "dsa.dp.lcs"
+          ],
+          "hits": [
+            "dsa.dp.lcs"
+          ],
+          "hit_rate": 1.0
+        },
+        {
+          "report_id": "FLPK019",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.traversal",
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal"
+          ],
+          "held_topics": [],
+          "hits": [],
+          "hit_rate": null
+        },
+        {
+          "report_id": "FLPK020",
+          "top": [
+            "dsa.dp.lcs",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.backtracking.subsets_permutations",
+            "dsa.dp.knapsack",
+            "dsa.heaps.top_k",
+            "dsa.linked_lists.traversal_reversal",
+            "cn.network_layer.routing_protocols",
+            "dsa.trees.bst",
+            "dsa.trees.traversal"
+          ],
+          "held_topics": [
+            "dbms.indexing.b_trees",
+            "dsa.arrays.sliding_window",
+            "dsa.dp.grid",
+            "dsa.graphs.shortest_path",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hits": [
+            "dsa.graphs.shortest_path",
+            "dsa.trees.lowest_common_ancestor",
+            "dsa.trees.traversal"
+          ],
+          "hit_rate": 0.5
+        }
+      ]
+    }
+  ]
+}
