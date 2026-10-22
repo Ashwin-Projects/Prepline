@@ -8,6 +8,8 @@ Report counts: *raw* = reports in the target's `reports.csv`; *after filtering* 
 |---|---|---|---|---|---|
 | Amazon SDE-1 | 21 | 18 | PASSED (18 ≥ 15) | SUCCESS | 88.7653 |
 | Microsoft SDE-1 | 17 | 15 | PASSED (15 ≥ 15) | SUCCESS | 89.0886 |
+| Google SWE-L3 | 16 | 8 | FAILED (8 < 15) | INSUFFICIENT_DATA | n/a |
+| Flipkart SDE-1 | 20 | 17 | PASSED (17 ≥ 15) | SUCCESS | 89.724 |
 
 ## Amazon SDE-1 (`amazon_sde1`)
 
@@ -41,7 +43,7 @@ Top 9 priority gaps:
 
 ## Microsoft SDE-1 (`microsoft_sde1`)
 
-Results file: `results/microsoft_sde1_v1.2_course_syllabi.json` (written by this run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
+Results file: `results/microsoft_sde1_v1.2_course_syllabi.json` (kept from an earlier run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
 
 | Indicator | Value |
 |---|---|
@@ -69,3 +71,47 @@ Top 10 priority gaps:
 | 8 | Lowest Common Ancestor (`dsa.trees.lowest_common_ancestor`) | 0.0667 | 0.9006 | 0.0066 |
 | 9 | String and Subsequence DP (`dsa.dp.lcs`) | 0.0667 | 0.9265 | 0.0049 |
 | 10 | Sliding Window Technique (`dsa.arrays.sliding_window`) | 0.04 | 0.8847 | 0.0046 |
+
+## Google SWE-L3 (`google_swe_l3`)
+
+Results file: `results/google_swe_l3_v1.2_course_syllabi.json` (written by this run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy None.
+
+| Indicator | Value |
+|---|---|
+| Reports (raw / after filtering) | 16 / 8 |
+| Questions (included / excluded) | 27 / 52 |
+| Density gate | FAILED (8 < 15) |
+| S_comp | n/a |
+
+The pipeline stopped at the density gate: no S_comp, priority gaps or confidence indicators.
+
+## Flipkart SDE-1 (`flipkart_sde1`)
+
+Results file: `results/flipkart_sde1_v1.2_course_syllabi.json` (written by this run). Syllabus: `VIT_CSE_2024_25_courses`, scoring config v1.2, taxonomy v1.0.
+
+| Indicator | Value |
+|---|---|
+| Reports (raw / after filtering) | 20 / 17 |
+| Questions (included / excluded) | 75 / 80 |
+| Density gate | PASSED (17 ≥ 15) |
+| S_comp | 89.724 |
+| Scoring universe (topics with I(t) > 0) | 13 |
+| Topics present in the syllabus | 80 of 83 |
+| Topics on fallback depth | 3 of 83 |
+| Present topics on fallback depth | 0 of 80 |
+| Unmapped terms (distinct) | 1699 (interview 469, syllabus 1258) |
+
+Top 10 priority gaps:
+
+| # | Topic | I(t) | Coverage | PriorityGap |
+|---|---|---|---|---|
+| 1 | String and Subsequence DP (`dsa.dp.lcs`) | 0.1765 | 0.9265 | 0.013 |
+| 2 | Lowest Common Ancestor (`dsa.trees.lowest_common_ancestor`) | 0.1294 | 0.9006 | 0.0129 |
+| 3 | Shortest Path Algorithms (`dsa.graphs.shortest_path`) | 0.1059 | 0.894 | 0.0112 |
+| 4 | Top K Elements and K-Way Merge (`dsa.heaps.top_k`) | 0.0588 | 0.8463 | 0.009 |
+| 5 | Tree Traversals (`dsa.trees.traversal`) | 0.0824 | 0.9006 | 0.0082 |
+| 6 | B-Trees and B+ Tree Indexing (`dbms.indexing.b_trees`) | 0.0588 | 0.8722 | 0.0075 |
+| 7 | Linked List Manipulation & Cycle Detection (`dsa.linked_lists.traversal_reversal`) | 0.0588 | 0.879 | 0.0071 |
+| 8 | Sliding Window Technique (`dsa.arrays.sliding_window`) | 0.0588 | 0.8847 | 0.0068 |
+| 9 | Routing Algorithms and Protocols (`cn.network_layer.routing_protocols`) | 0.0471 | 0.8645 | 0.0064 |
+| 10 | Subsets and Permutations (`dsa.backtracking.subsets_permutations`) | 0.0588 | 0.8983 | 0.006 |
