@@ -134,8 +134,9 @@ include BCSE203E, which was added to the syllabus afterwards.
 Phase 16, pre-registered in `docs/pilot/PILOT_PROTOCOL.md`; the form is built by hand from `docs/pilot/FORM.md`
 (consent → company → that company's top-10 gaps rated 1–5 → “taken an OA/interview with this company?” → Track A ticks
 the topics met → both rate PREPLINE). `python evaluation/pilot/analyze_pilot.py data/pilot/responses.csv` reads the
-Google Forms CSV export and reports, per track and company, M1 topic hit rate against the top-10 gaps (Hashing, Greedy
-and Other reported apart; Cannot recall excluded), M2 mean gap match and M3 mean rating. No responses are analysed yet.
+Google Forms CSV export and reports, per track and company, M1 topic hit rate against the company's top-10 topics by
+importance I(t) (Hashing, Greedy, OOP and Other reported apart; Cannot recall excluded), M2 mean gap match and M3 mean
+rating. No responses are analysed yet.
 Annotated screenshots for participants are in `docs/pilot/img/`, a 82-second walkthrough in `docs/pilot/demo.webm`.
 
 ## Testing
