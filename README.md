@@ -19,6 +19,7 @@ gaps for each company/role.
 - [Pipeline and methodology](#pipeline-and-methodology)
 - [Data](#data)
 - [Benchmark](#benchmark)
+- [Student pilot](#student-pilot)
 - [Testing](#testing)
 - [Project structure](#project-structure)
 - [Project status](#project-status)
@@ -52,7 +53,8 @@ powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1   # API :8000 + 
 ```
 
 Needs Node.js 20+ for the dashboard (packages install on first run). Six pages: **Overview** (S_comp, confidence,
-data card, priority gaps, coverage by domain, known mapping limitations), **Compare** (all targets side by side),
+data card, priority gaps, coverage by domain, **What to study next** — VIT modules to revise and two checked practice
+links per gap — a **Download report (PDF)** button, known mapping limitations), **Compare** (all targets side by side),
 **Topic explorer** (all 83 topics), **Confidence** (insufficient data, fallback depth, unmapped terms), **Benchmark**,
 **Methodology**. Light and dark themes; laid out for a 1366×768 projector. See `dashboard/README.md`.
 
@@ -61,7 +63,11 @@ Re-running the pipeline:
 ```powershell
 python evaluation/run_all_targets.py        # results/<target>_v1.2_course_syllabi.json + results/COMPARISON.md
 python evaluation/export_topic_tables.py    # results/topics/ (per-topic tables for the dashboard)
+python evaluation/export_study_modules.py   # results/study/ (modules to revise per topic, 'What to study next')
 ```
+
+Practice links live in `config/practice_links.json`; every URL was opened and checked (GeeksforGeeks only, because
+LeetCode refuses automated checks). The PDF report (`GET /api/v1/report/<target>`) is built from saved files only.
 
 Results files are versioned and not overwritten; delete a file deliberately to regenerate it. Adding a company needs
 only a data folder and one config entry (`docs/ADDING_A_COMPANY.md`).
@@ -123,26 +129,41 @@ subagent); their disagreements (56 rows) were adjudicated by the human owner; th
 only, not individually human-reviewed (`evaluation/benchmark/ADJUDICATION.md`). Gold v1.0 is frozen and does not
 include BCSE203E, which was added to the syllabus afterwards.
 
+## Student pilot
+
+Phase 16, pre-registered in `docs/pilot/PILOT_PROTOCOL.md`; the form is built by hand from `docs/pilot/FORM.md`
+(consent → company → that company's top-10 gaps rated 1–5 → “taken an OA/interview with this company?” → Track A ticks
+the topics met → both rate PREPLINE). `python evaluation/pilot/analyze_pilot.py data/pilot/responses.csv` reads the
+Google Forms CSV export and reports, per track and company, M1 topic hit rate against the top-10 gaps (Hashing, Greedy
+and Other reported apart; Cannot recall excluded), M2 mean gap match and M3 mean rating. No responses are analysed yet.
+Annotated screenshots for participants are in `docs/pilot/img/`, a 82-second walkthrough in `docs/pilot/demo.webm`.
+
 ## Testing
 
 ```powershell
 python -m pytest evaluation -q                   # Python suite (pipeline, API, data, benchmark)
 cd dashboard/web; npx playwright test            # dashboard end-to-end; refreshes dashboard/screenshots/
+$env:MEDIA = "1"; npx playwright test tests/media.spec.ts   # regenerate docs/pilot/img and demo.webm
 ```
 
 ## Project structure
 
 ```
-backend/            FastAPI app: upload/validate/run (routes.py), read-only dashboard endpoints (dashboard.py)
-config/             scoring_v1.0–v1.2.json (frozen), targets.json, api.json
+backend/            FastAPI app: upload/validate/run (routes.py), read-only dashboard endpoints (dashboard.py),
+                    study list (study.py), PDF report (report.py)
+config/             scoring_v1.0–v1.2.json (frozen), targets.json, api.json, practice_links.json
 dashboard/web/      Vite + React + TypeScript + Tailwind + Recharts dashboard, Playwright tests
 data/               raw syllabi and interviews, processed per-target folders, taxonomy, SOURCES.md
-docs/               ADDING_A_COMPANY.md, BACKLOG.md, plans and specs
+docs/               ARCHITECTURE.md, DEMO_SCRIPT.md, EXISTING_PLATFORMS.md, ADDING_A_COMPANY.md, BACKLOG.md,
+                    pilot/ (protocol, form, screenshots, demo video), plans and specs
 evaluation/         runners (run_full_pipeline, run_all_targets, export_topic_tables), tests, benchmark/
 pipeline/           parsing, abstraction, embeddings, taxonomy mapping, scoring
-results/            versioned results, COMPARISON.md, CHANGES_v1.x.md, topics/, benchmark/
+results/            versioned results, COMPARISON.md, CHANGES_v1.x.md, topics/, study/, benchmark/, validation/
 scripts/            start_demo.ps1
 ```
+
+Architecture diagram and code graph: `docs/ARCHITECTURE.md`. Demo: `docs/DEMO_SCRIPT.md`; related platforms:
+`docs/EXISTING_PLATFORMS.md`.
 
 ## Project status
 
@@ -155,8 +176,8 @@ scripts/            start_demo.ps1
 | 5 | 9–12 | Importance, S_comp, priority gaps, unmapped-term logging | Done |
 | 6 | 13 | Ground-truth benchmark (gold v1.0, 4 matchers) | Done |
 | 7 | 14–15 | Backend API and dashboard | Done |
-| 8 | 16 | Pilot outcome validation and γ calibration | Pending |
-| 9 | — | Optional: DSA prerequisite graph and study roadmap | Optional, not started |
+| 8 | 16 | Student pilot (form, protocol, analysis ready; no responses yet); γ calibration deferred | In progress |
+| 9 | — | Optional: DSA prerequisite graph and study roadmap | Optional; a per-gap study list ships on the Overview |
 
 ## Limitations
 
@@ -173,7 +194,8 @@ scripts/            start_demo.ps1
 
 ## Future work
 
-1. Phase 16 pilot: compare topic coverage with round-level interview outcomes in a consenting cohort; calibrate γ.
+1. Run the student pilot and publish its per-track results; γ calibration needs round-level outcomes and a larger
+   cohort.
 2. Taxonomy v1.1 with the missing nodes, and a matcher that uses node names (candidate from the benchmark, needs a
    larger validation set and a new config version).
 3. More interview reports (Google first) and more sources than GeeksforGeeks.

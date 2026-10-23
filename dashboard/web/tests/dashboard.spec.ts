@@ -175,6 +175,7 @@ test("methodology: pilot section shows in progress before any results", async ({
   await expect(page.getByTestId("pilot")).toContainText("Track B");
   await expect(page.getByTestId("pilot")).toContainText("No inferential statistics");
   await expect(page.getByTestId("pilot")).not.toContainText("faculty");
+  await expect(page.getByTestId("pilot")).toContainText("Amazon, Microsoft or Flipkart");
 });
 
 test("methodology: pilot section shows per-track numbers", async ({ page }) => {
@@ -182,7 +183,7 @@ test("methodology: pilot section shows per-track numbers", async ({ page }) => {
     n, M1_topic_hit_rate: m1, M1_topic_hit_rate_n: m1 === null ? 0 : n, M2_gap_relevance: m2,
     M2_gap_relevance_n: m2 === null ? 0 : n, M3_usefulness: m3, M3_usefulness_n: n,
   });
-  const b = (n: number, m2b: number, m3: number) => ({ n, M2b_perceived_match: m2b, M2b_perceived_match_n: n, M3_usefulness: m3, M3_usefulness_n: n });
+  const b = (n: number, m2: number, m3: number) => ({ n, M2_gap_relevance: m2, M2_gap_relevance_n: n, M3_usefulness: m3, M3_usefulness_n: n });
   await page.route("**/api/v1/pilot", (r) =>
     r.fulfill({
       json: {
@@ -190,9 +191,10 @@ test("methodology: pilot section shows per-track numbers", async ({ page }) => {
         results: {
           generated_at: "2026-11-20T10:00:00+00:00", n_responses: 21, n_excluded_no_consent: 1, synthetic: false,
           tracks: {
-            A: { by_company: { "Amazon SDE-1": a(5, 0.62, 3.4, 4.1), "Google SWE-L3": a(2, null, null, 3.5) }, overall: a(12, 0.58, 3.2, 3.9) },
-            B: { by_company: { "Amazon SDE-1": b(4, 3.25, 3.8) }, overall: b(8, 3.1, 3.6) },
+            A: { by_company: { Amazon: a(5, 0.62, 3.4, 4.1), Microsoft: a(2, null, null, 3.5) }, overall: a(12, 0.58, 3.2, 3.9) },
+            B: { by_company: { Amazon: b(4, 3.25, 3.8) }, overall: b(8, 3.1, 3.6) },
           },
+          q4_unmapped: { n_track_a: 12, selected: { Hashing: 5, "Greedy algorithms": 3, Other: 1 }, cannot_recall: 2 },
           M3_all_participants: { n: 20, M3_usefulness: 3.78, M3_usefulness_n: 20 },
         },
       },
@@ -203,6 +205,10 @@ test("methodology: pilot section shows per-track numbers", async ({ page }) => {
   await expect(page.getByTestId("pilot-table-a")).toContainText("62% (5)");
   await expect(page.getByTestId("pilot-table-a")).toContainText("n/a");
   await expect(page.getByTestId("pilot-table-b")).toContainText("3.25 (4)");
+  await expect(page.getByTestId("pilot-table-b")).toContainText("M2 gap match (n)");
+  await expect(page.getByTestId("pilot-table-b")).not.toContainText("M1");
+  await expect(page.getByTestId("pilot-unmapped")).toContainText("Hashing 5 of 12");
+  await expect(page.getByTestId("pilot-unmapped")).toContainText("Cannot recall 2");
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
