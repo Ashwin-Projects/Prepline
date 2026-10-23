@@ -4,14 +4,15 @@ Students only. Everyone picks a company (Q1) and rates its top-10 priority gaps 
 (took an OA/interview with that company: Q4 topics encountered) and Track B (did not).
 
     M1 topic hit rate   Track A, per participant: of the Q4 options ticked that map to taxonomy topics, the share
-                        whose topics include one of the company's top-10 priority gaps. Hashing, Greedy algorithms and
+                        whose topics include one of the company's top-10 most important topics by I(t) (ranked as in
+                        the retrospective validation). Hashing, Greedy algorithms, OOP / object-oriented design and
                         Other have no taxonomy node and are counted separately; Cannot recall is excluded; a participant
                         with no mapped option has no M1.
     M2 gap match        per participant: mean Q2 rating (1-5) over the gap rows answered.
     M3 rating           per participant: mean of the 4 Q5 statements (1-5).
 
-Each metric is the mean over participants, per company and per track. Responses without the consent tick are excluded
-and counted, as are responses missing Q1 or Q3. Descriptive only: no inferential statistics at this n.
+Each metric is the mean over participants, per company and per track. Responses without the consent answer (found by
+its text, whatever the checkbox question is titled) are excluded and counted, as are responses missing Q1 or Q3. Descriptive only: no inferential statistics at this n.
 
 Writes results/pilot/PILOT_RESULTS.md, pilot_results.json and pilot_m1_topic_hit_rate.png. Refuses to overwrite
 unless --replace, and refuses SYNTHETIC data (an improvement answer, Q6, starting "SYNTHETIC") in the default folder.
@@ -60,7 +61,7 @@ def load_responses(path: str) -> List[Response]:
 def missing_columns(path: str) -> List[str]:
     with open(path, encoding="utf-8-sig", newline="") as f:
         header = set(next(csv.reader(f), []))
-    return [c for c in dict.fromkeys(fs.columns()) if c not in header]
+    return [c for c in dict.fromkeys(fs.columns()) if c not in header and c != fs.CONSENT]
 
 
 def _first(response: Response, title: str) -> str:
@@ -83,8 +84,8 @@ def participant_metrics(response: Response, profile: Dict[str, Any], track: str)
     if track == "A":
         ticked = fs.parse_topics(_first(response, fs.Q4))
         mapped = [o for o in ticked if o in fs.OPTION_TOPICS]
-        gap_ids = set(profile["gap_ids"])
-        hits = [o for o in mapped if gap_ids & set(fs.OPTION_TOPICS[o])]
+        important = set(profile["top_important_ids"])
+        hits = [o for o in mapped if important & set(fs.OPTION_TOPICS[o])]
         out["M1_topic_hit_rate"] = len(hits) / len(mapped) if mapped else None
         out["ticked"] = sorted(ticked)
     return out
@@ -102,7 +103,7 @@ def _summary(rows: List[Dict[str, Any]], keys) -> Dict[str, Any]:
 
 def analyze(responses: List[Response]) -> Dict[str, Any]:
     by_company = {p["company"]: p for p in fs.profiles()}
-    consenting = [r for r in responses if fs.CONSENT_YES in _first(r, fs.CONSENT)]
+    consenting = [r for r in responses if any(fs.CONSENT_YES in v for cells in r.values() for v in cells)]
     rows: Dict[str, Dict[str, List[Dict[str, Any]]]] = {t: {c: [] for c in by_company} for t in ("A", "B")}
     for r in consenting:
         company, answer = _first(r, fs.COMPANY), _first(r, fs.Q3)
@@ -171,8 +172,8 @@ def build_markdown(result: Dict[str, Any], source: str) -> str:
         "",
         f"**M3, both tracks:** {_fmt(m3['M3_usefulness'])} (n = {m3['M3_usefulness_n']}).",
         "",
-        "- **M1** of the Q4 options ticked that map to taxonomy topics, the share covering one of the company's top-10 "
-        "priority gaps (option-level, so coarser than topic-level).",
+        "- **M1** of the Q4 options ticked that map to taxonomy topics, the share covering one of the company's "
+        "top-10 most important topics by I(t) (option-level, so coarser than topic-level).",
         "- **M2** mean Q2 rating of how well the top-10 gaps match the participant's own weak areas. Track B's is "
         "perceived, not tested, and is never pooled with Track A's.",
         "- **M3** mean of the 4 Q5 statements (1 = strongly disagree, 5 = strongly agree).",
@@ -199,7 +200,7 @@ def write_chart(result: Dict[str, Any], path: str) -> None:
         ax.text(x, s["M1_topic_hit_rate"] * 100 + 2, f"{s['M1_topic_hit_rate'] * 100:.0f} % (n={s['M1_topic_hit_rate_n']})",
                 ha="center", fontsize=9, color="#0b0b0b")
     ax.set_ylim(0, 110)
-    ax.set_ylabel("Topics met that PREPLINE lists as top-10 gaps (%)", color="#52514e", fontsize=9)
+    ax.set_ylabel("Topics met in PREPLINE's top-10 by importance (%)", color="#52514e", fontsize=9)
     ax.tick_params(colors="#52514e", labelsize=9)
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)

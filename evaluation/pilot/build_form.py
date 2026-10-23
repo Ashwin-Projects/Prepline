@@ -15,13 +15,6 @@ sys.path.insert(0, ROOT)
 
 from evaluation.pilot import form_spec as fs
 
-FORM_TITLE = "PREPLINE pilot"
-INFO_SHEET = ("PREPLINE compares the VIT CSE syllabus with the topics companies ask in interviews and lists the "
-              "topics a student is most likely under-prepared for (\"topic gaps\"). This form takes about 5 minutes. "
-              "Taking part is voluntary and you can skip any optional question. No name, email or roll number is "
-              "collected. Answers are reported only as group averages.")
-
-
 def form_markdown() -> str:
     q = lambda s: f"“{s}”"
     p = fs.profiles()
@@ -32,11 +25,12 @@ def form_markdown() -> str:
         "**exactly** (the analysis matches the CSV export column titles, see `data/pilot/pilot_template.csv`).",
         "",
         "**Settings:** Do not collect email addresses. Do not require sign-in. No name or roll-number field.",
-        f"Form title {q(FORM_TITLE)}; description {q(INFO_SHEET)}",
+        f"Form title {q(fs.FORM_TITLE)}; description {q(fs.DESCRIPTION)}",
         "",
         "## Section 1 — Consent and company",
         "",
-        f"- **{fs.CONSENT}** — Checkboxes, required, one option: {q(fs.CONSENT_YES)}.",
+        f"- **Consent** — Checkboxes, required, one option: {q(fs.CONSENT_YES)} (the question title is free; the "
+        "analysis finds consent by this answer).",
         f"- **Q1 {fs.COMPANY}** — Multiple choice, required, *Go to section based on answer*: "
         + "; ".join(f"{q(x['company'])} → section {q(x['company'])}" for x in p) + ".",
         "",
@@ -83,6 +77,9 @@ def form_markdown() -> str:
         f"- **Q6 {fs.Q6}** — Paragraph, optional.",
         "",
         "## How Q4 maps to the taxonomy (M1)",
+        "",
+        "M1 counts a ticked option as a hit when one of its topics is among the company's top-10 most important "
+        "topics by I(t).",
         "",
         "| Q4 option | Taxonomy v1.0 topics |",
         "|---|---|",
