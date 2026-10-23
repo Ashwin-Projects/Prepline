@@ -140,8 +140,6 @@ export interface PilotSummary {
   M1_topic_hit_rate_n?: number;
   M2_gap_relevance?: number | null;
   M2_gap_relevance_n?: number;
-  M2b_perceived_match?: number | null;
-  M2b_perceived_match_n?: number;
   M3_usefulness: number | null;
   M3_usefulness_n: number;
 }
@@ -159,6 +157,7 @@ export interface PilotResponse {
     n_excluded_no_consent: number;
     synthetic: boolean;
     tracks: { A: PilotTrack; B: PilotTrack };
+    q4_unmapped?: { n_track_a: number; selected: Record<string, number>; cannot_recall: number };
     M3_all_participants: PilotSummary;
   };
 }
@@ -176,3 +175,34 @@ export interface ValidationResponse {
   available: boolean;
   results: null | { label: string; generated_at: string; top_k: number; draws: number; seed: number; companies: ValidationCompany[] };
 }
+
+export interface StudyModule {
+  course_code: string;
+  course_title: string | null;
+  module_number: number | null;
+  module_title: string | null;
+  component: string | null;
+  match: "direct" | "parent topic";
+  similarity: number | null;
+}
+
+export interface StudyItem {
+  rank: number;
+  topic_id: string;
+  topic_name: string;
+  coverage: number | null;
+  priority_gap: number | null;
+  in_core_curriculum: boolean;
+  modules: StudyModule[];
+  note: string | null;
+  practice: { title: string; url: string }[];
+}
+
+export interface StudyResponse {
+  target: { id: string; company: string; role: string };
+  status: "SUCCESS" | "INSUFFICIENT_DATA";
+  links_verified_on: string;
+  items: StudyItem[];
+}
+
+export const reportUrl = (targetId: string) => `${API_BASE}/api/v1/report/${encodeURIComponent(targetId)}`;

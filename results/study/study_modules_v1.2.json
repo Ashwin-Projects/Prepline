@@ -1,0 +1,2593 @@
+{
+  "results_version": "v1.2",
+  "syllabus_id": "VIT_CSE_2024_25_courses",
+  "taxonomy_version": "v1.0",
+  "generated_at": "2026-10-23T13:55:47.157554+00:00",
+  "note": "Units mapped to the topic (direct) or to its nearest high-level ancestor (parent topic), whose coverage the topic inherits.",
+  "modules": {
+    "dsa.arrays.two_pointers": [
+      {
+        "course_code": "BCSE303P",
+        "course_title": "Operating Systems Lab",
+        "module_number": 9,
+        "module_title": "Dynamic memory allocation algorithms - First-fit, Best-fit, Worst-fit algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5477986335754395
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 5,
+        "module_title": "Memory Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5303246378898621
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 6,
+        "module_title": "Subsystems",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5277054309844971
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 2,
+        "module_title": "Arrays and Functions",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 3,
+        "module_title": "Pointers",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102P",
+        "course_title": "Structured and Object-Oriented Programming Lab",
+        "module_number": 2,
+        "module_title": "Experiment the use of 1-D, 2-D arrays and strings and Functions",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 4,
+        "module_title": "Structure and Union",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 2,
+        "module_title": "Looping Constructs and Arrays",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 2,
+        "module_title": "Linear Data Structures",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.502203106880188
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.502203106880188
+      }
+    ],
+    "dsa.arrays.sliding_window": [
+      {
+        "course_code": "BCSE303P",
+        "course_title": "Operating Systems Lab",
+        "module_number": 9,
+        "module_title": "Dynamic memory allocation algorithms - First-fit, Best-fit, Worst-fit algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5477986335754395
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 5,
+        "module_title": "Memory Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5303246378898621
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 6,
+        "module_title": "Subsystems",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5277054309844971
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 2,
+        "module_title": "Arrays and Functions",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 3,
+        "module_title": "Pointers",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102P",
+        "course_title": "Structured and Object-Oriented Programming Lab",
+        "module_number": 2,
+        "module_title": "Experiment the use of 1-D, 2-D arrays and strings and Functions",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 4,
+        "module_title": "Structure and Union",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 2,
+        "module_title": "Looping Constructs and Arrays",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 2,
+        "module_title": "Linear Data Structures",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.502203106880188
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.502203106880188
+      }
+    ],
+    "dsa.arrays.prefix_sum": [
+      {
+        "course_code": "BCSE303P",
+        "course_title": "Operating Systems Lab",
+        "module_number": 9,
+        "module_title": "Dynamic memory allocation algorithms - First-fit, Best-fit, Worst-fit algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5477986335754395
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 5,
+        "module_title": "Memory Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5303246378898621
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 6,
+        "module_title": "Subsystems",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5277054309844971
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 2,
+        "module_title": "Arrays and Functions",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 3,
+        "module_title": "Pointers",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102P",
+        "course_title": "Structured and Object-Oriented Programming Lab",
+        "module_number": 2,
+        "module_title": "Experiment the use of 1-D, 2-D arrays and strings and Functions",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038720369338989
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 4,
+        "module_title": "Structure and Union",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 2,
+        "module_title": "Looping Constructs and Arrays",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 2,
+        "module_title": "Linear Data Structures",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5038719773292542
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.502203106880188
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.502203106880188
+      }
+    ],
+    "dsa.linked_lists.traversal_reversal": [
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 2,
+        "module_title": "Linear Data Structures",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6471586227416992
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 3,
+        "module_title": "Implementation linked list and its application",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6137440204620361
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 3,
+        "module_title": "Pointers",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6034255027770996
+      },
+      {
+        "course_code": "BCSE102P",
+        "course_title": "Structured and Object-Oriented Programming Lab",
+        "module_number": 3,
+        "module_title": "Demonstrate the application of pointers",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6034255027770996
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 4,
+        "module_title": "Structure and Union",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6034253835678101
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 5,
+        "module_title": "Overview of Object-Oriented Programming",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5543198585510254
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 6,
+        "module_title": "Binary Tree Traversal implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5038113594055176
+      }
+    ],
+    "dsa.stacks_queues.monotonic_stack": [
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 2,
+        "module_title": "Implementation of queue data structure and its applications",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6686899662017822
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 2,
+        "module_title": "Linear Data Structures",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5084308385848999
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 1,
+        "module_title": "Implementation of stack data structure and its applications",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5023120641708374
+      }
+    ],
+    "dsa.trees.traversal": [
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 6,
+        "module_title": "Binary Tree Traversal implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.7784239053726196
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 4,
+        "module_title": "Trees",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7707778215408325
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 6,
+        "module_title": "Trees, Fundamental circuits, Cut sets",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.770777702331543
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7001916766166687
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 7,
+        "module_title": "Binary Search Tree implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6863009929656982
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6207308769226074
+      },
+      {
+        "course_code": "BCSE304L",
+        "course_title": "Theory of Computation",
+        "module_number": 4,
+        "module_title": "Context Free Grammars",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5891009569168091
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5608422756195068
+      },
+      {
+        "course_code": "BCSE306L",
+        "course_title": "Artificial Intelligence",
+        "module_number": 3,
+        "module_title": "Local Search and Adversarial Search",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5565078854560852
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5468619465827942
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 4,
+        "module_title": "INTERMEDIATE CODE GENERATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5465884208679199
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 2,
+        "module_title": "SYNTAX ANALYSIS",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5358368754386902
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5117321014404297
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5117321014404297
+      }
+    ],
+    "dsa.trees.bst": [
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 6,
+        "module_title": "Binary Tree Traversal implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.7784239053726196
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 4,
+        "module_title": "Trees",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7707778215408325
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 6,
+        "module_title": "Trees, Fundamental circuits, Cut sets",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.770777702331543
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7001916766166687
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 7,
+        "module_title": "Binary Search Tree implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6863009929656982
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6207308769226074
+      },
+      {
+        "course_code": "BCSE304L",
+        "course_title": "Theory of Computation",
+        "module_number": 4,
+        "module_title": "Context Free Grammars",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5891009569168091
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5608422756195068
+      },
+      {
+        "course_code": "BCSE306L",
+        "course_title": "Artificial Intelligence",
+        "module_number": 3,
+        "module_title": "Local Search and Adversarial Search",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5565078854560852
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5468619465827942
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 4,
+        "module_title": "INTERMEDIATE CODE GENERATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5465884208679199
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 2,
+        "module_title": "SYNTAX ANALYSIS",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5358368754386902
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5117321014404297
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5117321014404297
+      }
+    ],
+    "dsa.trees.lowest_common_ancestor": [
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 6,
+        "module_title": "Binary Tree Traversal implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.7784239053726196
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 4,
+        "module_title": "Trees",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7707778215408325
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 6,
+        "module_title": "Trees, Fundamental circuits, Cut sets",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.770777702331543
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7001916766166687
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 7,
+        "module_title": "Binary Search Tree implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6863009929656982
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6207308769226074
+      },
+      {
+        "course_code": "BCSE304L",
+        "course_title": "Theory of Computation",
+        "module_number": 4,
+        "module_title": "Context Free Grammars",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5891009569168091
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5608422756195068
+      },
+      {
+        "course_code": "BCSE306L",
+        "course_title": "Artificial Intelligence",
+        "module_number": 3,
+        "module_title": "Local Search and Adversarial Search",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5565078854560852
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5468619465827942
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 4,
+        "module_title": "INTERMEDIATE CODE GENERATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5465884208679199
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 2,
+        "module_title": "SYNTAX ANALYSIS",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5358368754386902
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5117321014404297
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5117321014404297
+      }
+    ],
+    "dsa.heaps.top_k": [
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 7,
+        "module_title": "Heaps and AVL Trees",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7021496295928955
+      }
+    ],
+    "dsa.graphs.bfs_dfs": [
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 4,
+        "module_title": "Graph Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7216007709503174
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 5,
+        "module_title": "Fundamentals of Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 7,
+        "module_title": "NOSQL Database Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6117560863494873
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 5,
+        "module_title": "CODE OPTIMIZATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.561198353767395
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 1,
+        "module_title": "Design Paradigms: Greedy, Divide and Conquer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 7,
+        "module_title": "Classes of Complexity and Approximation",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 2,
+        "module_title": "Data Representation and Computer Arithmetic",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5130013227462769
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 7,
+        "module_title": "Graph colouring, covering, Partitioning",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5026407241821289
+      }
+    ],
+    "dsa.graphs.shortest_path": [
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 4,
+        "module_title": "Graph Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7216007709503174
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 5,
+        "module_title": "Fundamentals of Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 7,
+        "module_title": "NOSQL Database Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6117560863494873
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 5,
+        "module_title": "CODE OPTIMIZATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.561198353767395
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 1,
+        "module_title": "Design Paradigms: Greedy, Divide and Conquer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 7,
+        "module_title": "Classes of Complexity and Approximation",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 2,
+        "module_title": "Data Representation and Computer Arithmetic",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5130013227462769
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 7,
+        "module_title": "Graph colouring, covering, Partitioning",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5026407241821289
+      }
+    ],
+    "dsa.graphs.topological_sort": [
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 4,
+        "module_title": "Graph Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7216007709503174
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 5,
+        "module_title": "Fundamentals of Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 7,
+        "module_title": "NOSQL Database Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6117560863494873
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 5,
+        "module_title": "CODE OPTIMIZATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.561198353767395
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 1,
+        "module_title": "Design Paradigms: Greedy, Divide and Conquer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 7,
+        "module_title": "Classes of Complexity and Approximation",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 2,
+        "module_title": "Data Representation and Computer Arithmetic",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5130013227462769
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 7,
+        "module_title": "Graph colouring, covering, Partitioning",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5026407241821289
+      }
+    ],
+    "dsa.graphs.disjoint_set": [
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 4,
+        "module_title": "Graph Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7216007709503174
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 5,
+        "module_title": "Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 5,
+        "module_title": "Fundamentals of Graphs",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6344430446624756
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 7,
+        "module_title": "NOSQL Database Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6117560863494873
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 5,
+        "module_title": "CODE OPTIMIZATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.561198353767395
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 1,
+        "module_title": "Design Paradigms: Greedy, Divide and Conquer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275208353996277
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 7,
+        "module_title": "Classes of Complexity and Approximation",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 2,
+        "module_title": "Data Representation and Computer Arithmetic",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5275207757949829
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5130013227462769
+      },
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 7,
+        "module_title": "Graph colouring, covering, Partitioning",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5026407241821289
+      }
+    ],
+    "dsa.sorting_searching.binary_search": [
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 3,
+        "module_title": "Searching and Sorting",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6566638946533203
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 5,
+        "module_title": "Implementation of sorting algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6494107246398926
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 4,
+        "module_title": "Implementation of searching algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6344357132911682
+      },
+      {
+        "course_code": "BCSE306L",
+        "course_title": "Artificial Intelligence",
+        "module_number": 2,
+        "module_title": "Problem Solving based on Searching",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6071228981018066
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5610681772232056
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 7,
+        "module_title": "Heaps and AVL Trees",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5099791288375854
+      },
+      {
+        "course_code": "BCSE202P",
+        "course_title": "Data Structures and Algorithms Lab",
+        "module_number": 7,
+        "module_title": "Binary Search Tree implementation",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5036545991897583
+      }
+    ],
+    "dsa.dp.1d": [
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5039490461349487
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 7,
+        "module_title": "PARALLELISM",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5027850270271301
+      }
+    ],
+    "dsa.dp.knapsack": [
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5039490461349487
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 7,
+        "module_title": "PARALLELISM",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5027850270271301
+      }
+    ],
+    "dsa.dp.grid": [
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5039490461349487
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 7,
+        "module_title": "PARALLELISM",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5027850270271301
+      }
+    ],
+    "dsa.dp.lcs": [
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5039490461349487
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 7,
+        "module_title": "PARALLELISM",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5027850270271301
+      }
+    ],
+    "dsa.backtracking.subsets_permutations": [
+      {
+        "course_code": "BMAT205L",
+        "course_title": "Discrete Mathematics and Graph Theory",
+        "module_number": 6,
+        "module_title": "Trees, Fundamental circuits, Cut sets",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5961706638336182
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 4,
+        "module_title": "Trees",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5961705446243286
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5866986513137817
+      },
+      {
+        "course_code": "BCSE306L",
+        "course_title": "Artificial Intelligence",
+        "module_number": 2,
+        "module_title": "Problem Solving based on Searching",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5778558254241943
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 4,
+        "module_title": "INTERMEDIATE CODE GENERATION",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5211406946182251
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5142862200737
+      },
+      {
+        "course_code": "BCSE304L",
+        "course_title": "Theory of Computation",
+        "module_number": 4,
+        "module_title": "Context Free Grammars",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5127002000808716
+      },
+      {
+        "course_code": "BCSE204L",
+        "course_title": "Design and Analysis of Algorithms",
+        "module_number": 3,
+        "module_title": "String Matching Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5077476501464844
+      },
+      {
+        "course_code": "BCSE204P",
+        "course_title": "Design and Analysis of Algorithms Lab",
+        "module_number": 6,
+        "module_title": "String matching algorithms : Na\u00efve, KMP and Rabin Karp,suffix trees",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5077476501464844
+      },
+      {
+        "course_code": "BCSE306L",
+        "course_title": "Artificial Intelligence",
+        "module_number": 3,
+        "module_title": "Local Search and Adversarial Search",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5027750730514526
+      }
+    ],
+    "dbms.sql.queries_aggregations": [
+      {
+        "course_code": "BCSE302P",
+        "course_title": "Database Systems Lab",
+        "module_number": 1,
+        "module_title": "Data Definition and Data Manipulation Language",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6016221046447754
+      },
+      {
+        "course_code": "BCSE101E",
+        "course_title": "Computer Programming: Python",
+        "module_number": 2,
+        "module_title": "Python Programming Fundamentals",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 1,
+        "module_title": "C Programming Fundamentals",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 1,
+        "module_title": "Java Basics",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5590918660163879
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5319768190383911
+      }
+    ],
+    "dbms.sql.joins": [
+      {
+        "course_code": "BCSE302P",
+        "course_title": "Database Systems Lab",
+        "module_number": 1,
+        "module_title": "Data Definition and Data Manipulation Language",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6016221046447754
+      },
+      {
+        "course_code": "BCSE101E",
+        "course_title": "Computer Programming: Python",
+        "module_number": 2,
+        "module_title": "Python Programming Fundamentals",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 1,
+        "module_title": "C Programming Fundamentals",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 1,
+        "module_title": "Java Basics",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5590918660163879
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5319768190383911
+      }
+    ],
+    "dbms.sql.subqueries": [
+      {
+        "course_code": "BCSE302P",
+        "course_title": "Database Systems Lab",
+        "module_number": 1,
+        "module_title": "Data Definition and Data Manipulation Language",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6016221046447754
+      },
+      {
+        "course_code": "BCSE101E",
+        "course_title": "Computer Programming: Python",
+        "module_number": 2,
+        "module_title": "Python Programming Fundamentals",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 1,
+        "module_title": "C Programming Fundamentals",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 1,
+        "module_title": "Java Basics",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5620008707046509
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5590918660163879
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5319768190383911
+      }
+    ],
+    "dbms.normalization.normal_forms": [
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 3,
+        "module_title": "Relational Database Design",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6312492489814758
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5965969562530518
+      },
+      {
+        "course_code": "BCSE202L",
+        "course_title": "Data Structures and Algorithms",
+        "module_number": 1,
+        "module_title": "Algorithm Analysis",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5006066560745239
+      }
+    ],
+    "dbms.transactions.acid": [
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7289407253265381
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6209980845451355
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 5,
+        "module_title": "Transaction Processing and Recovery",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6129540205001831
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6122082471847534
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 4,
+        "module_title": "Physical Database Design and Query",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5151839256286621
+      }
+    ],
+    "dbms.transactions.isolation_locking": [
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7289407253265381
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6209980845451355
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 5,
+        "module_title": "Transaction Processing and Recovery",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6129540205001831
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6122082471847534
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 4,
+        "module_title": "Physical Database Design and Query",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5151839256286621
+      }
+    ],
+    "dbms.indexing.b_trees": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 7,
+        "module_title": "Storage Management, Protection and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.643447995185852
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 6,
+        "module_title": "Virtualization and File System",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5898405313491821
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 4,
+        "module_title": "Physical Database Design and Query",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5734845399856567
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5505145788192749
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5345422029495239
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 7,
+        "module_title": "NOSQL Database Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5250215530395508
+      },
+      {
+        "course_code": "BCSE101E",
+        "course_title": "Computer Programming: Python",
+        "module_number": 4,
+        "module_title": "Collections",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5095367431640625
+      }
+    ],
+    "os.process_management.context_switch": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 1,
+        "module_title": "Introduction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.558074414730072
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 2,
+        "module_title": "OS Principles",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.558074414730072
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5208901166915894
+      }
+    ],
+    "os.process_management.multithreading": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 1,
+        "module_title": "Introduction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.558074414730072
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 2,
+        "module_title": "OS Principles",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.558074414730072
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5208901166915894
+      }
+    ],
+    "os.cpu_scheduling.algorithms": [
+      {
+        "course_code": "BCSE303P",
+        "course_title": "Operating Systems Lab",
+        "module_number": 5,
+        "module_title": "Simulation of CPU scheduling algorithms (FCFS, SJF, Priority and Round Robin)",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6670935153961182
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 3,
+        "module_title": "Scheduling",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6422522068023682
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 6,
+        "module_title": "Transport Layer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5626822113990784
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 7,
+        "module_title": "PARALLELISM",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5293172001838684
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 7,
+        "module_title": "High Performance Processors",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.52540123462677
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5062994956970215
+      },
+      {
+        "course_code": "BCSE305L",
+        "course_title": "Embedded Systems",
+        "module_number": 5,
+        "module_title": "Real Time Operating System",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5022497773170471
+      }
+    ],
+    "os.process_synchronization.semaphores_mutex": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6073369979858398
+      }
+    ],
+    "os.memory_management.paging_segmentation": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 5,
+        "module_title": "Memory Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7240008115768433
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 6,
+        "module_title": "Subsystems",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6495407223701477
+      },
+      {
+        "course_code": "BCSE305L",
+        "course_title": "Embedded Systems",
+        "module_number": 2,
+        "module_title": "I/O Interfacing Techniques",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6416672468185425
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6348481178283691
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 3,
+        "module_title": "Pointers",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5956228971481323
+      },
+      {
+        "course_code": "BCSE303P",
+        "course_title": "Operating Systems Lab",
+        "module_number": 9,
+        "module_title": "Dynamic memory allocation algorithms - First-fit, Best-fit, Worst-fit algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5817584991455078
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 5,
+        "module_title": "Interfacing and Communication",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5773991346359253
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 1,
+        "module_title": "Introduction To Computer Architecture and Organization",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5560505390167236
+      }
+    ],
+    "os.memory_management.page_replacement": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 5,
+        "module_title": "Memory Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7240008115768433
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 6,
+        "module_title": "Subsystems",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6495407223701477
+      },
+      {
+        "course_code": "BCSE305L",
+        "course_title": "Embedded Systems",
+        "module_number": 2,
+        "module_title": "I/O Interfacing Techniques",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6416672468185425
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6348481178283691
+      },
+      {
+        "course_code": "BCSE102L",
+        "course_title": "Structured and Object-Oriented Programming",
+        "module_number": 3,
+        "module_title": "Pointers",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5956228971481323
+      },
+      {
+        "course_code": "BCSE303P",
+        "course_title": "Operating Systems Lab",
+        "module_number": 9,
+        "module_title": "Dynamic memory allocation algorithms - First-fit, Best-fit, Worst-fit algorithms",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5817584991455078
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 5,
+        "module_title": "Interfacing and Communication",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5773991346359253
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 1,
+        "module_title": "Introduction To Computer Architecture and Organization",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5560505390167236
+      }
+    ],
+    "os.deadlocks.prevention_avoidance": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 3,
+        "module_title": "Scheduling",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.7274755835533142
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 6,
+        "module_title": "Concurrency Control In Transaction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5562406182289124
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 4,
+        "module_title": "Concurrency",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.501911997795105
+      }
+    ],
+    "cn.network_models.osi_layers": [
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 8,
+        "module_title": "Simulation of Transport layer Protocols and analysis of congestion control techniques in network",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.6366153955459595
+      },
+      {
+        "course_code": "BCSE305L",
+        "course_title": "Embedded Systems",
+        "module_number": 6,
+        "module_title": "Embedded Networking Protocols",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5253623723983765
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 1,
+        "module_title": "Networking Principles and Layered",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5158805251121521
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 4,
+        "module_title": "Network Layer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.51032954454422
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 6,
+        "module_title": "Transport Layer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5082133412361145
+      },
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 6,
+        "module_title": "Socket programming(TCP and UDP) - Some challenging experiments can be given on Socket programming",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.508213222026825
+      }
+    ],
+    "cn.application_layer.http_https": [
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5682140588760376
+      }
+    ],
+    "cn.application_layer.dns": [
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5682140588760376
+      }
+    ],
+    "cn.transport_layer.tcp_udp": [
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 6,
+        "module_title": "Socket programming(TCP and UDP) - Some challenging experiments can be given on Socket programming",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.597186267375946
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 1,
+        "module_title": "Networking Principles and Layered",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5971862077713013
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 6,
+        "module_title": "Transport Layer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5971862077713013
+      },
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 8,
+        "module_title": "Simulation of Transport layer Protocols and analysis of congestion control techniques in network",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5729573965072632
+      },
+      {
+        "course_code": "BCSE309P",
+        "course_title": "Cryptography and Network Security Lab",
+        "module_number": 9,
+        "module_title": "Develop a simple client server model using telnet and capture the packets transmitted with tshark Analyze the pcap file and get the transmitted data (plain text) using any packet capturing library. Implement the above scenario using SSH and observe the data",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5037581920623779
+      },
+      {
+        "course_code": "BCSE305L",
+        "course_title": "Embedded Systems",
+        "module_number": 6,
+        "module_title": "Embedded Networking Protocols",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5002649426460266
+      }
+    ],
+    "cn.transport_layer.tcp_mechanisms": [
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 6,
+        "module_title": "Socket programming(TCP and UDP) - Some challenging experiments can be given on Socket programming",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.597186267375946
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 1,
+        "module_title": "Networking Principles and Layered",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5971862077713013
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 6,
+        "module_title": "Transport Layer",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5971862077713013
+      },
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 8,
+        "module_title": "Simulation of Transport layer Protocols and analysis of congestion control techniques in network",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5729573965072632
+      },
+      {
+        "course_code": "BCSE309P",
+        "course_title": "Cryptography and Network Security Lab",
+        "module_number": 9,
+        "module_title": "Develop a simple client server model using telnet and capture the packets transmitted with tshark Analyze the pcap file and get the transmitted data (plain text) using any packet capturing library. Implement the above scenario using SSH and observe the data",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5037581920623779
+      },
+      {
+        "course_code": "BCSE305L",
+        "course_title": "Embedded Systems",
+        "module_number": 6,
+        "module_title": "Embedded Networking Protocols",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5002649426460266
+      }
+    ],
+    "cn.network_layer.ip_subnetting": [
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 1,
+        "module_title": "Networking Principles and Layered",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6019177436828613
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 5,
+        "module_title": "Routing Protocols",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5900933146476746
+      },
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 5,
+        "module_title": "Observing Packets across the network and Performance Analysis of Routing protocols",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5900933146476746
+      },
+      {
+        "course_code": "BCSE203E",
+        "course_title": "Web Programming",
+        "module_number": 7,
+        "module_title": "Advanced ReactJS",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5658460855484009
+      },
+      {
+        "course_code": "BCSE203E",
+        "course_title": "Web Programming",
+        "module_number": 0,
+        "module_title": "Web Programming - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5658460855484009
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 1,
+        "module_title": "Introduction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5350370407104492
+      },
+      {
+        "course_code": "BCSE309L",
+        "course_title": "Cryptography and Network Security",
+        "module_number": 6,
+        "module_title": "Transport Layer Security and IP Security",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5274561643600464
+      }
+    ],
+    "cn.network_layer.routing_protocols": [
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 1,
+        "module_title": "Networking Principles and Layered",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6019177436828613
+      },
+      {
+        "course_code": "BCSE308L",
+        "course_title": "Computer Networks",
+        "module_number": 5,
+        "module_title": "Routing Protocols",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5900933146476746
+      },
+      {
+        "course_code": "BCSE308P",
+        "course_title": "Computer Networks Lab",
+        "module_number": 5,
+        "module_title": "Observing Packets across the network and Performance Analysis of Routing protocols",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5900933146476746
+      },
+      {
+        "course_code": "BCSE203E",
+        "course_title": "Web Programming",
+        "module_number": 7,
+        "module_title": "Advanced ReactJS",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5658460855484009
+      },
+      {
+        "course_code": "BCSE203E",
+        "course_title": "Web Programming",
+        "module_number": 0,
+        "module_title": "Web Programming - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5658460855484009
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 1,
+        "module_title": "Introduction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5350370407104492
+      },
+      {
+        "course_code": "BCSE309L",
+        "course_title": "Cryptography and Network Security",
+        "module_number": 6,
+        "module_title": "Transport Layer Security and IP Security",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5274561643600464
+      }
+    ],
+    "cn.network_security.tls_ssl": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 1,
+        "module_title": "Introduction",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5498991012573242
+      },
+      {
+        "course_code": "BCSE309L",
+        "course_title": "Cryptography and Network Security",
+        "module_number": 4,
+        "module_title": "Message Digest and Hash Functions",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5498991012573242
+      },
+      {
+        "course_code": "BCSE309L",
+        "course_title": "Cryptography and Network Security",
+        "module_number": 7,
+        "module_title": "E-mail, Web and System Security",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5313358306884766
+      },
+      {
+        "course_code": "BCSE309L",
+        "course_title": "Cryptography and Network Security",
+        "module_number": 3,
+        "module_title": "Asymmetric Encryption Algorithm and Key Exchange",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5124620199203491
+      },
+      {
+        "course_code": "BCSE309L",
+        "course_title": "Cryptography and Network Security",
+        "module_number": 2,
+        "module_title": "Symmetric Encryption Algorithms",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.509185791015625
+      }
+    ],
+    "system_design.load_balancing.algorithms": [],
+    "system_design.caching.strategies": [
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 4,
+        "module_title": "Memory System Organization and Architecture",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6667649149894714
+      },
+      {
+        "course_code": "BCSE307L",
+        "course_title": "Compiler Design",
+        "module_number": 7,
+        "module_title": "PARALLELISM",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.6230500340461731
+      },
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 5,
+        "module_title": "Memory Management",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.598152756690979
+      },
+      {
+        "course_code": "BCSE205L",
+        "course_title": "Computer Architecture and Organization",
+        "module_number": 5,
+        "module_title": "Interfacing and Communication",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5691981911659241
+      },
+      {
+        "course_code": "BCSE302L",
+        "course_title": "Database Systems",
+        "module_number": 1,
+        "module_title": "Database Systems Concepts and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5094630122184753
+      }
+    ],
+    "system_design.database_scaling.sharding_replication": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 7,
+        "module_title": "Storage Management, Protection and",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5325512886047363
+      }
+    ],
+    "system_design.messaging.pub_sub": [
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 6,
+        "module_title": "IO Streams and Files",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5050092935562134
+      },
+      {
+        "course_code": "BCSE103E",
+        "course_title": "Computer Programming : Java",
+        "module_number": 0,
+        "module_title": "Computer Programming : Java - Indicative Experiments",
+        "component": "lab",
+        "match": "parent topic",
+        "similarity": 0.5050092935562134
+      }
+    ],
+    "system_design.rate_limiting": [
+      {
+        "course_code": "BCSE303L",
+        "course_title": "Operating Systems",
+        "module_number": 6,
+        "module_title": "Virtualization and File System",
+        "component": "theory",
+        "match": "parent topic",
+        "similarity": 0.5395711660385132
+      }
+    ]
+  }
+}

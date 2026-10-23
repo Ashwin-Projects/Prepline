@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { ResultsResponse, Topic } from "../lib/api";
+import { FileDown } from "lucide-react";
+import { reportUrl, type ResultsResponse, type Topic } from "../lib/api";
 import { confidenceOf } from "../lib/confidence";
 import { date, domainName, domainShort, pct } from "../lib/format";
 import { useTarget } from "../lib/target";
@@ -9,6 +10,7 @@ import { GapBars } from "../components/GapBars";
 import { TargetSelect } from "../components/TargetSelect";
 import { Card, ConfidenceBadge, ErrorState, GateChip, InsufficientState, Loading, PageHeader, ProvisionalChip, Stat } from "../components/ui";
 import { MappingLimitations } from "../components/MappingLimitations";
+import { StudyNext } from "../components/StudyNext";
 
 export interface DomainCoverage {
   domain: string;
@@ -59,7 +61,19 @@ export default function Overview() {
       <PageHeader
         title="Overview"
         lede="How well the VIT CSE 2024-25 core syllabus covers the topics a company asks about in interviews."
-        actions={<TargetSelect />}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <TargetSelect />
+            <a
+              href={reportUrl(target)}
+              download
+              className="press inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-3 py-2 text-[13px] font-medium text-ink transition-colors duration-150 hover:bg-surface-2"
+            >
+              <FileDown size={15} aria-hidden="true" />
+              Download report (PDF)
+            </a>
+          </div>
+        }
       />
       {error && <ErrorState message={error} />}
       {loading && !data && <Loading />}
@@ -220,6 +234,8 @@ export default function Overview() {
             </table>
             </div>
           </Card>
+
+          <StudyNext target={target} className="col-span-12" />
 
           <MappingLimitations className="col-span-12" />
         </div>

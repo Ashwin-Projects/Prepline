@@ -10,8 +10,8 @@ starlette>=1.1.0
 uvicorn==0.47.0
 python-multipart==0.0.30
 nltk==3.9.1
+reportlab==5.0.1  # dashboard PDF report (backend/report.py)
 
 # test
 pytest==9.0.3
-reportlab==5.0.1
 httpx==0.28.1

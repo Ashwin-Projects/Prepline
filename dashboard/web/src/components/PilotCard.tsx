@@ -4,8 +4,8 @@ import { useApi } from "../lib/useApi";
 import { Card } from "./ui";
 
 const TRACKS = [
-  ["Track A", "Students who took an online assessment or interview (any outcome, internships included): topics asked, top-10 gap ratings, usefulness."],
-  ["Track B", "Any CSE student after about 5 minutes on this dashboard: “these gaps match my perceived weak areas” (1–5), usefulness."],
+  ["Track A", "Took an online assessment or interview with the chosen company: rates its top-10 gaps against their weak areas (1–5), ticks the topics they met, rates PREPLINE."],
+  ["Track B", "Has not: rates the same gaps against their perceived weak areas (1–5) and rates PREPLINE."],
 ];
 
 function cell(value: number | null | undefined, n: number | undefined, asPct = false) {
@@ -29,15 +29,9 @@ function TrackTable({ title, rows, kind, testId }: {
           <tr className="border-b border-line text-ink-2">
             <th scope="col" className="py-1.5 pr-3 text-left font-medium">Company</th>
             <th scope="col" className={th}>n</th>
-            {kind === "A" ? (
-              <>
-                <th scope="col" className={th}>M1 hit rate (n)</th>
-                <th scope="col" className={th}>M2 relevance (n)</th>
-              </>
-            ) : (
-              <th scope="col" className={th}>M2b perceived match (n)</th>
-            )}
-            <th scope="col" className={th}>M3 usefulness (n)</th>
+            {kind === "A" && <th scope="col" className={th}>M1 hit rate (n)</th>}
+            <th scope="col" className={th}>M2 gap match (n)</th>
+            <th scope="col" className={th}>M3 rating (n)</th>
           </tr>
         </thead>
         <tbody>
@@ -45,14 +39,8 @@ function TrackTable({ title, rows, kind, testId }: {
             <tr key={label} className="border-b border-line last:border-b-0">
               <td className="py-1.5 pr-3 text-ink">{label}</td>
               <td className={td}>{s.n}</td>
-              {kind === "A" ? (
-                <>
-                  <td className={td}>{cell(s.M1_topic_hit_rate, s.M1_topic_hit_rate_n, true)}</td>
-                  <td className={td}>{cell(s.M2_gap_relevance, s.M2_gap_relevance_n)}</td>
-                </>
-              ) : (
-                <td className={td}>{cell(s.M2b_perceived_match, s.M2b_perceived_match_n)}</td>
-              )}
+              {kind === "A" && <td className={td}>{cell(s.M1_topic_hit_rate, s.M1_topic_hit_rate_n, true)}</td>}
+              <td className={td}>{cell(s.M2_gap_relevance, s.M2_gap_relevance_n)}</td>
               <td className={td}>{cell(s.M3_usefulness, s.M3_usefulness_n)}</td>
             </tr>
           ))}
@@ -70,7 +58,7 @@ export function PilotCard({ className = "" }: { className?: string }) {
     <Card
       className={className}
       title="Participant pilot (Phase 16)"
-      subtitle="Students only, two tracks; pre-registered in docs/pilot/PILOT_PROTOCOL.md. Descriptive only, reported per track with its n."
+      subtitle="Students only; each picks Amazon, Microsoft or Flipkart. Pre-registered in docs/pilot/PILOT_PROTOCOL.md; descriptive only, reported per track with its n."
       testId="pilot"
     >
       {!results ? (
@@ -96,21 +84,30 @@ export function PilotCard({ className = "" }: { className?: string }) {
           <p className="text-[13px] text-ink-2" data-testid="pilot-status">
             Track A {results.tracks.A.overall.n}, Track B {results.tracks.B.overall.n} participants (
             {results.n_excluded_no_consent} excluded without consent), analysed {date(results.generated_at)}.
-            Usefulness over both tracks: {cell(results.M3_all_participants.M3_usefulness, results.M3_all_participants.M3_usefulness_n)}.
+            PREPLINE rating over both tracks: {cell(results.M3_all_participants.M3_usefulness, results.M3_all_participants.M3_usefulness_n)}.
           </p>
           {results.synthetic && <p role="alert" className="font-medium text-bad">SYNTHETIC DATA — not pilot results.</p>}
           <TrackTable
-            title="Track A — took an assessment or interview"
+            title="Track A — took an assessment or interview with the company"
             kind="A"
             testId="pilot-table-a"
             rows={[...Object.entries(results.tracks.A.by_company), ["All Track A", results.tracks.A.overall]]}
           />
           <TrackTable
-            title="Track B — after 5 minutes on the dashboard (perceived, not tested)"
+            title="Track B — has not (gap match is perceived, not tested)"
             kind="B"
             testId="pilot-table-b"
             rows={[...Object.entries(results.tracks.B.by_company), ["All Track B", results.tracks.B.overall]]}
           />
+          {results.q4_unmapped && (
+            <p className="text-[13px] text-ink-2" data-testid="pilot-unmapped">
+              Topics met outside the taxonomy (not in M1):{" "}
+              {Object.entries(results.q4_unmapped.selected)
+                .map(([option, n]) => `${option} ${n} of ${results.q4_unmapped!.n_track_a}`)
+                .join(" · ")}
+              . Cannot recall {results.q4_unmapped.cannot_recall} (excluded).
+            </p>
+          )}
         </div>
       )}
     </Card>
