@@ -1,0 +1,74 @@
+{
+  "description": "Two practice/reading pages per taxonomy topic that appears in a scored target's top-10 priority gaps (dashboard 'What to study next'). Every URL was fetched and its page title checked with WebFetch on the date below. LeetCode tag pages answer automated fetches with HTTP 403, so they could not be verified and are not listed. Not a scoring parameter.",
+  "verified_on": "2026-10-23",
+  "links": {
+    "dsa.linked_lists.traversal_reversal": [
+      {"title": "Linked List Data Structure", "url": "https://www.geeksforgeeks.org/dsa/linked-list-data-structure/"},
+      {"title": "Detect Cycle in Linked List", "url": "https://www.geeksforgeeks.org/dsa/detect-loop-in-a-linked-list/"}
+    ],
+    "dsa.stacks_queues.monotonic_stack": [
+      {"title": "Introduction to Monotonic Stack", "url": "https://www.geeksforgeeks.org/dsa/introduction-to-monotonic-stack-2/"},
+      {"title": "Stack Data Structure", "url": "https://www.geeksforgeeks.org/dsa/stack-data-structure/"}
+    ],
+    "dsa.trees.lowest_common_ancestor": [
+      {"title": "Lowest Common Ancestor in a Binary Tree", "url": "https://www.geeksforgeeks.org/dsa/lowest-common-ancestor-binary-tree-set-1/"},
+      {"title": "Lowest Common Ancestor in a Binary Search Tree", "url": "https://www.geeksforgeeks.org/dsa/lowest-common-ancestor-in-a-binary-search-tree/"}
+    ],
+    "dsa.graphs.shortest_path": [
+      {"title": "Shortest Path Algorithm Tutorial with Problems", "url": "https://www.geeksforgeeks.org/dsa/shortest-path-algorithms-a-complete-guide/"},
+      {"title": "Dijkstra's Algorithm", "url": "https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/"}
+    ],
+    "dsa.heaps.top_k": [
+      {"title": "Heap Data Structure", "url": "https://www.geeksforgeeks.org/dsa/heap-data-structure/"},
+      {"title": "Find k largest elements in an array", "url": "https://www.geeksforgeeks.org/dsa/k-largestor-smallest-elements-in-an-array/"}
+    ],
+    "dsa.dp.grid": [
+      {"title": "Unique paths in a Grid with Obstacles", "url": "https://www.geeksforgeeks.org/dsa/unique-paths-in-a-grid-with-obstacles/"},
+      {"title": "Min Cost Path in Grid", "url": "https://www.geeksforgeeks.org/dsa/min-cost-path-dp-6/"}
+    ],
+    "dsa.sorting_searching.binary_search": [
+      {"title": "Binary Search", "url": "https://www.geeksforgeeks.org/dsa/binary-search/"},
+      {"title": "Binary Search on Answer Tutorial with Problems", "url": "https://www.geeksforgeeks.org/dsa/binary-search-on-answer-tutorial-with-problems/"}
+    ],
+    "dsa.trees.bst": [
+      {"title": "Binary Search Tree", "url": "https://www.geeksforgeeks.org/dsa/binary-search-tree-data-structure/"},
+      {"title": "Insertion in Binary Search Tree (BST)", "url": "https://www.geeksforgeeks.org/dsa/insertion-in-binary-search-tree/"}
+    ],
+    "dsa.trees.traversal": [
+      {"title": "Tree Traversal Techniques", "url": "https://www.geeksforgeeks.org/dsa/tree-traversals-inorder-preorder-and-postorder/"},
+      {"title": "Level Order Traversal of Binary Tree", "url": "https://www.geeksforgeeks.org/dsa/level-order-tree-traversal/"}
+    ],
+    "system_design.caching.strategies": [
+      {"title": "Cache Eviction Policies | System Design", "url": "https://www.geeksforgeeks.org/system-design/cache-eviction-policies-system-design/"},
+      {"title": "Introduction to LRU Cache", "url": "https://www.geeksforgeeks.org/dsa/lru-cache-implementation/"}
+    ],
+    "system_design.messaging.pub_sub": [
+      {"title": "Message Queues - System Design", "url": "https://www.geeksforgeeks.org/system-design/message-queues-system-design/"},
+      {"title": "Pub/Sub Architecture", "url": "https://www.geeksforgeeks.org/system-design/what-is-pub-sub/"}
+    ],
+    "os.memory_management.page_replacement": [
+      {"title": "Page Replacement Algorithms in Operating Systems", "url": "https://www.geeksforgeeks.org/operating-systems/page-replacement-algorithms-in-operating-systems/"},
+      {"title": "Virtual Memory in Operating System", "url": "https://www.geeksforgeeks.org/operating-systems/virtual-memory-in-operating-system/"}
+    ],
+    "dsa.backtracking.subsets_permutations": [
+      {"title": "Power Set", "url": "https://www.geeksforgeeks.org/dsa/power-set/"},
+      {"title": "Permutations of given String", "url": "https://www.geeksforgeeks.org/dsa/write-a-c-program-to-print-all-permutations-of-a-given-string/"}
+    ],
+    "dsa.dp.lcs": [
+      {"title": "Longest Common Subsequence (LCS)", "url": "https://www.geeksforgeeks.org/dsa/longest-common-subsequence-dp-4/"},
+      {"title": "Edit Distance", "url": "https://www.geeksforgeeks.org/dsa/edit-distance-dp-5/"}
+    ],
+    "dsa.arrays.sliding_window": [
+      {"title": "Sliding Window Technique", "url": "https://www.geeksforgeeks.org/dsa/window-sliding-technique/"},
+      {"title": "Longest Substring Without Repeating Characters", "url": "https://www.geeksforgeeks.org/dsa/length-of-the-longest-substring-without-repeating-characters/"}
+    ],
+    "dbms.indexing.b_trees": [
+      {"title": "Introduction of B Tree", "url": "https://www.geeksforgeeks.org/dsa/introduction-of-b-tree-2/"},
+      {"title": "Introduction of B+ Tree", "url": "https://www.geeksforgeeks.org/dbms/introduction-of-b-tree/"}
+    ],
+    "cn.network_layer.routing_protocols": [
+      {"title": "Classification of Routing Algorithms", "url": "https://www.geeksforgeeks.org/computer-networks/classification-of-routing-algorithms/"},
+      {"title": "Distance Vector Routing (DVR) Protocol", "url": "https://www.geeksforgeeks.org/computer-networks/distance-vector-routing-dvr-protocol/"}
+    ]
+  }
+}
