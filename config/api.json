@@ -20,6 +20,8 @@
     "topics_dir": "results/topics",
     "benchmark_file": "results/benchmark/benchmark_v1.0.json",
     "pilot_results": "results/pilot/pilot_results.json",
-    "retro_validation": "results/validation/retro_validation.json"
+    "retro_validation": "results/validation/retro_validation.json",
+    "study_modules": "results/study/study_modules_v1.2.json",
+    "practice_links": "config/practice_links.json"
   }
 }
