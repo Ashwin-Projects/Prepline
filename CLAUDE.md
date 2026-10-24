@@ -1,192 +1,133 @@
-# CLAUDE.md - PREPLINE Project Context & Memory
+# CLAUDE.md: PREPLINE
 
-## Overview & Purpose
+PREPLINE scores how well the VIT B.Tech CSE 2024-25 core syllabus (26 courses) covers the topics companies ask about in
+interviews. For each company/role target it reports a composite score S_comp and ranked priority gaps. README.md covers
+the overview, formulas, current results and limitations; `docs/ARCHITECTURE.md` has the data-flow diagram and "where to
+change what". Read both before larger changes.
 
-**PREPLINE** is a Curriculum-to-Interview Alignment Engine. It quantitatively measures how closely a university's computer science curriculum aligns with the technical interview expectations of specific tech companies and software engineering roles.
+## Architecture
 
-### Core Problem Solved
-University CS programs focus on foundational computer science theory, whereas industry technical interviews evaluate a specific, applied subset of that theory (e.g., LeetCode-style DSA, System Design, Leadership Principles). PREPLINE bridges this gap by creating an auditable, data-driven mapping between course syllabus documents (PDFs) and real interview experience reports (CSVs/JSON), outputting:
-1. **Composite Alignment Score ($S_{\text{comp}}$)**: Overall alignment percentage (0-100%).
-2. **Topic Coverage ($\text{Coverage}(t)$)**: Topic-level presence bit $C(t)$ and workload depth $D(t) \in [1.0, 5.0]$.
-3. **Priority Gap List ($\text{PriorityGap}(t)$)**: Ranked list of preparation gaps based on interview importance $I(t)$ and missing coverage.
+| Area | Role |
+|---|---|
+| `pipeline/config.py` | Loads the current scoring config (`config/scoring_v1.2.json`) once per path. All frozen constants come from it; never hard-code them. |
+| `pipeline/syllabus_parser.py` | pdfplumber parsing: splits PDFs into courses → modules, keeps allowlisted core courses, extracts depth signals, detects pages with no text layer. Transcriptions for PDFs without text: `data/raw/syllabi/transcribed/<CODE>.txt`. |
+| `pipeline/interview_parser.py` | Applies the interview filter (behavioural, `needs_review`, no question text, no report id) and writes `excluded_questions.csv`. |
+| `pipeline/keyword_abstraction.py` → `embeddings.py` → `taxonomy_mapper.py` | Two-pass abstraction (RAKE concepts), local MiniLM cosine matching against node descriptions, and the deterministic 60/40 credit split. Applies the node-type rule: syllabus → `high_level_concept`, interview → `granular_skill`. |
+| `pipeline/taxonomy_tree.py` | Granular skills inherit coverage from their nearest high-level ancestor. |
+| `pipeline/scoring.py` | Coverage C(t)/D(t), importance I(t), S_comp with the density gate, and priority gaps. |
+| `pipeline/unmapped_terms_logger.py`, `taxonomy_versioning.py` | Append-only unmapped-terms log; manual taxonomy-version governance. Neither automates migration. |
+| `backend/` | FastAPI app (`app.py`). `routes.py`: upload / validate-target / pipeline run. `dashboard.py`: read-only results, comparison, benchmark, validation and pilot. `study.py`: study list. `report.py`: reportlab PDF. `schemas.py`: Pydantic models. Limits, CORS and file paths are in `config/api.json`. |
+| `dashboard/web/` | Vite + React 19 + TS + Tailwind v4 + Recharts. It only reads saved files via the API and never runs the pipeline. |
+| `evaluation/` | Runners (`run_full_pipeline.py`, `run_all_targets.py`), dashboard exporters (`export_topic_tables.py`, `export_study_modules.py`), `retro_validation.py`, `compare_results.py`, `review_unmapped_terms.py`, `benchmark/`, `pilot/`, and all pytest tests (`test_*.py`). |
 
----
+Data: one folder per target, `data/processed/<target_id>/` (`reports.csv`, `questions.csv`, generated
+`excluded_questions.csv`), registered in `config/targets.json`. Adding a target needs no code changes
+(`docs/ADDING_A_COMPANY.md`). Report sources are listed in `data/SOURCES.md`.
 
-## Project Structure
+## Commands
 
-```
-prepline/
-├── backend/                  # FastAPI endpoints and Pydantic schemas (backend/schemas.py)
-├── dashboard/                # UI components and visualization frontend
-├── data/
-│   ├── raw/
-│   │   ├── interviews/
-│   │   │   └── amazon_sde1_interviews.csv # Original raw Amazon SDE-1 interview dataset (unmodified, committed)
-│   │   └── syllabi/
-│   │       ├── vit_syllabus_manifest.csv  # Manifest defining raw VIT CSE 2024-25 syllabus document sources
-│   │       └── *.pdf                      # Input syllabus PDFs (gitignored)
-│   ├── processed/            # Canonical dataset CSVs (reports.csv, questions.csv)
-│   └── taxonomy/             # Versioned taxonomy hierarchy (taxonomy_v1.0.json)
-├── pipeline/
-│   ├── __init__.py
-│   ├── interview_parser.py   # Dataset ingestion, parsing & deduplication logic (Phase 2)
-│   ├── syllabus_parser.py    # Syllabus PDF text & depth metric extraction via pdfplumber (Phase 7)
-│   ├── keyword_abstraction.py# Two-pass NLP abstraction logic (Phase 4)
-│   ├── embeddings.py         # Local sentence embeddings via all-MiniLM-L6-v2 (Phase 5)
-│   ├── taxonomy_mapper.py    # Canonical node mapping & 60/40 topic credit split (Phase 6)
-│   └── scoring.py            # Coverage, importance, composite score & gap ranking (Phases 9-12)
-├── evaluation/               # Benchmark scripts & unit tests (test_syllabus_parser, test_backend_api, etc.)
-├── .gitignore                # Ignores virtual environments, cache, logs, data/raw/syllabi/*.pdf
-├── README.md                 # Full project specification & mathematical formulation
-└── requirements.txt          # Dependencies (torch, sentence-transformers, pdfplumber, pandas, etc.)
+```powershell
+pip install -r requirements.txt
+python -m pytest evaluation -q                                    # Python tests
+powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1   # API :8000 + dashboard :5173
+python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000    # API only
+python evaluation/run_all_targets.py                              # results/<id>_v1.2_course_syllabi.json + COMPARISON.md
+python evaluation/export_topic_tables.py; python evaluation/export_study_modules.py   # dashboard data
+cd dashboard/web; npx playwright test                             # dashboard E2E (refreshes screenshots)
+cd dashboard/web; npm run build; npm run lint                     # tsc + vite build; oxlint
 ```
 
----
+Syllabus PDFs are gitignored (`data/raw/syllabi/*.pdf`, listed in `vit_syllabus_manifest.csv`). The backend loads the
+embedding stack at import, and parsing the full VIT PDF takes minutes.
 
-## Project Phases & Status
+## Frozen constraints (change only with explicit owner approval and a new config version)
 
-| Phase | Description | Status | Notes |
-|---|---|---|---|
-| **Phase 1** | Scaffolding & environment setup | **Completed** | Directory structure and basic modules created |
-| **Phase 2** | Raw interview dataset restructuring, expansion & deduplication | **Completed & Pushed** | Committed in `0dbe0e0`: `data/processed/reports.csv` (21 independent reports) & `data/processed/questions.csv` (99 rows); **Density Gate PASSED** |
-| **Phase 3** | Versioned taxonomy definition | **Completed** | `taxonomy_v1.0.json` defined in `data/taxonomy/` |
-| **Phases 4–6** | Two-pass NLP abstraction, local embeddings, 60/40 credit mapper | **Completed & Verified** | Built in `pipeline/keyword_abstraction.py`, `pipeline/embeddings.py`, `pipeline/taxonomy_mapper.py`. Uses `all-MiniLM-L6-v2`, threshold $\tau = 0.50$, deterministic 60/40 credit split. Validated 99/99 dataset items (75 mapped, 24 subthreshold). |
-| **Phase 7** | Syllabus PDF parsing (`pdfplumber`) & depth modeling ($D(t)$) | **Completed & Tested** | Built in `pipeline/syllabus_parser.py`. Extract course metadata, depth signals, scanned PDF detection & test-covered (`test_syllabus_parser.py`). |
-| **Phase 8** | Presence & Depth Modeling ($C(t)$, $D(t) \in [1.0, 5.0]$, $\text{Coverage}(t)$) | **Completed & Tested** | Built in `pipeline/scoring.py` (`calculate_syllabus_coverage`). Verified by `evaluation/test_scoring.py` |
-| **Phase 9** | Per-Report Topic Importance ($W(r,t)$, $I(t)$) | **Completed & Tested** | Built in `pipeline/scoring.py` (`calculate_topic_importance`). Verified by `evaluation/test_scoring.py` |
-| **Phase 10** | Overall Composite Alignment Score ($S_{\text{comp}}$) | **Completed & Tested** | Built in `pipeline/scoring.py` (`calculate_composite_score`). Universe $U = \{t \mid I(t) > 0\}$. Enforces 15-report density gate. Verified by `evaluation/test_scoring.py` |
-| **Phase 11** | Priority Gap Ranking ($\text{PriorityGap}(t)$) | **Completed & Tested** | Built in `pipeline/scoring.py` (`rank_priority_gaps`). Calculates $\text{PriorityGap}(t) = I(t) \cdot (1 - \text{Coverage}(t))$, sorts descending with deterministic `topic_id` tie-breaking. Verified by `evaluation/test_scoring.py` |
-| **Phase 12** | Unmapped-terms logging + taxonomy versioning | **Completed** | Built in `pipeline/unmapped_terms_logger.py`, `pipeline/taxonomy_versioning.py`, `evaluation/review_unmapped_terms.py`. Verified by `evaluation/test_phase12.py` |
-| **Phase 13** | Ground-truth benchmark evaluation (200+ samples, 70/15/15 split) | **Pending** | Dev/Val/Test splits for NLP evaluation |
-| **Phase 14** | Backend API & Scoring Integration | **Completed & Integrated** | FastAPI service in `backend/app.py`, `routes.py`, `schemas.py` fully integrated with Phase 8–11 scoring engine (`calculate_syllabus_coverage`, `calculate_topic_importance`, `calculate_composite_score`, `rank_priority_gaps`). Enforces 15-report density gate against canonical `reports.csv`. Tested by `evaluation/test_backend_api.py`. |
-| **Phase 15** | Dashboard UI | **Pending** | UI frontend components and visualization |
-| **Phase 16** | Pilot outcome validation & gamma calibration | **Pending** | Cohort outcome correlation |
+- τ = 0.50, γ = 0.5, depth reference values, `min_reports` = 15, semester weeks, taxonomy v1.0, the embedding model
+  and its revision, the node-type rule, and the core-course allowlist: all in `config/scoring_v1.2.json`.
+- The density gate needs ≥ 15 reports left after filtering. Below that, the status is `INSUFFICIENT_DATA` with no S_comp.
+  Never relax the gate.
+- Benchmark gold labels v1.0 and splits v1.0 are frozen. Never use the test split to choose a method or threshold.
+- Every mapping and result pins `taxonomy_version`.
 
----
+## Conventions
 
-## Session Accomplishments
+- **Versioned outputs, never overwritten.** Results, configs, the taxonomy, benchmark splits, topic tables, study
+  modules and validation files are versioned. Runners skip or refuse existing files (use `--replace` or `--out-dir`
+  where offered). Superseded configs (`scoring_v1.0`, `v1.1`) are kept as records.
+- **Raw data is immutable.** `data/raw/interviews/amazon_sde1_interviews.csv` and the raw syllabi are never edited.
+- **Report IDs** are unique, prefixed per company (`AMZ`, ...) and never reused. For example, `AMZ012` was removed as a
+  duplicate of `AMZ004` and stays unused.
+- **Question parsing rules:**
+  - Quote exact question titles in `question_text` (leave `topic` empty).
+  - Put general topic mentions in `topic` (leave `question_text` empty).
+  - Never paraphrase, invent, merge or drop questions.
+  - For ambiguous or summary blobs, set `needs_review=True` with a `review_reason`.
+- **`round_type`** is one of:
+  - `OA`: online or written tests;
+  - `technical`: coding, DSA or algorithms;
+  - `behavioral`: leadership principles, projects, resume or hiring-manager chats;
+  - `system_design`;
+  - `mixed`: technical and behavioural without a breakdown;
+  - `unknown`.
+- **Credit split:** one match above τ gets 100 %. With several, the top match gets 60 % and the rest share 40 % equally.
+  Exact ties are broken alphabetically by `topic_id`.
+- **Honest reporting:** scores are labelled provisional. Known mapping errors live in `docs/BACKLOG.md` and are shown on
+  the dashboard. Retro validation must not be presented as the pilot or as outcome validation. Never invent results,
+  pilot responses or calibration.
+- **API safety:** the server binds to loopback by default (`PREPLINE_HOST` to change it), uploads are size, page and
+  filename limited, CORS never allows credentials, and unhandled errors return a generic 500 with a request id.
+- **Pilot data:** raw form exports (`data/pilot/responses*.csv`) stay local; only aggregated `results/pilot/` is
+  committed.
 
-1. **Phases 4–6 Final Validation & Verification**:
-   - Merged latest `origin/main` baseline into `feature/sprint3-two-pass-abstraction`.
-   - Executed full end-to-end dataset validation against all 99 questions in `data/processed/questions.csv`.
-   - Confirmed **75 items mapped** ($\tau \ge 0.50$) and **24 subthreshold/behavioral items unmapped** ($\tau < 0.50$).
-   - Verified 0 taxonomy version mismatches, 0 invented nodes, 0 credit allocation sum errors, and 100% adherence to the deterministic 60/40 credit split.
+## Dashboard UI (redesign 2026-10-24)
 
-2. **NLTK Resource Handling Optimization**:
-   - Updated `_get_rake()` in `pipeline/keyword_abstraction.py` with lazy initialization and auto-download checks (`stopwords`, `punkt`, `punkt_tab`) to guarantee zero import-time failures in fresh environments.
+Spec and plan: `docs/superpowers/specs/2026-10-24-ui-redesign-scroll-story-design.md`,
+`docs/superpowers/plans/2026-10-24-ui-redesign-scroll-story.md`.
 
-3. **Phase 2 Dataset Completion & Push**:
-   - Expanded Amazon SDE-1 interview reports to **21 independent reports** (`AMZ001`–`AMZ011`, `AMZ013`–`AMZ022`). `AMZ012` remains removed as a duplicate of `AMZ004`.
-   - Extracted and classified **99 total question/topic rows** into `data/processed/questions.csv`.
-   - Committed changes in commit `0dbe0e0` ("Complete Phase 2 interview dataset") and pushed to `origin/main`.
-
-4. **Syllabus Manifest Preparation (Phase 7)**:
-   - Added `vit_syllabus_manifest.csv` mapping official VIT CSE 2024-25 curriculum PDF specifications and official source URLs.
-
-5. **Test Suite Verification**:
-   - Executed full test suite (`python -m unittest discover -s evaluation`). All **16 / 16 unit tests passed cleanly in 0.49s**.
-
-6. **Phase 8 (Presence & Depth Modeling) Implementation & Verification**:
-   - Implemented `calculate_syllabus_coverage()` in `pipeline/scoring.py` following PREPLINE Final Execution Blueprint v1.1.
-   - Aggregate syllabus-wide presence bit $C(t) \in \{0, 1\}$.
-   - Normalized available depth signals $N(x) = \min(x/R_x, 1.0)$ using exact reference constants (`unit_hours`=10, `slide_count`=20, `lab_hours`=10, `lab_count`=5, `assignment_count`=5). Missing signals are excluded from denominator rather than treated as zero.
-   - Calculated depth $D(t) = 1.0 + 4.0 \cdot D_{\text{norm}}(t)$ bounded in $[1.0, 5.0]$, distinguishing measured depth from fallback depth ($D=1.0$, `depth_status="fallback"`).
-   - Applied decay coverage formula $\text{Coverage}(t) = C(t) \cdot \left[\frac{1 - e^{-\gamma D(t)}}{1 - e^{-5\gamma}}\right]$ with $\gamma = 0.5$.
-   - Built comprehensive test suite in `evaluation/test_scoring.py` (7 unit test cases).
-   - Executed full test suite (`python -m unittest discover -s evaluation`). All **23 / 23 unit tests passed cleanly in 0.50s**.
-
-7. **Phase 9 (Per-Report Topic Importance) Implementation & Verification**:
-   - Implemented `calculate_topic_importance()` in `pipeline/scoring.py` consuming question inputs and computing question credits via `pipeline.taxonomy_mapper.map_source_to_taxonomy()`.
-   - Grouped questions by `report_id` and enforced max credit capping $W(r,t) = \max_{q \in r}(\text{credit}(q, t))$ within each report to prevent duplicate question inflation.
-   - Aggregated topic importance $I(t) = \frac{\sum_r W(r,t)}{\text{total\_reports\_count}}$ across $N=21$ independent Amazon SDE-1 reports.
-   - Added comprehensive unit test suite `TestPhase9Scoring` in `evaluation/test_scoring.py` covering single question, multiple questions in one report (max capping), 60/40 split preservation, total reports denominator, unmapped topic zeroes, and full 99-question / 21-report integration.
-   - Executed full test suite (`python -m unittest discover -s evaluation`). All **31 / 31 unit tests passed cleanly in 16.3s**.
-
-8. **Phase 10 & Phase 11 (Composite Score & Priority Gap Ranking) Implementation & Verification**:
-   - Implemented `calculate_composite_score(importance_dict, coverage_dict)` in `pipeline/scoring.py` using formula $S_{\text{comp}} = \left[\frac{\sum_{t \in U} (I(t) \cdot \text{Coverage}(t))}{\sum_{t \in U} I(t)}\right] \times 100$ over positive-importance scoring universe $U = \{t \mid I(t) > 0\}$. Enforces minimum 15-report density gate.
-   - Implemented `rank_priority_gaps(importance_dict, coverage_dict, taxonomy_nodes)` in `pipeline/scoring.py` calculating $\text{PriorityGap}(t) = I(t) \cdot (1 - \text{Coverage}(t))$ for $t \in U$. Excludes zero-importance topics ($I(t) \le 0$) and sorts descending with deterministic `topic_id` tie-breaking. Returns `PriorityGapItem`-compatible structure with 1-indexed ranks.
-   - Built unit test suites `TestPhase10Scoring` and `TestPhase11Scoring` in `evaluation/test_scoring.py` covering known scores, multiple topics, zero-importance exclusion, score bounding, empty input handling, descending gap sorting, and deterministic tie handling.
-   - Executed full unit test suite (`python -m unittest discover -s evaluation`). All **42 / 42 unit tests passed cleanly in 17.7s**.
-
-9. **Phase 8–11 Backend API Integration & Final Verification**:
-   - Replaced all scaffold/mock values (`S_comp=76.5`, static coverage, mock report count) in `backend/routes.py` (`POST /api/v1/pipeline/run` and `POST /api/v1/validate-target`) with real outputs from `pipeline/scoring.py` (`calculate_syllabus_coverage`, `calculate_topic_importance`, `calculate_composite_score`, `rank_priority_gaps`).
-   - Connected target report density gate to canonical dataset `data/processed/reports.csv` (`report_count=21`).
-   - Extended `evaluation/test_backend_api.py` with end-to-end integration tests confirming dynamic calculation of $S_{\text{comp}}$, real importance and coverage lists, descending gap rankings, and total absence of mock values.
-   - Performed clean import/startup check (`from backend.app import app`).
-   - Executed full test suite (`python -m unittest discover -s evaluation`). All **43 / 43 unit tests passed cleanly in 17.8s**.
-
----
-
-## Key Decisions, Rules & Schemas Established
-
-- **Canonical Dataset Location**: One folder per company/role target, `data/processed/<target_id>/` (`reports.csv`, `questions.csv`, generated `excluded_questions.csv`); targets are listed in `config/targets.json` (Amazon SDE-1 data moved to `data/processed/amazon_sde1/` on 2026-10-22). See `docs/ADDING_A_COMPANY.md` and `data/SOURCES.md`.
-- **Density Gate Constraint**: Scoring requires a minimum density of `MIN_REPORTS = 15` unique deduplicated reports per company/role pair. Current Amazon SDE-1 count is **21 unique reports**; density gate is **PASSED**.
-- **Report ID Continuation**: Report IDs must be assigned sequentially (`AMZ001`..`AMZ011`, `AMZ013`..`AMZ022`). Never reuse removed duplicate IDs (`AMZ012`).
-- **Parsing Rules for Questions**:
-  - Exact question titles $\rightarrow$ `question_text` (leave `topic` empty).
-  - General topic mentions $\rightarrow$ `topic` (leave `question_text` empty).
-  - No paraphrasing, inventing, merging, or dropping of questions/topics.
-  - Ambiguous/summary blobs $\rightarrow$ `needs_review: true` with a clear reason in `review_reason`.
-- **Classification Rules for `round_type`**:
-  - `OA`: Online assessments, written coding tests.
-  - `technical`: Coding problems, DSA, algorithms.
-  - `behavioral`: Workstyle, Leadership Principles, project/resume discussions, hiring manager chats.
-  - `system_design`: System design problems (e.g. Parking Lot design, LED system design).
-  - `mixed`: Rounds blending technical and behavioral without sub-breakdown.
-  - `unknown`: Used when classification cannot be confidently made.
-- **Credit Allocation Rule (60/40 Split)**:
-  - Single topic above $\tau = 0.50 \rightarrow 100\%$ credit.
-  - Multiple topics above $\tau = 0.50 \rightarrow 60\%$ to top similarity match, $40\%$ divided equally among secondary matches.
-  - Exact ties broken alphabetically by `topic_id`.
-
----
-
-## Current Dataset Summary
-
-- **Raw Input File Rows (`amazon_sde1_interviews.csv`)**: 15 (unmodified baseline, committed)
-- **Unique Independent Reports (`data/processed/reports.csv`)**: **21** (`AMZ001`–`AMZ011`, `AMZ013`–`AMZ022`)
-- **Duplicate Reports Removed / Rejected**: 1 (`AMZ012` duplicate of `AMZ004`)
-- **Total Question/Topic Rows (`data/processed/questions.csv`)**: **99**
-- **PREPLINE Density Gate Requirement (`MIN_REPORTS = 15`)**: **PASSED (21 / 15 reports)**
-- **Git Branch Status**: Up to date with `origin/main` (Commit `0dbe0e0`)
-
----
-
-## Report status (12 Oct 2026)
-
-- **Report draft**: Drafted as a Claude Doc titled "PREPLINE Project Report (AI-assisted draft)".
-- **Verified figures**:
-  - Amazon SDE-1 interview reports: **21**
-  - Taxonomy: **v1.0**, **83 topics**
-  - $S_{\text{comp}}$: **51.54**
-  - Top priority gaps: heaps, shortest path, grid DP, top-K, message queues
-  - Depth status: **58 measured / 25 fallback**
-  - Test suite: **64 tests** passing
-- **Remaining gaps**:
-  - Second company-role pair
-  - Phase 13 ground-truth benchmark
-  - Teacher pilot
-  - Scanned syllabus pages (OCR excluded from MVP)
-  - Dashboard
-
----
-
-## Instructions for Future Claude Sessions
-
-1. **Read `CLAUDE.md` First**: Always inspect this file before starting work on PREPLINE to get up-to-date context.
-2. **Do Not Modify Raw Data**: `amazon_sde1_interviews.csv` must remain unmodified as the raw baseline.
-3. **Data Sources for Pipeline**: When building or running `pipeline/interview_parser.py` or scoring modules, consume `reports.csv` and `questions.csv` from the target folder `data/processed/<target_id>/` (config/targets.json).
-4. **Preserve Taxonomy Versioning**: All concept mappings and evaluations must pin to `taxonomy_version` (e.g., `v1.0`).
-
----
+- **Design system:** editorial academic.
+  - Tokens in `dashboard/web/src/index.css`: paper `#f7f5f0` / ink `#0e0f13` themes and one ink-blue `--primary`.
+  - The token names are unchanged, so components never use raw hex.
+  - `--font-display` (bundled Newsreader) is for `h1`, card titles and the wordmark; Fira Sans/Code stay for UI and data.
+  - `PageHeader` takes an `eyebrow` ("Dashboard · 0N").
+- **Story route `/how-it-works`** (`src/story/`):
+  - It sits outside `Layout` and runs five chapters: syllabus, taxonomy, interview evidence, scoring, gaps.
+  - Every number comes from `/api/v1/results/{target}` and `/api/v1/comparison` via `story/data.ts`. Never hard-code
+    story values.
+  - The §4 strip is exact: column width = I(t)/ΣI and fill = Coverage(t), so the filled share is S_comp/100.
+  - There are no invented course→topic connectors.
+- **Motion:**
+  - The `motion` package is imported only under `src/story/` (lazy route chunk); keep it out of the entry bundle.
+  - Animate only transform and opacity, using full `transform` strings.
+  - Chapters pin only on screens at least 900px wide and 700px tall (the `unpinned` CSS variant and `UNPINNED` in
+    `useChapterProgress.ts` must agree).
+  - Unpinned, progress tracks the scene element itself, so it animates as it enters view.
+  - The story header is sticky only at 1000px and wider, so a wrapped company selector never covers a pinned stage.
+  - While results load, chapters show a scene-sized skeleton.
+  - `prefers-reduced-motion`: no pinning, every scene in its final state.
+- **Theme toggle** lives in `components/ThemeToggle.tsx` (shared by the sidebar and the story header, same
+  `prepline-theme` key).
+- **Tests:**
+  - `tests/story.spec.ts` checks the story numbers against the live API, plus reduced motion, 360 px, API-down,
+    insufficient data and company switching.
+  - `tests/design.spec.ts` checks the display face, nav entry, eyebrows and theme persistence.
+- **Verification on 2026-10-24:**
+  - `python -m pytest evaluation -q` → 339 passed.
+  - `npx playwright test` → 42 passed, 6 skipped (`media.spec.ts`, needs `MEDIA=1`).
+  - A final fresh-context code review found no Critical issues. All 4 Important findings were fixed test-first: phone
+    scrub mapping, a company-switch test that now checks the new company's values, the loading skeleton, and short or
+    medium-width pinning. 10 Minor findings are deferred.
+  - `npm run lint` → exit 0, with `only-export-components` warnings only.
+  - `npm run build` → OK.
+  - A manual pass found no console errors (both themes, with and without reduced motion) and no horizontal overflow at
+    768/390/360 px. The PDF export, study links, tooltips, Topic explorer search and company hand-off all work.
 
 ## Skills policy
+
 - Workflow: Superpowers (brainstorm → plan → TDD → verify). Do not use ECC workflows.
-- Constraint-Driven Development: τ=0.50, γ=0.5, depth reference values, MIN_REPORTS=15, taxonomy v1.0 are FROZEN unless I explicitly say otherwise.
-- Logic changes: TDD Guard on; failing test first.
-- Check Context7 before using sentence-transformers, pdfplumber, FastAPI, NLTK APIs.
+- Constraint-Driven Development: the frozen constraints above stay frozen unless I explicitly say otherwise.
+- Logic changes: TDD Guard on; write the failing test first.
+- Check Context7 before using the sentence-transformers, pdfplumber, FastAPI or NLTK APIs.
 - Versioned outputs/config: Deprecation & Migration; never overwrite old results files.
 - Pipeline runs: log timings and counts (Observability).
 - Before any merge: Claude Security review.
 - Dashboard only: Impeccable (design), Emil Kowalski (motion, sparingly), Playwright (tests).
-

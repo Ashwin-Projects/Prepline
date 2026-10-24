@@ -10,11 +10,11 @@ export function Card({ title, subtitle, children, className = "", testId }: {
   testId?: string;
 }) {
   return (
-    <section className={`rounded-lg border border-line bg-surface p-4 ${className}`} data-testid={testId}>
+    <section className={`rounded-[10px] border border-line bg-surface p-5 max-[600px]:p-4 ${className}`} data-testid={testId}>
       {title && (
-        <header className="mb-3">
-          <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
-          {subtitle && <p className="text-[13px] text-ink-3">{subtitle}</p>}
+        <header className="mb-3.5">
+          <h2 className="font-display text-[19px] leading-tight font-medium tracking-[-0.01em] text-ink">{title}</h2>
+          {subtitle && <p className="mt-0.5 text-[13px] text-ink-3">{subtitle}</p>}
         </header>
       )}
       {children}
@@ -22,12 +22,22 @@ export function Card({ title, subtitle, children, className = "", testId }: {
   );
 }
 
-export function PageHeader({ title, lede, actions }: { title: string; lede?: ReactNode; actions?: ReactNode }) {
+export function PageHeader({ title, lede, actions, eyebrow }: {
+  title: string;
+  lede?: ReactNode;
+  actions?: ReactNode;
+  eyebrow?: string;
+}) {
   return (
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-b border-line pb-6">
       <div className="min-w-0">
-        <h1 className="text-2xl font-semibold tracking-tight text-ink">{title}</h1>
-        {lede && <p className="mt-1 max-w-3xl text-[14px] text-ink-2">{lede}</p>}
+        {eyebrow && (
+          <p className="mb-2 text-[12px] font-medium tracking-[0.08em] text-ink-3 uppercase" data-testid="page-eyebrow">
+            {eyebrow}
+          </p>
+        )}
+        <h1 className="text-[40px] leading-[1.05] font-medium tracking-[-0.02em] text-ink max-[600px]:text-[32px]">{title}</h1>
+        {lede && <p className="mt-2.5 max-w-[62ch] text-[15px] text-ink-2">{lede}</p>}
       </div>
       {actions}
     </div>

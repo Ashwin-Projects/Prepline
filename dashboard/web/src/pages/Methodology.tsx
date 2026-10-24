@@ -66,6 +66,7 @@ export default function Methodology() {
   return (
     <>
       <PageHeader
+        eyebrow="Dashboard · 06"
         title="Methodology"
         lede="Every number in the dashboard comes from these formulas, applied to versioned inputs. Frozen constants change only with a new config version."
       />
