@@ -51,6 +51,7 @@ export default function Topics() {
   return (
     <>
       <PageHeader
+        eyebrow="Dashboard · 03"
         title="Topic explorer"
         lede="All 83 taxonomy topics with interview importance, syllabus coverage and depth. Granular skills inherit coverage from their high-level parent."
         actions={<TargetSelect />}

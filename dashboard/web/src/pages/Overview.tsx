@@ -59,6 +59,7 @@ export default function Overview() {
   return (
     <>
       <PageHeader
+        eyebrow="Dashboard · 01"
         title="Overview"
         lede="How well the VIT CSE 2024-25 core syllabus covers the topics a company asks about in interviews."
         actions={

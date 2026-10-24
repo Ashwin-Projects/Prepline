@@ -21,6 +21,7 @@ export default function Benchmark() {
   return (
     <>
       <PageHeader
+        eyebrow="Dashboard · 05"
         title="Benchmark"
         lede="Four topic matchers scored against the v1.0 gold labels. Thresholds were chosen on dev and checked on val; test was never used for a choice (it was computed twice by accident, with identical numbers)."
       />

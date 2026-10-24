@@ -5,14 +5,23 @@
 @import "@fontsource/fira-sans/700.css";
 @import "@fontsource/fira-code/400.css";
 @import "@fontsource/fira-code/500.css";
+@import "@fontsource-variable/newsreader/opsz.css";
 @import "katex/dist/katex.min.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* Story chapters pin only on screens wide and tall enough for a pinned stage; keep in sync with UNPINNED in
+   src/story/useChapterProgress.ts. */
+@custom-variant unpinned {
+  @media (max-width: 899.98px) { @slot; }
+  @media (max-height: 699.98px) { @slot; }
+}
 
-/* Design tokens (Swiss / minimal, data-dense). Components use these, never raw hex. */
+/* Design tokens (editorial academic: warm paper / deep ink, serif display over a data sans).
+   Components use these, never raw hex. */
 @theme {
   --font-sans: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Fira Code", ui-monospace, monospace;
+  --font-display: "Newsreader Variable", Georgia, "Times New Roman", serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
@@ -33,17 +42,17 @@
 }
 
 :root {
-  --bg: #f6f7f9;
-  --surface: #ffffff;
-  --surface-2: #eef1f5;
-  --ink: #0f172a;
-  --ink-2: #475569;
-  --ink-3: #5a6578;
-  --line: #dde3ea;
-  --primary: #1e40af;
-  --primary-soft: #e3eafb;
+  --bg: #f7f5f0;
+  --surface: #fdfcf9;
+  --surface-2: #efece4;
+  --ink: #17171c;
+  --ink-2: #4a4a55;
+  --ink-3: #63636e;
+  --line: #e2ddd2;
+  --primary: #23408e;
+  --primary-soft: #e4e8f4;
   --series: #2a78d6;
-  --track: #e6ebf1;
+  --track: #ebe7de;
   --warn: #92400e;
   --warn-soft: #fdf3e1;
   --good: #166534;
@@ -53,17 +62,17 @@
 }
 
 .dark {
-  --bg: #0f1115;
-  --surface: #171a20;
-  --surface-2: #1f232b;
-  --ink: #eef0f3;
-  --ink-2: #b4bac4;
-  --ink-3: #8c93a0;
-  --line: #2c313a;
-  --primary: #8fb0ff;
-  --primary-soft: #1d2a48;
+  --bg: #0e0f13;
+  --surface: #15171c;
+  --surface-2: #1d2027;
+  --ink: #ecebe6;
+  --ink-2: #b9b8b1;
+  --ink-3: #8f8e88;
+  --line: #2a2c33;
+  --primary: #a9bcff;
+  --primary-soft: #1c2440;
   --series: #3987e5;
-  --track: #262b34;
+  --track: #23262d;
   --warn: #f2c27b;
   --warn-soft: #3a2d17;
   --good: #8fd6a4;
@@ -75,6 +84,7 @@
 html, body { background: var(--bg); color: var(--ink); }
 body { font-family: var(--font-sans); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 .tabular { font-variant-numeric: tabular-nums; }
+h1, .font-display { font-family: var(--font-display); font-optical-sizing: auto; }
 
 /* Motion: subtle, transform/opacity only, reduced-motion safe. */
 .press { transition: transform 160ms var(--ease-out-strong); }
@@ -95,7 +105,12 @@ body { font-family: var(--font-sans); font-size: 15px; line-height: 1.5; -webkit
   @starting-style { transform: scaleX(0.02); }
 }
 
+/* Story: a slow, looping nudge on the scroll cue's arrow at the top of the page; reduced motion keeps the text, drops the motion. */
+.story-cue svg { animation: story-cue 1.8s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
+@keyframes story-cue { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
 @media (prefers-reduced-motion: reduce) {
+  .story-cue svg { animation: none; }
   .press:active { transform: none; }
   .page-enter { transition: opacity 120ms linear; transform: none; @starting-style { transform: none; } }
   .bar-grow { transition: none; }

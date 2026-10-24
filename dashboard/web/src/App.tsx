@@ -11,6 +11,8 @@ const Topics = lazy(() => import("./pages/Topics"));
 const Confidence = lazy(() => import("./pages/Confidence"));
 const Benchmark = lazy(() => import("./pages/Benchmark"));
 const Methodology = lazy(() => import("./pages/Methodology"));
+// The scroll story (and the motion library it uses) loads only when /how-it-works is opened.
+const HowItWorks = lazy(() => import("./story/HowItWorks"));
 
 const page = (Component: React.ComponentType) => (
   <Suspense fallback={<Loading />}>
@@ -31,6 +33,7 @@ export default function App() {
             <Route path="benchmark" element={page(Benchmark)} />
             <Route path="methodology" element={page(Methodology)} />
           </Route>
+          <Route path="how-it-works" element={page(HowItWorks)} />
         </Routes>
       </BrowserRouter>
     </TargetProvider>

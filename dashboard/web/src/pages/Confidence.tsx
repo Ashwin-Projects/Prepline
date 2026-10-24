@@ -16,6 +16,7 @@ export default function Confidence() {
   return (
     <>
       <PageHeader
+        eyebrow="Dashboard · 04"
         title="Confidence"
         lede="Three indicators say how far to trust a score. They are shown next to every number instead of being folded into it."
         actions={<TargetSelect />}
@@ -31,8 +32,8 @@ export default function Confidence() {
             </p>
             <ul className="space-y-2">
               {comparison.data.targets.map((t) => (
-                <li key={t.target_id} className="flex items-center justify-between gap-2 text-[14px]">
-                  <span className="truncate text-ink">
+                <li key={t.target_id} className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[14px]">
+                  <span className="min-w-0 text-ink [overflow-wrap:anywhere]">
                     {t.company} {t.role}
                   </span>
                   <span className="flex shrink-0 items-center gap-2">

@@ -24,6 +24,7 @@ cd dashboard/web; npm install; npx vite --port 5173                  # second te
 
 | Page | Shows |
 |---|---|
+| How it works (`/how-it-works`) | Full-bleed scroll story in five chapters, pinned on screens at least 900×700px (syllabus → taxonomy → interview evidence → scoring → gaps), drawn from the same saved results; ends with a link into the Overview. Reduced motion shows every chapter in its final state |
 | Overview | Company/role selector, provisional S_comp with a confidence badge, known mapping limitations, data card (reports collected → usable, density gate, taxonomy/config versions, date), ranked priority gaps, coverage by domain |
 | Compare | All targets side by side with provisional scores and a note that scoring universes differ; Google SWE-L3 shows an insufficient-data state (8 of 15 reports) instead of a score |
 | Topic explorer | All 83 topics: domain, importance, coverage, depth, measured/fallback, coverage source (direct/inherited); search, domain filter, sorting |
@@ -66,7 +67,7 @@ tested in `evaluation/test_dashboard_api.py`.
 
 ## Stack and design
 
-Vite, React 19, TypeScript, Tailwind CSS v4, Recharts, KaTeX, lucide icons, Fira Sans/Fira Code bundled locally (works
+Vite, React 19, TypeScript, Tailwind CSS v4, Recharts, KaTeX, Motion (story route only), lucide icons, Newsreader + Fira Sans/Fira Code bundled locally (works
 offline). Design tokens live in `web/src/index.css` (light and dark, contrast-checked to WCAG AA for text). Motion is
 limited to transform/opacity CSS transitions (button press, page fade, gap bars) and is removed under
 `prefers-reduced-motion`; charts do not animate.

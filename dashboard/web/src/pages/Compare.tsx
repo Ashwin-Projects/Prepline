@@ -8,6 +8,7 @@ export default function Compare() {
   return (
     <>
       <PageHeader
+        eyebrow="Dashboard · 02"
         title="Compare"
         lede="All configured company/role targets against the same syllabus. Scores are provisional, and each company is scored on its own set of interview topics, so similar scores are not a ranking. A target below the density gate shows no score."
       />
