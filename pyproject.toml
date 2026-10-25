@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prepline"
+version = "0.1.0"
+description = "Syllabus-to-interview topic coverage analysis prototype"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pandas",
+  "scikit-learn",
+]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers"]
+test = []
+
+[project.scripts]
+prepline = "pipeline.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["pipeline*"]

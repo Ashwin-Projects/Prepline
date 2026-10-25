@@ -1,0 +1,25 @@
+{
+  "taxonomy_version": "v1.0",
+  "topics": [
+    {
+      "topic_id": "dsa.arrays",
+      "name": "Arrays",
+      "type": "high_level_concept"
+    },
+    {
+      "topic_id": "dsa.trees",
+      "name": "Trees",
+      "type": "high_level_concept"
+    },
+    {
+      "topic_id": "dsa.graphs",
+      "name": "Graphs",
+      "type": "high_level_concept"
+    },
+    {
+      "topic_id": "dbms.sql.subqueries",
+      "name": "SQL Subqueries",
+      "type": "granular_skill"
+    }
+  ]
+}

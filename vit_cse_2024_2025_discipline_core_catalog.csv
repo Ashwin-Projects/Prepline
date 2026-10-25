@@ -1,0 +1,22 @@
+course_code,course_title,course_type,version,lecture_hours,tutorial_hours,practical_hours,project_hours,credits,curriculum_source,source_page
+BCSE202L,Data Structures and Algorithms,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE202P,Data Structures and Algorithms Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE203E,Web Programming,Embedded Theory and Lab,1.0,1,0,4,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE204L,Design and Analysis of Algorithms,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE204P,Design and Analysis of Algorithms Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE205L,Computer Architecture and Organization,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE301L,Software Engineering,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE301P,Software Engineering Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE302L,Database Systems,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE302P,Database Systems Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE303L,Operating Systems,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE303P,Operating Systems Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE304L,Theory of Computation,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE305L,Embedded Systems,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE306L,Artificial Intelligence,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE307L,Compiler Design,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE307P,Compiler Design Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE308L,Computer Networks,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE308P,Computer Networks Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE309L,Cryptography and Network Security,Theory Only,1.0,3,0,0,0,3,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
+BCSE309P,Cryptography and Network Security Lab,Lab Only,1.0,0,0,2,0,1,"VIT B.Tech CSE Curriculum and Syllabi 2024-2025",2
