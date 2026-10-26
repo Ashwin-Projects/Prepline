@@ -16,3 +16,4 @@ CLAUDE-SECURITY-*/
 
 # Phase 16 pilot: raw form exports stay local (only aggregated results/pilot/ is committed)
 data/pilot/responses*.csv
+CLAUDE.md
